@@ -140,22 +140,35 @@ test.describe('Onboarding Accessibility', () => {
 
     await firstNameInput.fill('Focus');
     await lastNameInput.fill('Test');
-    await emailInput.fill('focus@test.com');
+    // Use unique email to avoid caching issues
+    const uniqueEmail = `focus-${Date.now()}@test.com`;
+    await emailInput.fill(uniqueEmail);
     await emailInput.blur();
-    await page.waitForTimeout(1000); // Wait for validation
+    await page.waitForTimeout(2000); // Wait longer for validation
+
+    // Scroll to make sure the button is in viewport
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(500);
 
     // Submit form
     const nextButton = getOnboardingNextButton(page);
-    if (await nextButton.isEnabled()) {
-      // Use force click to avoid overlay issues on mobile
+    await expect(nextButton).toBeEnabled({ timeout: 5000 });
+    await nextButton.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(500);
+
+    // Try regular click first
+    try {
+      await nextButton.click({ timeout: 5000 });
+    } catch (e) {
+      // If regular click fails, try force click
       await nextButton.click({ force: true });
-
-      // Wait for navigation
-      await page.waitForURL('**/step/2');
-
-      // Check that page is functional (focus management is implementation detail)
-      await expect(page.locator('h1, h2, main, [role="main"]').first()).toBeVisible();
     }
+
+    // Wait for navigation
+    await page.waitForURL('**/step/2', { timeout: 15000 });
+
+    // Check that page is functional (focus management is implementation detail)
+    await expect(page.locator('h1, h2, main, [role="main"]').first()).toBeVisible();
   });
 
   test('color contrast meets WCAG AA standards', async ({ page }) => {
@@ -214,7 +227,9 @@ test.describe('Onboarding Accessibility', () => {
     // Click next button
     const nextButton = getOnboardingNextButton(page);
     if (await nextButton.isEnabled()) {
-      // Use force click to avoid overlay issues on mobile
+      // Scroll button into view and click
+      await nextButton.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(300);
       await nextButton.click({ force: true });
 
       // Transitions should still work but without excessive motion
@@ -257,7 +272,9 @@ test.describe('Onboarding Accessibility', () => {
     // "Click next" or "Click continue"
     const nextButton = getOnboardingNextButton(page);
     if (await nextButton.isEnabled()) {
-      // Use force click to avoid overlay issues on mobile
+      // Scroll button into view and click
+      await nextButton.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(300);
       await nextButton.click({ force: true });
     }
   });
@@ -332,9 +349,11 @@ test.describe('Onboarding Accessibility', () => {
 
     const nextButton = getOnboardingNextButton(page);
     if (await nextButton.isEnabled()) {
-      // Use force click to avoid overlay issues on mobile
+      // Scroll button into view and click
+      await nextButton.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(300);
       await nextButton.click({ force: true });
-      await page.waitForURL('**/step/2');
+      await page.waitForURL('**/step/2', { timeout: 10000 });
       await page.waitForTimeout(2000);
 
       // Run accessibility scan on Step 2
