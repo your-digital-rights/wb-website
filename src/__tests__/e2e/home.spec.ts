@@ -27,7 +27,8 @@ test.describe('WhiteBoar Homepage', () => {
     }
 
     // Test navigation to pricing section using navigation menu
-    await page.getByTestId('nav-services-btn').click();
+    // Use .first() to handle duplicate elements (desktop + mobile navigation)
+    await page.getByTestId('nav-services-btn').first().click();
     await expect(page.locator('#pricing')).toBeInViewport();
 
     // On mobile, re-open the menu for the next test
@@ -36,7 +37,7 @@ test.describe('WhiteBoar Homepage', () => {
     }
 
     // Test navigation to portfolio section using navigation menu
-    await page.getByTestId('nav-clients-btn').click();
+    await page.getByTestId('nav-clients-btn').first().click();
     await expect(page.locator('#portfolio')).toBeInViewport();
   });
 
@@ -103,9 +104,15 @@ test.describe('WhiteBoar Homepage', () => {
     await expect(page).toHaveURL(/\/onboarding/, { timeout: 10000 });
   });
 
-  test('contact link is working', async ({ page }) => {
+  test('contact link is working', async ({ page, isMobile }) => {
+    // On mobile, open the mobile menu first
+    if (isMobile) {
+      await page.getByLabel('Toggle mobile menu').click();
+    }
+
     // Check Contact link in navigation
-    const contactLink = page.getByTestId('nav-contact-link');
+    // Use .first() to handle duplicate elements (desktop + mobile navigation)
+    const contactLink = page.getByTestId('nav-contact-link').first();
     await expect(contactLink).toBeVisible();
     await expect(contactLink).toHaveAttribute('href', '/contact');
   });

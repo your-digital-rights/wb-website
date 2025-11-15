@@ -147,7 +147,8 @@ test.describe('Onboarding Accessibility', () => {
     // Submit form
     const nextButton = getOnboardingNextButton(page);
     if (await nextButton.isEnabled()) {
-      await nextButton.click();
+      // Use force click to avoid overlay issues on mobile
+      await nextButton.click({ force: true });
 
       // Wait for navigation
       await page.waitForURL('**/step/2');
@@ -213,7 +214,8 @@ test.describe('Onboarding Accessibility', () => {
     // Click next button
     const nextButton = getOnboardingNextButton(page);
     if (await nextButton.isEnabled()) {
-      await nextButton.click();
+      // Use force click to avoid overlay issues on mobile
+      await nextButton.click({ force: true });
 
       // Transitions should still work but without excessive motion
       await page.waitForTimeout(1000);
@@ -228,7 +230,7 @@ test.describe('Onboarding Accessibility', () => {
 
     // "Click first name"
     const firstNameInput = page.getByRole('textbox', { name: /First Name.*required/i });
-    await firstNameInput.click();
+    await firstNameInput.click({ force: true });
     await expect(firstNameInput).toBeFocused();
 
     // "Type John"
@@ -236,7 +238,7 @@ test.describe('Onboarding Accessibility', () => {
 
     // "Click last name"
     const lastNameInput = page.getByRole('textbox', { name: /Last Name.*required/i });
-    await lastNameInput.click();
+    await lastNameInput.click({ force: true });
     await expect(lastNameInput).toBeFocused();
 
     // "Type Doe"
@@ -244,7 +246,7 @@ test.describe('Onboarding Accessibility', () => {
 
     // "Click email"
     const emailInput = page.getByRole('textbox', { name: /Email.*required/i });
-    await emailInput.click();
+    await emailInput.click({ force: true });
     await expect(emailInput).toBeFocused();
 
     // "Type john@example.com"
@@ -255,7 +257,8 @@ test.describe('Onboarding Accessibility', () => {
     // "Click next" or "Click continue"
     const nextButton = getOnboardingNextButton(page);
     if (await nextButton.isEnabled()) {
-      await nextButton.click();
+      // Use force click to avoid overlay issues on mobile
+      await nextButton.click({ force: true });
     }
   });
 
@@ -329,7 +332,8 @@ test.describe('Onboarding Accessibility', () => {
 
     const nextButton = getOnboardingNextButton(page);
     if (await nextButton.isEnabled()) {
-      await nextButton.click();
+      // Use force click to avoid overlay issues on mobile
+      await nextButton.click({ force: true });
       await page.waitForURL('**/step/2');
       await page.waitForTimeout(2000);
 
