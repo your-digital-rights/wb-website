@@ -24,20 +24,24 @@ test.describe('WhiteBoar Homepage', () => {
     // On mobile, open the mobile menu first
     if (isMobile) {
       await page.getByLabel('Toggle mobile menu').click();
+      await page.waitForTimeout(500); // Wait for menu animation
     }
 
     // Test navigation to pricing section using navigation menu
-    // Use .first() to handle duplicate elements (desktop + mobile navigation)
-    await page.getByTestId('nav-services-btn').first().click();
+    // Filter for visible element to handle desktop vs mobile navigation
+    const servicesBtn = page.getByTestId('nav-services-btn').locator('visible=true').first();
+    await servicesBtn.click();
     await expect(page.locator('#pricing')).toBeInViewport();
 
     // On mobile, re-open the menu for the next test
     if (isMobile) {
       await page.getByLabel('Toggle mobile menu').click();
+      await page.waitForTimeout(500); // Wait for menu animation
     }
 
     // Test navigation to portfolio section using navigation menu
-    await page.getByTestId('nav-clients-btn').first().click();
+    const clientsBtn = page.getByTestId('nav-clients-btn').locator('visible=true').first();
+    await clientsBtn.click();
     await expect(page.locator('#portfolio')).toBeInViewport();
   });
 
@@ -108,11 +112,12 @@ test.describe('WhiteBoar Homepage', () => {
     // On mobile, open the mobile menu first
     if (isMobile) {
       await page.getByLabel('Toggle mobile menu').click();
+      await page.waitForTimeout(500); // Wait for menu animation
     }
 
     // Check Contact link in navigation
-    // Use .first() to handle duplicate elements (desktop + mobile navigation)
-    const contactLink = page.getByTestId('nav-contact-link').first();
+    // Filter for visible element to handle desktop vs mobile navigation
+    const contactLink = page.getByTestId('nav-contact-link').locator('visible=true').first();
     await expect(contactLink).toBeVisible();
     await expect(contactLink).toHaveAttribute('href', '/contact');
   });
