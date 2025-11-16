@@ -100,12 +100,18 @@ test.describe('WhiteBoar Homepage', () => {
   test('pricing plan selection works', async ({ page }) => {
     // Scroll to pricing section using test ID
     await page.getByTestId('pricing-title').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(300);
 
-    // Click on Fast & Simple plan using test ID
-    await page.getByTestId('pricing-cta-fast').click();
+    // Scroll button into view and wait for it to be ready
+    const pricingButton = page.getByTestId('pricing-cta-fast');
+    await pricingButton.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(500);
 
-    // Check that it navigates to onboarding
-    await expect(page).toHaveURL(/\/onboarding/, { timeout: 10000 });
+    // Wait for navigation to occur after clicking
+    await Promise.all([
+      page.waitForURL(/\/onboarding/, { timeout: 10000 }),
+      pricingButton.click()
+    ]);
   });
 
   test('contact link is working', async ({ page, isMobile }) => {
