@@ -147,10 +147,13 @@ test.describe('Onboarding Accessibility', () => {
     // Submit form
     const nextButton = getOnboardingNextButton(page);
     if (await nextButton.isEnabled()) {
-      // On mobile, scroll into view first to handle overlays
+      // On mobile, need more aggressive scrolling and stability waiting
       if (isMobile) {
+        // Scroll to bottom to move info cards out of the way
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await page.waitForTimeout(500);
         await nextButton.scrollIntoViewIfNeeded();
-        await page.waitForTimeout(300);
+        await page.waitForTimeout(500); // Wait for element to stabilize
       }
       await nextButton.click();
 
@@ -218,10 +221,13 @@ test.describe('Onboarding Accessibility', () => {
     // Click next button
     const nextButton = getOnboardingNextButton(page);
     if (await nextButton.isEnabled()) {
-      // On mobile, scroll into view first to handle overlays
+      // On mobile, need more aggressive scrolling and stability waiting
       if (isMobile) {
+        // Scroll to bottom to move info cards out of the way
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await page.waitForTimeout(500);
         await nextButton.scrollIntoViewIfNeeded();
-        await page.waitForTimeout(300);
+        await page.waitForTimeout(500); // Wait for element to stabilize
       }
       await nextButton.click();
 
@@ -265,10 +271,13 @@ test.describe('Onboarding Accessibility', () => {
     // "Click next" or "Click continue"
     const nextButton = getOnboardingNextButton(page);
     if (await nextButton.isEnabled()) {
-      // On mobile, scroll into view first to handle overlays
+      // On mobile, need more aggressive scrolling and stability waiting
       if (isMobile) {
+        // Scroll to bottom to move info cards out of the way
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await page.waitForTimeout(500);
         await nextButton.scrollIntoViewIfNeeded();
-        await page.waitForTimeout(300);
+        await page.waitForTimeout(500); // Wait for element to stabilize
       }
       await nextButton.click();
     }
@@ -344,10 +353,13 @@ test.describe('Onboarding Accessibility', () => {
 
     const nextButton = getOnboardingNextButton(page);
     if (await nextButton.isEnabled()) {
-      // On mobile, scroll into view first to handle overlays
+      // On mobile, need more aggressive scrolling and stability waiting
       if (isMobile) {
+        // Scroll to bottom to move info cards out of the way
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await page.waitForTimeout(500);
         await nextButton.scrollIntoViewIfNeeded();
-        await page.waitForTimeout(300);
+        await page.waitForTimeout(500); // Wait for element to stabilize
       }
       await nextButton.click();
       await page.waitForURL('**/step/2', { timeout: 10000 });
