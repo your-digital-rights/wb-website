@@ -104,7 +104,7 @@ export default function OnboardingWelcome() {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="absolute -top-4 -right-4 text-primary/20"
+              className="absolute -top-4 -right-4 text-primary/20 hidden md:block"
             >
               <Sparkles className="w-8 h-8" />
             </motion.div>
@@ -212,11 +212,11 @@ export default function OnboardingWelcome() {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="space-y-6 pt-4"
         >
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-stretch sm:items-center">
             <Button
               size="lg"
               onClick={handleStart}
-              className="gap-2 px-8"
+              className="gap-2 px-8 w-full sm:w-auto"
               disabled={!mounted}
             >
               {t('actions.start')}

@@ -231,19 +231,24 @@ export function StepTemplate({
           {/* Navigation */}
           {!hideNavigation && (
             <motion.div
-              className="flex items-center justify-between mt-8"
+              className="flex flex-col md:flex-row items-stretch md:items-center justify-between mt-8 gap-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
               {/* Previous Button */}
-              <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap">
+              <motion.div
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+                className="w-full md:w-auto order-2 md:order-1"
+              >
                 <Button
                   variant="outline"
                   size="lg"
                   onClick={onPrevious}
                   disabled={!canGoPrevious || isLoading}
-                  className="gap-2"
+                  className="gap-2 w-full md:w-auto"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   {previousLabel || t('previous')}
@@ -251,7 +256,7 @@ export function StepTemplate({
               </motion.div>
 
               {/* Step Indicators */}
-              <div className="hidden md:flex items-center gap-2">
+              <div className="hidden md:flex items-center gap-2 order-2">
                 {Array.from({ length: 14 }, (_, i) => (
                   <div
                     key={i}
@@ -276,12 +281,17 @@ export function StepTemplate({
               </div>
 
               {/* Next Button */}
-              <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap">
+              <motion.div
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+                className="w-full md:w-auto order-1 md:order-3"
+              >
                 <Button
                   size="lg"
                   onClick={onNext}
                   disabled={!canGoNext || isLoading}
-                  className="gap-2"
+                  className="gap-2 w-full md:w-auto"
                 >
                   {isLoading ? (
                     <>
