@@ -384,7 +384,18 @@ export async function restartOnboarding(page: Page) {
 export async function ensureFreshOnboardingState(page: Page) {
   // Clear localStorage using addInitScript to ensure it's cleared before any page navigation
   await page.addInitScript(() => {
-    localStorage.clear();
+    const keysToRemove: string[] = [];
+
+    // Preserve non-onboarding keys like cookie consent while clearing onboarding-specific state
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key) continue;
+      if (key === 'wb-onboarding-store' || key.startsWith('wb-onboarding-start-')) {
+        keysToRemove.push(key);
+      }
+    }
+
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
   });
 
   // Navigate directly to onboarding welcome page with cleared storage

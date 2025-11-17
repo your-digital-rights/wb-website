@@ -816,10 +816,12 @@ export class WebhookService {
       let submissionId = setupIntent.metadata?.submission_id
       let subscriptionId = setupIntent.metadata?.subscription_id
 
+      let fallbackCustomerId: string | undefined
+
       if (!submissionId) {
         const { data: submissionLookup, error: submissionLookupError } = await supabase
           .from('onboarding_submissions')
-          .select('id, stripe_subscription_id, session_id')
+          .select('id, stripe_subscription_id, session_id, stripe_customer_id')
           .eq('stripe_payment_id', setupIntent.id)
           .single()
 
@@ -827,6 +829,7 @@ export class WebhookService {
           const enrichedSubmissionId = submissionLookup.id
           submissionId = enrichedSubmissionId
           subscriptionId = subscriptionId ?? submissionLookup.stripe_subscription_id ?? undefined
+          fallbackCustomerId = submissionLookup.stripe_customer_id ?? undefined
 
           setupIntent.metadata = {
             ...(setupIntent.metadata || {}),
@@ -844,6 +847,29 @@ export class WebhookService {
           console.warn('[Webhook] Unable to enrich setup_intent metadata from database', {
             setupIntentId: setupIntent.id,
             lookupError: submissionLookupError
+          })
+        }
+      }
+
+      // When metadata already contains submission_id we still may need subscription/customer fallbacks
+      if (submissionId && (!subscriptionId || !setupIntent.customer)) {
+        const { data: submissionRecord, error: submissionRecordError } = await supabase
+          .from('onboarding_submissions')
+          .select('stripe_subscription_id, stripe_customer_id')
+          .eq('id', submissionId)
+          .single()
+
+        if (submissionRecord) {
+          if (!subscriptionId) {
+            subscriptionId = submissionRecord.stripe_subscription_id ?? undefined
+          }
+          if (!setupIntent.customer) {
+            fallbackCustomerId = submissionRecord.stripe_customer_id ?? undefined
+          }
+        } else if (submissionRecordError) {
+          console.warn('[Webhook] Unable to fetch submission for setup intent fallback', {
+            submissionId,
+            error: submissionRecordError
           })
         }
       }
@@ -896,28 +922,35 @@ export class WebhookService {
       }
 
       // Also set as customer's default payment method for future invoices
-      if (setupIntent.customer) {
+      const resolvedCustomerId = (setupIntent.customer as string | undefined) ?? fallbackCustomerId
+
+      if (resolvedCustomerId) {
         try {
-          await this.stripe.customers.update(setupIntent.customer as string, {
+          await this.stripe.customers.update(resolvedCustomerId, {
             invoice_settings: {
               default_payment_method: setupIntent.payment_method as string
             }
           })
 
           debugLog('[Webhook] Payment method set as customer default', {
-            customerId: setupIntent.customer,
+            customerId: resolvedCustomerId,
             paymentMethodId: setupIntent.payment_method
           })
         } catch (error) {
           if (isResourceMissingError(error)) {
             console.warn('[Webhook] Customer missing while setting default payment method, skipping', {
-              customerId: setupIntent.customer,
+              customerId: resolvedCustomerId,
               setupIntentId: setupIntent.id
             })
           } else {
             throw error
           }
         }
+      } else {
+        console.warn('[Webhook] Unable to determine customer for setup_intent.succeeded', {
+          setupIntentId: setupIntent.id,
+          submissionId
+        })
       }
 
       // Log analytics event

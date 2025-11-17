@@ -14,12 +14,50 @@ export function CookieConsent() {
   const t = useTranslations('cookieConsent')
   const [isVisible, setIsVisible] = React.useState(false)
   const [showPreferences, setShowPreferences] = React.useState(false)
+  const bannerRef = React.useRef<HTMLDivElement | null>(null)
 
   React.useEffect(() => {
     // Check if user has already given consent
     const hasConsent = hasGivenConsent()
     setIsVisible(!hasConsent)
   }, [])
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") {
+      return
+    }
+
+    const root = document.documentElement
+    const body = document.body
+
+    const updateBannerOffset = () => {
+      const height = bannerRef.current?.offsetHeight ?? 0
+      root.style.setProperty("--cookie-consent-height", `${height}px`)
+    }
+
+    if (!isVisible) {
+      body.classList.remove("has-cookie-consent")
+      root.style.removeProperty("--cookie-consent-height")
+      return
+    }
+
+    body.classList.add("has-cookie-consent")
+    updateBannerOffset()
+
+    const resizeObserver = new ResizeObserver(updateBannerOffset)
+    if (bannerRef.current) {
+      resizeObserver.observe(bannerRef.current)
+    }
+
+    window.addEventListener("resize", updateBannerOffset)
+
+    return () => {
+      body.classList.remove("has-cookie-consent")
+      root.style.removeProperty("--cookie-consent-height")
+      resizeObserver.disconnect()
+      window.removeEventListener("resize", updateBannerOffset)
+    }
+  }, [isVisible])
 
   const handleAcceptAll = () => {
     acceptAllCookies()
@@ -47,6 +85,7 @@ export function CookieConsent() {
   return (
     <>
       <div
+        ref={bannerRef}
         className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border shadow-lg"
         role="dialog"
         aria-labelledby="cookie-consent-title"

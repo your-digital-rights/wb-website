@@ -3,3 +3,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --cookie-consent-height: 0px;
+}
+
+body.has-cookie-consent {
+  padding-bottom: calc(
+    var(--cookie-consent-height, 0px) +
+    env(safe-area-inset-bottom) +
+    var(--wb-space-6, 1.5rem)
+  );
+  transition: padding-bottom 200ms ease;
+}
+
+@media (min-width: 768px) {
+  body.has-cookie-consent {
+    padding-bottom: calc(
+      var(--cookie-consent-height, 0px) +
+      env(safe-area-inset-bottom) +
+      var(--wb-space-8, 2rem)
+    );
+  }
+}

@@ -177,6 +177,9 @@ export function StepTemplate({
             ease: "easeInOut"
           }}
           className="container mx-auto px-4 py-8 max-w-4xl"
+          style={{
+            paddingBottom: 'calc(var(--cookie-consent-height, 0px) + var(--wb-space-8, 2rem) + env(safe-area-inset-bottom))'
+          }}
         >
           {/* Step Header */}
           <div className="text-center mb-8">
