@@ -132,7 +132,7 @@ test.describe('Onboarding Accessibility', () => {
     expect(await formInputs.count()).toBeGreaterThanOrEqual(3);
   });
 
-  test('focus management during step transitions', async ({ page }) => {
+  test('focus management during step transitions', async ({ page, isMobile }) => {
     // Fill form using accessible names
     const firstNameInput = page.getByRole('textbox', { name: /First Name.*required/i });
     const lastNameInput = page.getByRole('textbox', { name: /Last Name.*required/i });
@@ -147,6 +147,14 @@ test.describe('Onboarding Accessibility', () => {
     // Submit form
     const nextButton = getOnboardingNextButton(page);
     if (await nextButton.isEnabled()) {
+      // On mobile, need more aggressive scrolling and stability waiting
+      if (isMobile) {
+        // Scroll to bottom to move info cards out of the way
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await page.waitForTimeout(500);
+        await nextButton.scrollIntoViewIfNeeded();
+        await page.waitForTimeout(500); // Wait for element to stabilize
+      }
       await nextButton.click();
 
       // Wait for navigation
@@ -195,7 +203,7 @@ test.describe('Onboarding Accessibility', () => {
     await expect(nextButton).toBeVisible();
   });
 
-  test('respects reduced motion preferences', async ({ page }) => {
+  test('respects reduced motion preferences', async ({ page, isMobile }) => {
     // Set reduced motion preference
     await page.emulateMedia({ reducedMotion: 'reduce' });
 
@@ -213,6 +221,14 @@ test.describe('Onboarding Accessibility', () => {
     // Click next button
     const nextButton = getOnboardingNextButton(page);
     if (await nextButton.isEnabled()) {
+      // On mobile, need more aggressive scrolling and stability waiting
+      if (isMobile) {
+        // Scroll to bottom to move info cards out of the way
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await page.waitForTimeout(500);
+        await nextButton.scrollIntoViewIfNeeded();
+        await page.waitForTimeout(500); // Wait for element to stabilize
+      }
       await nextButton.click();
 
       // Transitions should still work but without excessive motion
@@ -223,7 +239,7 @@ test.describe('Onboarding Accessibility', () => {
     await expect(page.locator('body')).toBeVisible();
   });
 
-  test('supports voice navigation commands', async ({ page }) => {
+  test('supports voice navigation commands', async ({ page, isMobile }) => {
     // Test common voice commands simulation using accessible names
 
     // "Click first name"
@@ -255,6 +271,14 @@ test.describe('Onboarding Accessibility', () => {
     // "Click next" or "Click continue"
     const nextButton = getOnboardingNextButton(page);
     if (await nextButton.isEnabled()) {
+      // On mobile, need more aggressive scrolling and stability waiting
+      if (isMobile) {
+        // Scroll to bottom to move info cards out of the way
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await page.waitForTimeout(500);
+        await nextButton.scrollIntoViewIfNeeded();
+        await page.waitForTimeout(500); // Wait for element to stabilize
+      }
       await nextButton.click();
     }
   });
@@ -315,7 +339,7 @@ test.describe('Onboarding Accessibility', () => {
     }
   });
 
-  test('Step 2 accessibility (Email Verification)', async ({ page }) => {
+  test('Step 2 accessibility (Email Verification)', async ({ page, isMobile }) => {
     // Navigate to Step 2 using accessible names
     const firstNameInput = page.getByRole('textbox', { name: /First Name.*required/i });
     const lastNameInput = page.getByRole('textbox', { name: /Last Name.*required/i });
@@ -329,8 +353,16 @@ test.describe('Onboarding Accessibility', () => {
 
     const nextButton = getOnboardingNextButton(page);
     if (await nextButton.isEnabled()) {
+      // On mobile, need more aggressive scrolling and stability waiting
+      if (isMobile) {
+        // Scroll to bottom to move info cards out of the way
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await page.waitForTimeout(500);
+        await nextButton.scrollIntoViewIfNeeded();
+        await page.waitForTimeout(500); // Wait for element to stabilize
+      }
       await nextButton.click();
-      await page.waitForURL('**/step/2');
+      await page.waitForURL('**/step/2', { timeout: 10000 });
       await page.waitForTimeout(2000);
 
       // Run accessibility scan on Step 2

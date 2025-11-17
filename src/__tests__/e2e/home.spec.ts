@@ -24,19 +24,24 @@ test.describe('WhiteBoar Homepage', () => {
     // On mobile, open the mobile menu first
     if (isMobile) {
       await page.getByLabel('Toggle mobile menu').click();
+      await page.waitForTimeout(500); // Wait for menu animation
     }
 
     // Test navigation to pricing section using navigation menu
-    await page.getByTestId('nav-services-btn').click();
+    // Filter for visible element to handle desktop vs mobile navigation
+    const servicesBtn = page.getByTestId('nav-services-btn').locator('visible=true').first();
+    await servicesBtn.click();
     await expect(page.locator('#pricing')).toBeInViewport();
 
     // On mobile, re-open the menu for the next test
     if (isMobile) {
       await page.getByLabel('Toggle mobile menu').click();
+      await page.waitForTimeout(500); // Wait for menu animation
     }
 
     // Test navigation to portfolio section using navigation menu
-    await page.getByTestId('nav-clients-btn').click();
+    const clientsBtn = page.getByTestId('nav-clients-btn').locator('visible=true').first();
+    await clientsBtn.click();
     await expect(page.locator('#portfolio')).toBeInViewport();
   });
 
@@ -95,17 +100,30 @@ test.describe('WhiteBoar Homepage', () => {
   test('pricing plan selection works', async ({ page }) => {
     // Scroll to pricing section using test ID
     await page.getByTestId('pricing-title').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(300);
 
-    // Click on Fast & Simple plan using test ID
-    await page.getByTestId('pricing-cta-fast').click();
+    // Scroll button into view and wait for it to be ready
+    const pricingButton = page.getByTestId('pricing-cta-fast');
+    await pricingButton.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(500);
 
-    // Check that it navigates to onboarding
-    await expect(page).toHaveURL(/\/onboarding/, { timeout: 10000 });
+    // Wait for navigation to occur after clicking
+    await Promise.all([
+      page.waitForURL(/\/onboarding/, { timeout: 10000 }),
+      pricingButton.click()
+    ]);
   });
 
-  test('contact link is working', async ({ page }) => {
+  test('contact link is working', async ({ page, isMobile }) => {
+    // On mobile, open the mobile menu first
+    if (isMobile) {
+      await page.getByLabel('Toggle mobile menu').click();
+      await page.waitForTimeout(500); // Wait for menu animation
+    }
+
     // Check Contact link in navigation
-    const contactLink = page.getByTestId('nav-contact-link');
+    // Filter for visible element to handle desktop vs mobile navigation
+    const contactLink = page.getByTestId('nav-contact-link').locator('visible=true').first();
     await expect(contactLink).toBeVisible();
     await expect(contactLink).toHaveAttribute('href', '/contact');
   });
