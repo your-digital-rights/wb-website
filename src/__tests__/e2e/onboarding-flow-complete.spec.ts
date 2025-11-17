@@ -325,28 +325,13 @@ test.describe('Complete Onboarding Flow', () => {
     }
 
     // Select industry from dropdown with better error handling
-    const industryDropdown = page.getByRole('combobox').first();
+    const industryDropdown = page.getByRole('combobox', { name: /Industry/i });
     await industryDropdown.click();
-    await page.waitForTimeout(1000); // Longer wait for dropdown to populate
-
-    // Try multiple selectors for Technology option
-    const technologyOption = page.getByRole('option', { name: /Technology|technology/i }).first();
-    if (await technologyOption.isVisible()) {
-      await technologyOption.click();
-    } else {
-      // Fallback - try clicking any option with 'tech' in it
-      const techOption = page.locator('[role="option"]').filter({ hasText: /tech/i }).first();
-      if (await techOption.isVisible()) {
-        await techOption.click();
-      } else {
-        console.log('⚠️ Could not find Technology option, selecting first available');
-        const firstOption = page.getByRole('option').first();
-        if (await firstOption.isVisible()) {
-          await firstOption.click();
-        }
-      }
-    }
-    await page.waitForTimeout(1000);
+    const targetIndustryOption = page.getByRole('option', { name: /Technology & IT Services/i }).first();
+    await expect(targetIndustryOption).toBeVisible();
+    await targetIndustryOption.click();
+    await page.waitForTimeout(500);
+    await expect(industryDropdown).toContainText(/Technology & IT Services/i);
 
     // Fill optional VAT number (comprehensive testing)
     const vatInput = page.locator('input[name="vatNumber"]');

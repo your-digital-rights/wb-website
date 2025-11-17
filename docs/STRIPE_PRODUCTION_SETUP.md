@@ -81,11 +81,11 @@ Webhooks allow Stripe to notify your app when payments succeed or fail.
 
 1. Go to **Developers** → **Webhooks** in Stripe Dashboard
 2. Click **Add endpoint**
-3. Enter your endpoint URL:
+3. Enter your endpoint URL (⚠️ without a trailing slash):
    ```
    https://your-domain.com/api/stripe/webhook
    ```
-   Replace `your-domain.com` with your actual production domain
+   Replace `your-domain.com` with your actual production domain. Stripe treats redirects as failures, so `https://your-domain.com/api/stripe/webhook/` (note trailing slash) will follow a `307/308` redirect and appear as a failed webhook.
 
 4. Select events to listen to:
    - `invoice.paid` ✅ (REQUIRED - payment successful)
