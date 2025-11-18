@@ -57,7 +57,8 @@ export class WebhookService {
             'total_discount_amounts',
             'customer',
             'subscription',
-            'payments.data.payment'
+            'payments.data.payment',
+            'discounts.data.coupon'
           ]
         })
       } catch (error) {
@@ -332,12 +333,60 @@ export class WebhookService {
       // Extract discount information from invoice
       let discountAmount = 0
       let discountMetadata: any = {}
+      let couponId: string | null = null
+
+      // Debug logging for discount extraction
+      console.log('[Webhook] DEBUG: Invoice discount info:', {
+        total_discount_amounts: invoice.total_discount_amounts,
+        discounts: (invoice as any).discounts,
+        discount: (invoice as any).discount
+      })
 
       if (invoice.total_discount_amounts && invoice.total_discount_amounts.length > 0) {
         discountAmount = invoice.total_discount_amounts.reduce(
           (sum: number, discount: any) => sum + discount.amount,
           0
         )
+
+        // Try to get coupon ID from invoice discounts
+        const invoiceAny = invoice as any
+        if (invoiceAny.discounts && invoiceAny.discounts.length > 0) {
+          const firstDiscount = invoiceAny.discounts[0]
+          console.log('[Webhook] DEBUG: First discount structure:', JSON.stringify(firstDiscount, null, 2))
+
+          // With the expanded discounts, we should have the full discount object with coupon
+          if (typeof firstDiscount === 'string') {
+            // Still a discount ID, need to fetch it manually
+            try {
+              const discount = await this.stripe.discounts.retrieve(firstDiscount)
+              couponId = discount.coupon.id
+              console.log('[Webhook] DEBUG: Retrieved coupon from discount ID:', couponId)
+            } catch (error) {
+              console.log('[Webhook] DEBUG: Failed to retrieve discount:', error)
+            }
+          } else if (firstDiscount && firstDiscount.coupon) {
+            // Expanded discount with coupon
+            couponId = typeof firstDiscount.coupon === 'string' ? firstDiscount.coupon : firstDiscount.coupon.id
+            console.log('[Webhook] DEBUG: Got coupon from expanded discount:', couponId)
+          } else if (firstDiscount.discount && firstDiscount.discount.coupon) {
+            // Nested discount object structure
+            couponId = firstDiscount.discount.coupon?.id || firstDiscount.discount.coupon || null
+            console.log('[Webhook] DEBUG: Got coupon from nested discount:', couponId)
+          }
+        }
+      }
+
+      // Check customer for discount information if not found in invoice
+      if (!couponId && customerId) {
+        try {
+          const customer = await this.stripe.customers.retrieve(customerId) as Stripe.Customer & { discount?: Stripe.Discount | null }
+          if (customer.discount) {
+            couponId = customer.discount.coupon.id
+            console.log('[Webhook] DEBUG: Got coupon from customer discount:', couponId)
+          }
+        } catch (error) {
+          debugLog('Failed to retrieve customer for discount info:', error)
+        }
       }
 
       // Get discount details from subscription to determine recurring discount
@@ -352,8 +401,18 @@ export class WebhookService {
             ?? subscriptionAny.discounts?.data?.[0]
             ?? null) as Stripe.Discount | null
 
+          console.log('[Webhook] DEBUG: Subscription discount info:', {
+            discount: discount,
+            discountFromProperty: subscriptionAny.discount,
+            discountsArray: subscriptionAny.discounts
+          })
+
           if (discount) {
             const coupon = (discount as any).coupon as Stripe.Coupon
+            // Use subscription coupon ID if not already found from invoice
+            if (!couponId) {
+              couponId = coupon.id
+            }
             discountMetadata = {
               coupon_id: coupon.id,
               duration: coupon.duration,
@@ -379,13 +438,22 @@ export class WebhookService {
         }
       }
 
+      // Debug logging for final values
+      console.log('[Webhook] DEBUG: Final discount values being saved:', {
+        couponId: couponId,
+        discountMetadataCouponId: discountMetadata.coupon_id,
+        discountAmount: discountAmount,
+        finalDiscountCode: couponId || discountMetadata.coupon_id || null,
+        finalDiscountAmount: discountAmount || null
+      })
+
       // Update submission with payment details including discount information
       // Only update Stripe IDs if not already set (don't overwrite values from CheckoutSessionService)
       const updateData: any = {
         status: 'paid',
         payment_amount: invoice.total,
         currency: invoice.currency.toUpperCase(),
-        discount_code: discountMetadata.coupon_id || null,
+        discount_code: couponId || discountMetadata.coupon_id || null,
         discount_amount: discountAmount || null,
         payment_completed_at: invoice.status_transitions?.paid_at
           ? new Date(invoice.status_transitions.paid_at * 1000).toISOString()
@@ -540,6 +608,10 @@ export class WebhookService {
 
       const submission = lookupResult.submission
 
+      // Extract discount information from invoice
+      let discountMetadata: any = {}
+      let couponId: string | null = null
+
       if (invoiceRef) {
         try {
           invoiceId = typeof invoiceRef === 'string' ? invoiceRef : invoiceRef.id
@@ -552,14 +624,42 @@ export class WebhookService {
               (sum, discount) => sum + discount.amount,
               0
             )
+
+            // Try to get coupon ID from invoice discounts
+            const invoiceAny = invoice as any
+            if (invoiceAny.discounts && invoiceAny.discounts.length > 0) {
+              const firstDiscount = invoiceAny.discounts[0]
+              if (firstDiscount.discount) {
+                // Discount object structure
+                couponId = firstDiscount.discount.coupon?.id || firstDiscount.discount.coupon || null
+              } else if (typeof firstDiscount === 'string') {
+                // Direct coupon ID
+                couponId = firstDiscount
+              } else if (firstDiscount.coupon) {
+                // Direct coupon object
+                couponId = typeof firstDiscount.coupon === 'string' ? firstDiscount.coupon : firstDiscount.coupon.id
+              }
+            }
           }
         } catch (invoiceError) {
           debugLog('Failed to retrieve invoice for payment intent:', invoiceError)
         }
       }
 
+      // Check customer for discount information if not found in invoice
+      if (!couponId && customerId) {
+        try {
+          const customer = await this.stripe.customers.retrieve(customerId) as Stripe.Customer & { discount?: Stripe.Discount | null }
+          if (customer.discount) {
+            couponId = customer.discount.coupon.id
+            console.log('[Webhook] DEBUG: PaymentIntent - Got coupon from customer discount:', couponId)
+          }
+        } catch (error) {
+          debugLog('Failed to retrieve customer for discount info in payment_intent:', error)
+        }
+      }
+
       // Get discount information from subscription if it exists
-      let discountMetadata: any = {}
       let recurringDiscount = 0
 
       if (submission.stripe_subscription_id) {
@@ -571,6 +671,10 @@ export class WebhookService {
 
           if (discount) {
             const coupon = (discount as any).coupon as Stripe.Coupon
+            // Use invoice coupon ID if available, otherwise use subscription coupon ID
+            if (!couponId) {
+              couponId = coupon.id
+            }
             discountMetadata = {
               coupon_id: coupon.id,
               duration: coupon.duration,
@@ -607,7 +711,7 @@ export class WebhookService {
         status: 'paid',
         payment_amount: amount,
         currency: currency.toUpperCase(),
-        discount_code: discountMetadata.coupon_id || null,
+        discount_code: couponId || discountMetadata.coupon_id || null,
         discount_amount: computedDiscountAmount || null,
         payment_completed_at: new Date().toISOString(),
         payment_metadata: {
