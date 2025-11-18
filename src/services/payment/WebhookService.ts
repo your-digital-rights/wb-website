@@ -385,6 +385,8 @@ export class WebhookService {
         status: 'paid',
         payment_amount: invoice.total,
         currency: invoice.currency.toUpperCase(),
+        discount_code: discountMetadata.coupon_id || null,
+        discount_amount: discountAmount || null,
         payment_completed_at: invoice.status_transitions?.paid_at
           ? new Date(invoice.status_transitions.paid_at * 1000).toISOString()
           : new Date().toISOString(),
@@ -605,6 +607,8 @@ export class WebhookService {
         status: 'paid',
         payment_amount: amount,
         currency: currency.toUpperCase(),
+        discount_code: discountMetadata.coupon_id || null,
+        discount_amount: computedDiscountAmount || null,
         payment_completed_at: new Date().toISOString(),
         payment_metadata: {
           payment_intent_id: paymentIntentId,

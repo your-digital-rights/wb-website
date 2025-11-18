@@ -67,18 +67,33 @@ export function EmailVerification({
   }, [])
 
   // Handle OTP input change
-  const handleOtpChange = (index: number, value: string) => {
-    // Only allow digits
-    if (value && !/^\d$/.test(value)) return
-    
+  const handleOtpChange = (index: number, rawValue: string) => {
+    const digitsOnly = rawValue.replace(/\D/g, '')
     const newOtp = [...otp]
-    newOtp[index] = value
+
+    // Allow the user to clear the current input
+    if (!digitsOnly) {
+      if (rawValue === '') {
+        newOtp[index] = ''
+        setOtp(newOtp)
+        setLocalError('')
+      }
+      return
+    }
+
+    let lastFilledIndex = index - 1
+
+    for (let i = 0; i < digitsOnly.length && index + i < 6; i++) {
+      newOtp[index + i] = digitsOnly[i]
+      lastFilledIndex = index + i
+    }
+
     setOtp(newOtp)
     setLocalError('')
-    
-    // Auto-focus next input
-    if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus()
+
+    const nextIndex = lastFilledIndex + 1
+    if (nextIndex < 6) {
+      inputRefs.current[nextIndex]?.focus()
     }
     
     // Auto-submit when complete
@@ -201,7 +216,6 @@ export function EmailVerification({
               ref={(el) => { inputRefs.current[index] = el }}
               type="text"
               inputMode="numeric"
-              maxLength={1}
               value={digit}
               onChange={(e) => handleOtpChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}

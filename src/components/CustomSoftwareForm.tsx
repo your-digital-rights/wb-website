@@ -174,7 +174,7 @@ export function CustomSoftwareForm() {
           <CardDescription>{t('subtitle')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6" noValidate>
             {/* Name Field */}
             <div className="space-y-2">
               <Label htmlFor="name" className="required">

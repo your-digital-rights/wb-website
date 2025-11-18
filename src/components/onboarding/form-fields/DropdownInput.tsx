@@ -285,7 +285,7 @@ export const DropdownInput = forwardRef<HTMLButtonElement, DropdownInputProps>(
             </Button>
           </PopoverTrigger>
           
-          <PopoverContent className="w-full p-1" align="start">
+          <PopoverContent className="w-[calc(100vw-2rem)] sm:w-full p-1" align="start">
             <Command>
               {searchable && (
                 <CommandInput
@@ -295,11 +295,11 @@ export const DropdownInput = forwardRef<HTMLButtonElement, DropdownInputProps>(
                   className="h-9"
                 />
               )}
-              
+
               <CommandEmpty>
                 {emptyText || t('noResults')}
               </CommandEmpty>
-              
+
               <CommandGroup className="max-h-64 overflow-auto">
                 {filteredOptions.map((option) => (
                   <CommandItem
@@ -311,19 +311,19 @@ export const DropdownInput = forwardRef<HTMLButtonElement, DropdownInputProps>(
                   >
                     {/* Selection Indicator */}
                     <div className={cn(
-                      "flex h-4 w-4 items-center justify-center",
+                      "flex h-4 w-4 items-center justify-center flex-shrink-0",
                       selectedValues.includes(option.value)
                         ? "text-primary"
                         : "text-transparent"
                     )}>
                       <Check className="h-4 w-4" />
                     </div>
-                    
+
                     {/* Option Content */}
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <div className="font-medium">{option.label}</div>
                       {option.description && (
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-sm text-muted-foreground line-clamp-2">
                           {option.description}
                         </div>
                       )}
@@ -332,13 +332,13 @@ export const DropdownInput = forwardRef<HTMLButtonElement, DropdownInputProps>(
                 ))}
               </CommandGroup>
             </Command>
-            
+
             {/* Selection Counter */}
             {multiple && maxSelections && (
               <div className="border-t px-3 py-2 text-xs text-muted-foreground">
-                {t('selectedCount', { 
-                  count: selectedValues.length, 
-                  max: maxSelections 
+                {t('selectedCount', {
+                  count: selectedValues.length,
+                  max: maxSelections
                 })}
               </div>
             )}
