@@ -1,5 +1,9 @@
 # Repository Guidelines
 
+## Project Overview
+
+**WhiteBoar** is an AI-driven digital agency homepage built with Next.js 15+, featuring modern web standards and multilingual support. This is a production-ready website implementing the business requirements outlined in `context/whiteboar-business-overview.md`.
+
 ## Project Structure & Module Organization
 - Next.js 15 + strict TypeScript live under `src/`; App Router pages stay in `src/app`, legacy API handlers in `src/pages/api`.
 - Shared UI (`src/components`), helpers (`src/lib`), schemas (`src/schemas`), and stores (`src/stores`) keep concerns grouped.
