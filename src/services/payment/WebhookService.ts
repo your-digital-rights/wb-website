@@ -330,147 +330,123 @@ export class WebhookService {
       // Preserve existing schedule_id if already set (don't overwrite with NULL)
       const scheduleId = submission.stripe_subscription_schedule_id || null
 
-      // Extract discount information from invoice
+      // SIMPLIFIED: Extract discount amount and coupon code directly
       let discountAmount = 0
-      let discountMetadata: any = {}
-      let couponId: string | null = null
+      let couponCode: string | null = null
 
-      // Debug logging for discount extraction
-      console.log('[Webhook] DEBUG: Invoice discount info:', {
-        total_discount_amounts: invoice.total_discount_amounts,
-        discounts: (invoice as any).discounts,
-        discount: (invoice as any).discount
-      })
-
+      // Calculate discount amount from invoice
       if (invoice.total_discount_amounts && invoice.total_discount_amounts.length > 0) {
         discountAmount = invoice.total_discount_amounts.reduce(
           (sum: number, discount: any) => sum + discount.amount,
           0
         )
-
-        // Skip invoice discount extraction for now - focus on customer discount
-        console.log('[Webhook] DEBUG: Skipping invoice discount extraction, will use customer discount');
       }
 
-      // Check customer for discount information if not found in invoice
-      if (!couponId && customerId) {
+      // Get the coupon code from customer discount (this is what users enter)
+      if (customerId) {
         try {
           const customer = await this.stripe.customers.retrieve(customerId, {
             expand: ['discount.coupon']
           }) as Stripe.Customer & { discount?: Stripe.Discount | null }
 
-          console.log('[Webhook] DEBUG: Customer discount structure:', JSON.stringify({
-            hasDiscount: !!customer.discount,
-            discount: customer.discount,
-            discountId: customer.discount?.id,
-            coupon: customer.discount?.coupon,
-            couponId: customer.discount?.coupon?.id
-          }, null, 2))
-
           if (customer.discount && customer.discount.coupon) {
-            couponId = customer.discount.coupon.id
-            console.log('[Webhook] DEBUG: Set couponId to:', couponId)
-            // Force update discountMetadata as well
-            discountMetadata = {
-              coupon_id: customer.discount.coupon.id,
-              duration: customer.discount.coupon.duration,
-              duration_in_months: customer.discount.coupon.duration_in_months,
-              percent_off: customer.discount.coupon.percent_off,
-              amount_off: customer.discount.coupon.amount_off
-            }
+            // Log the full structure to understand what we're getting
+            console.log('[Webhook] Full customer discount structure:', JSON.stringify({
+              discountId: customer.discount.id,
+              couponId: customer.discount.coupon.id,
+              couponName: customer.discount.coupon.name,
+              coupon: customer.discount.coupon
+            }, null, 2))
+
+            // Try different possible locations for the user-entered code
+            const possibleCodes = [
+              customer.discount.coupon.id,
+              customer.discount.coupon.name,
+              (customer.discount.coupon as any).code,
+              (customer.discount as any).promotion_code,
+              (customer.discount as any).coupon_code
+            ]
+
+            console.log('[Webhook] Possible coupon codes:', possibleCodes)
+
+            // Find the first value that doesn't look like a discount ID
+            couponCode = possibleCodes.find(code =>
+              code && typeof code === 'string' && !code.startsWith('di_')
+            ) || null
+
+            console.log('[Webhook] Selected coupon code:', couponCode)
           }
         } catch (error) {
-          debugLog('Failed to retrieve customer for discount info:', error)
+          debugLog('Failed to retrieve customer discount:', error)
         }
       }
 
-      // Get discount details from subscription to determine recurring discount
-      let recurringDiscount = 0
-      if (subscriptionId) {
+      // Get discount from subscription if not found on customer
+      if (!couponCode && subscriptionId) {
         try {
           const subscription = await this.stripe.subscriptions.retrieve(subscriptionId, {
             expand: ['discount.coupon']
           }) as Stripe.Subscription & { discount?: Stripe.Discount | null }
 
-          // Extract discount information from subscription
-          const subscriptionAny = subscription as any
-          const rawDiscount = subscriptionAny.discount
+          // Check if subscription has discount in any form
+          const hasDiscount = !!(subscription.discount || (subscription as any).discounts)
 
-          console.log('[Webhook] DEBUG: Raw discount from subscription:', {
-            rawDiscount,
-            typeOfDiscount: typeof rawDiscount,
-            isString: typeof rawDiscount === 'string',
-            startsWithDi: typeof rawDiscount === 'string' && rawDiscount.startsWith('di_')
+          console.log('[Webhook] Subscription discount analysis:', {
+            hasDiscount,
+            discount: subscription.discount,
+            discountType: typeof subscription.discount,
+            discountsArray: (subscription as any).discounts,
+            subscriptionId: subscription.id
           })
 
-          // If discount is a string ID, we need to retrieve the full discount object
-          let discount: Stripe.Discount | null = null
-          if (typeof rawDiscount === 'string') {
-            try {
-              discount = await this.stripe.discounts.retrieve(rawDiscount)
-              console.log('[Webhook] DEBUG: Retrieved full discount object:', {
-                discountId: discount.id,
-                couponId: discount.coupon.id
-              })
-            } catch (error) {
-              console.log('[Webhook] DEBUG: Failed to retrieve discount:', error)
-            }
-          } else if (rawDiscount && typeof rawDiscount === 'object') {
-            discount = rawDiscount
-            console.log('[Webhook] DEBUG: Using expanded discount object:', {
-              discountId: discount.id,
-              couponId: discount.coupon?.id
-            })
-          }
+          if (subscription.discount) {
+            let discount: any = subscription.discount
 
-          if (discount && discount.coupon && discount.coupon.id) {
-            const coupon = discount.coupon as Stripe.Coupon
-            // Use subscription coupon ID if not already found
-            if (!couponId) {
-              couponId = coupon.id  // This should be the coupon ID like 'E2E_TEST_20_w0'
-            }
-            // Always update metadata to have the correct coupon info
-            discountMetadata = {
-              coupon_id: coupon.id,  // This should be the coupon ID like 'E2E_TEST_20_w0'
-              duration: coupon.duration,
-              duration_in_months: coupon.duration_in_months,
-              percent_off: coupon.percent_off,
-              amount_off: coupon.amount_off
-            }
-
-            // Calculate recurring discount from subscription items
-            if (subscription.items.data.length > 0) {
-              const baseItem = subscription.items.data[0]
-              const baseAmount = baseItem.price.unit_amount || 0
-
-              if (coupon.percent_off) {
-                recurringDiscount = Math.round(baseAmount * (coupon.percent_off / 100))
-              } else if (coupon.amount_off) {
-                recurringDiscount = coupon.amount_off
+            // If discount is a string ID, retrieve the full discount object
+            if (typeof discount === 'string') {
+              console.log('[Webhook] Retrieving discount object:', discount)
+              try {
+                discount = await this.stripe.discounts.retrieve(discount)
+                console.log('[Webhook] Retrieved discount with coupon:', discount.coupon?.id)
+              } catch (error) {
+                console.log('[Webhook] Failed to retrieve discount:', error)
+                discount = null
               }
             }
+
+            // Extract coupon code from discount object
+            if (discount && discount.coupon && discount.coupon.id) {
+              couponCode = discount.coupon.id
+              console.log('[Webhook] SUCCESS: Found subscription coupon code:', couponCode)
+            } else {
+              console.log('[Webhook] No valid coupon found in subscription discount')
+            }
+          } else {
+            console.log('[Webhook] No subscription discount found')
           }
         } catch (error) {
-          debugLog('Failed to retrieve subscription for discount info:', error)
+          debugLog('Failed to retrieve subscription discount:', error)
         }
       }
 
-      // Ensure we're using coupon ID not discount ID
-      let finalCouponId = couponId || discountMetadata.coupon_id || null
-
-      // Safety check: discount IDs start with 'di_', coupon codes don't
-      if (finalCouponId && finalCouponId.startsWith('di_')) {
-        console.log('[Webhook] ERROR: Got discount ID instead of coupon code:', finalCouponId)
-        finalCouponId = null // Don't save discount IDs
-      }
-
-      console.log('[Webhook] Final coupon values:', {
-        couponId,
-        metadataCouponId: discountMetadata.coupon_id,
-        finalValue: finalCouponId,
+      // Use the simplified coupon code
+      console.log('[Webhook] Final values being saved:', {
+        couponCode,
         discountAmount,
-        wasDiscountId: (couponId || discountMetadata.coupon_id || '').startsWith('di_')
+        eventId: event.id
       })
+
+      // Save debug info to metadata so we can see it in the database
+      const debugInfo = {
+        customerId,
+        subscriptionId,
+        hasCustomer: !!customerId,
+        hasSubscription: !!subscriptionId,
+        couponCodeFound: couponCode,
+        discountAmountFound: discountAmount,
+        eventType: event.type,
+        eventId: event.id
+      }
 
       // Update submission with payment details including discount information
       // Only update Stripe IDs if not already set (don't overwrite values from CheckoutSessionService)
@@ -478,7 +454,7 @@ export class WebhookService {
         status: 'paid',
         payment_amount: invoice.total,
         currency: invoice.currency.toUpperCase(),
-        discount_code: finalCouponId,
+        discount_code: couponCode,
         discount_amount: discountAmount || null,
         payment_completed_at: invoice.status_transitions?.paid_at
           ? new Date(invoice.status_transitions.paid_at * 1000).toISOString()
@@ -490,8 +466,8 @@ export class WebhookService {
           schedule_id: scheduleId,
           subtotal: invoice.subtotal,
           discount_amount: discountAmount,
-          recurring_discount: recurringDiscount,
-          discount_info: discountMetadata
+          coupon_code: couponCode,
+          debug_info: debugInfo
         },
         updated_at: new Date().toISOString()
       }
@@ -745,7 +721,7 @@ export class WebhookService {
         status: 'paid',
         payment_amount: amount,
         currency: currency.toUpperCase(),
-        discount_code: couponId || discountMetadata.coupon_id || null,
+        discount_code: null, // TODO: Implement simplified coupon extraction like handleInvoicePaid
         discount_amount: computedDiscountAmount || null,
         payment_completed_at: new Date().toISOString(),
         payment_metadata: {
