@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "lint:css": "stylelint '**/*.css' --config context/design-system/stylelint.config.cjs",
     "test": "jest src/__tests__/components src/__tests__/unit",
     "test:unit": "jest src/__tests__/components src/__tests__/unit",
