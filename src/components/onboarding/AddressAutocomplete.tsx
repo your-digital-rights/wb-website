@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect, useMemo, useCallback } from 'react'
+import { useState, useRef, useEffect, useMemo, useCallback, useId } from 'react'
 import { useTranslations } from 'next-intl'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MapPin, Loader2, AlertCircle, CheckCircle2, X } from 'lucide-react'
@@ -66,14 +66,15 @@ export function AddressAutocomplete({
   onAddressChange,
 }: AddressAutocompleteProps) {
   const t = useTranslations('forms.address')
-  
+  const generatedId = useId()
+
   const [query, setQuery] = useState(value?.formatted_address || '')
   const [suggestions, setSuggestions] = useState<PlaceSuggestion[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const [localError, setLocalError] = useState<string>('')
-  
+
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const autocompleteService = useRef<any>(null)
@@ -81,7 +82,7 @@ export function AddressAutocomplete({
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  const inputId = `address-${Math.random().toString(36).substr(2, 9)}`
+  const inputId = `address-${generatedId}`
   const hasError = !!(error || localError)
   const hasSuccess = !!success && !hasError
 

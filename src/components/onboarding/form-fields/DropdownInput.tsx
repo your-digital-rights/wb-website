@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, useState, useMemo } from 'react'
+import { forwardRef, useState, useMemo, useId } from 'react'
 import { useTranslations } from 'next-intl'
 import { motion } from 'framer-motion'
 import {
@@ -87,8 +87,9 @@ export const DropdownInput = forwardRef<HTMLButtonElement, DropdownInputProps>(
     const t = useTranslations('forms.dropdown')
     const [open, setOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
-    
-    const inputId = `dropdown-${Math.random().toString(36).substr(2, 9)}`
+    const generatedId = useId()
+
+    const inputId = `dropdown-${generatedId}`
     const hasError = !!error
     const hasSuccess = !!success && !hasError
     

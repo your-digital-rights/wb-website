@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, useState } from 'react'
+import { forwardRef, useState, useId } from 'react'
 import { useFormTranslation } from '@/hooks/useTranslationWithFallback'
 import { motion } from 'framer-motion'
 import { Eye, EyeOff, AlertCircle, CheckCircle2 } from 'lucide-react'
@@ -44,8 +44,9 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     const { t } = useFormTranslation()
     const [showPassword, setShowPassword] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
-    
-    const inputType = showPasswordToggle 
+    const generatedId = useId()
+
+    const inputType = showPasswordToggle
       ? (showPassword ? 'text' : 'password')
       : propType
 
@@ -53,7 +54,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     const hasSuccess = !!success && !hasError
     const showCharacterCount = typeof characterCount === 'number' && maxLength
 
-    const inputId = props.id || `input-${Math.random().toString(36).substr(2, 9)}`
+    const inputId = props.id || `input-${generatedId}`
 
     if (variant === 'floating') {
       return (

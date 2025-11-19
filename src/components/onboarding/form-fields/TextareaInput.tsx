@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, useState, useRef, useEffect } from 'react'
+import { forwardRef, useState, useRef, useEffect, useId } from 'react'
 import { useFormTranslation } from '@/hooks/useTranslationWithFallback'
 import { motion } from 'framer-motion'
 import { AlertCircle, CheckCircle2 } from 'lucide-react'
@@ -45,8 +45,9 @@ export const TextareaInput = forwardRef<HTMLTextAreaElement, TextareaInputProps>
     const [characterCount, setCharacterCount] = useState(0)
     const [isFocused, setIsFocused] = useState(false)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
-    
-    const inputId = props.id || `textarea-${Math.random().toString(36).substr(2, 9)}`
+    const generatedId = useId()
+
+    const inputId = props.id || `textarea-${generatedId}`
     const hasError = !!error
     const hasSuccess = !!success && !hasError
 
