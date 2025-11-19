@@ -101,12 +101,13 @@ export const DropdownInput = forwardRef<HTMLButtonElement, DropdownInputProps>(
         : Array.isArray(currentValue) ? currentValue : [currentValue].filter(Boolean)
     }, [value, defaultValue, multiple])
 
-    // Filter options based on search
+    // Filter options based on search - searches value (code), label (full name), and description
     const filteredOptions = useMemo(() => {
       if (!searchQuery) return options
-      
+
       const query = searchQuery.toLowerCase()
-      return options.filter(option => 
+      return options.filter(option =>
+        option.value.toLowerCase().includes(query) ||
         option.label.toLowerCase().includes(query) ||
         option.description?.toLowerCase().includes(query)
       )
@@ -286,7 +287,7 @@ export const DropdownInput = forwardRef<HTMLButtonElement, DropdownInputProps>(
           </PopoverTrigger>
           
           <PopoverContent className="w-[calc(100vw-2rem)] sm:w-full p-1" align="start">
-            <Command>
+            <Command shouldFilter={false}>
               {searchable && (
                 <CommandInput
                   placeholder={searchPlaceholder || t('search')}
