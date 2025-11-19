@@ -48,10 +48,13 @@ declare const messages: {
       "price": "€35 / month",
       "feature1": "Personalized branding",
       "feature2": "Delivered in 5 business days",
-      "feature3": "Multilingual: English and Italian included (more on request)",
+      "feature3": "Multilingual: English and Italian included",
+      "feature3Tooltip": "Additional languages can be added for an extra fee.",
       "feature4": "Search engine visibility",
       "feature5": "Adjustment package included",
-      "feature6": "Hosting included (10k visits per month)"
+      "feature5Tooltip": "Once your site is ready, you have one week to request changes. After that window, further updates are available for a fee.",
+      "feature6": "Hosting included",
+      "feature6Tooltip": "This package includes up to ten thousand monthly visits. Higher traffic limits can be added for an extra fee."
     },
     "custom": {
       "name": "Custom Made",
@@ -638,7 +641,7 @@ declare const messages: {
         "description": "Choose the visual style that best represents your brand",
         "intro": {
           "title": "Choose Your Design Style",
-          "description": "Select the design approach that best reflects your brand personality and appeals to your target audience. This will guide the overall visual direction of your website."
+          "description": "Choose the design style that reflects your brand and speaks to your audience. This sets the visual direction of your website but does not affect the sections shown or the written content."
         },
         "selection": {
           "title": "Design Style Selection",

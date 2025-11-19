@@ -45,10 +45,13 @@
       "price": "€35 / mese",
       "feature1": "Branding personalizzato",
       "feature2": "Consegnato in 5 giorni lavorativi",
-      "feature3": "Multilingue: inglese e italiano inclusi (altre lingue su richiesta)",
+      "feature3": "Multilingue: inglese e italiano inclusi",
+      "feature3Tooltip": "Lingue aggiuntive possono essere aggiunte a pagamento.",
       "feature4": "Visibilità sui motori di ricerca",
       "feature5": "Pacchetto di modifiche incluso",
-      "feature6": "Hosting incluso (10k visite al mese)"
+      "feature5Tooltip": "Una volta pronto il tuo sito, hai una settimana per richiedere modifiche. Dopo tale finestra, ulteriori aggiornamenti sono disponibili a pagamento.",
+      "feature6": "Hosting incluso",
+      "feature6Tooltip": "Questo pacchetto include fino a diecimila visite mensili. Limiti di traffico più elevati possono essere aggiunti a pagamento."
     },
     "custom": {
       "name": "Su Misura",
@@ -635,7 +638,7 @@
         "description": "Scegli lo stile visivo che meglio rappresenta il tuo brand",
         "intro": {
           "title": "Scegli il Tuo Stile di Design",
-          "description": "Seleziona l'approccio di design che meglio riflette la personalità del tuo brand e piace al tuo pubblico target. Questo guiderà la direzione visiva generale del tuo sito web."
+          "description": "Scegli lo stile di design che riflette il tuo brand e parla al tuo pubblico. Questo imposta la direzione visiva del tuo sito web ma non influisce sulle sezioni mostrate o sui contenuti scritti."
         },
         "selection": {
           "title": "Selezione Stile di Design",
