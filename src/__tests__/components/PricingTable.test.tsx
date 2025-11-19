@@ -6,6 +6,30 @@ jest.mock('next-intl', () => ({
   useTranslations: () => (key: string) => key
 }))
 
+// Mock the usePricing hook to avoid async state updates
+jest.mock('@/hooks/usePricing', () => ({
+  usePricing: () => ({
+    prices: {
+      basePackage: {
+        priceId: 'price_test',
+        amount: 3500,
+        currency: 'eur',
+        interval: 'month'
+      },
+      languageAddOn: {
+        priceId: 'price_addon_test',
+        amount: 7500,
+        currency: 'eur'
+      }
+    },
+    isLoading: false,
+    error: null,
+    basePackagePrice: '€35',
+    basePackagePricePerMonth: '€35 / month',
+    languageAddOnPrice: '€75'
+  })
+}))
+
 // Mock window.location
 const mockLocationAssign = jest.fn()
 Object.defineProperty(window, 'location', {
