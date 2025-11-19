@@ -128,15 +128,16 @@ test.describe('WhiteBoar Homepage', () => {
     await expect(contactLink).toHaveAttribute('href', '/contact');
   });
 
-  test('accessibility features work', async ({ page, isMobile }) => {
-    if (isMobile) {
+  test('accessibility features work', async ({ page, isMobile, browserName }) => {
+    // Skip keyboard navigation on mobile and webkit (webkit doesn't support Tab navigation in Playwright)
+    if (isMobile || browserName === 'webkit') {
       const firstButton = page.getByRole('button').first();
       await expect(firstButton).toBeVisible();
       return;
     }
 
     await page.keyboard.press('Tab');
-    
+
     const focusedElement = page.locator(':focus');
     await expect(focusedElement).toBeVisible();
     
