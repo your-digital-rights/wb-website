@@ -19,34 +19,60 @@
 import { test, expect, Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 
-// Helper: Ensure fresh onboarding state
-async function ensureFreshOnboardingState(page: Page) {
-  // Navigate first to establish a valid page context
-  await page.goto('/onboarding')
-
-  // Now clear storage
-  await page.evaluate(() => {
-    localStorage.clear()
-    sessionStorage.clear()
-  })
-}
-
-// Helper: Seed session through Step 10
+// Helper: Seed session through Step 10 and navigate to Step 11
 async function seedSessionThroughStep10(page: Page) {
-  // TODO: Implement fast-path session seeding through Step 10
-  // For now, navigate directly to Step 11 (will be replaced with proper seeding)
-  await page.goto('/onboarding/step/11')
+  const baseUrl = 'http://localhost:3783'
 
-  // Wait for the page to be fully loaded
+  // Create a session with steps 1-10 completed
+  const response = await fetch(`${baseUrl}/api/test/seed-session`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      locale: 'en',
+      currentStep: 11,
+      additionalLanguages: []
+    })
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to seed Step 11 session: ${response.statusText}`)
+  }
+
+  const data = await response.json()
+
+  if (!data.success) {
+    throw new Error(`Seed session failed: ${data.error || 'Unknown error'}`)
+  }
+
+  // Build Zustand store structure
+  const zustandStore = {
+    state: {
+      sessionId: data.sessionId,
+      currentStep: 11,
+      completedSteps: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      formData: data.formData,
+      sessionExpiresAt: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
+      isSessionExpired: false
+    },
+    version: 1
+  }
+
+  // Inject the store BEFORE any page loads (critical for hydration)
+  await page.addInitScript((store) => {
+    localStorage.setItem('wb-onboarding-store', store)
+  }, JSON.stringify(zustandStore))
+
+  // Navigate to Step 11
+  await page.goto('http://localhost:3783/onboarding/step/11')
   await page.waitForLoadState('networkidle')
 
-  // Wait for the step heading to appear (confirms React components mounted)
-  await expect(page.getByRole('heading', { name: 'Products & Services' })).toBeVisible()
+  // Wait for the step heading to appear (use exact match and level 1)
+  await expect(page.getByRole('heading', { name: 'Products & Services', level: 1 })).toBeVisible()
 }
 
 test.describe('Step 11: Enhanced Products & Services Entry', () => {
   test.beforeEach(async ({ page }) => {
-    await ensureFreshOnboardingState(page)
+    // Seed session directly without navigating to /onboarding first
     await seedSessionThroughStep10(page)
   })
 
@@ -64,11 +90,12 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       await expect(addButton).toBeEnabled()
 
       // Verify "Next" button enabled (not disabled for skipping)
-      const nextButton = page.getByRole('button', { name: 'Next' })
+      const nextButton = page.getByRole('button', { name: 'Next', exact: true }).first()
       await expect(nextButton).toBeEnabled()
 
       // Test skip flow: navigate to Step 12
       await nextButton.click()
+      await page.waitForURL(/\/step\/12/, { timeout: 10000 })
       await expect(page).toHaveURL(/\/step\/12/)
 
       // Navigate back to Step 11
@@ -77,7 +104,7 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
 
       // Verify products array empty in localStorage
       const products = await page.evaluate(() => {
-        const store = JSON.parse(localStorage.getItem('onboarding-store') || '{}')
+        const store = JSON.parse(localStorage.getItem('wb-onboarding-store') || '{}')
         return store.state?.formData?.products || []
       })
       expect(products).toEqual([])
