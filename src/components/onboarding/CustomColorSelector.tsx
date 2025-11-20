@@ -46,6 +46,23 @@ export function CustomColorSelector({
     onChange(updatedColors)
   }
 
+  // Validate and clean up color value when picker is closed
+  const closeColorPickerWithValidation = () => {
+    // Find the active color
+    const activeColor = currentColors.find(c => c.name === activeColorPicker)
+
+    if (activeColor && activeColor.value) {
+      const isValidHex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(activeColor.value)
+
+      // If invalid, clear the color
+      if (!isValidHex) {
+        handleClearColor(activeColorPicker!)
+      }
+    }
+
+    setActiveColorPicker(null)
+  }
+
   const handleClearColor = (colorName: string) => {
     const updatedColors = currentColors.map((color) =>
       color.name === colorName ? { ...color, value: undefined } : color
@@ -56,10 +73,6 @@ export function CustomColorSelector({
 
   const openColorPicker = (colorName: string) => {
     setActiveColorPicker(colorName)
-  }
-
-  const closeColorPicker = () => {
-    setActiveColorPicker(null)
   }
 
   return (
@@ -83,7 +96,7 @@ export function CustomColorSelector({
             const hasValue = !!color.value
 
             return (
-              <div key={color.name} className="space-y-2">
+              <div key={color.name} className="space-y-2 relative">
                 <Label className="text-sm font-medium capitalize">
                   {t(`labels.${color.name}`)}
                 </Label>
@@ -157,7 +170,7 @@ export function CustomColorSelector({
                             type="button"
                             variant="ghost"
                             size="sm"
-                            onClick={closeColorPicker}
+                            onClick={closeColorPickerWithValidation}
                             className="h-6 w-6 p-0"
                           >
                             <X className="w-4 h-4" />
@@ -197,7 +210,7 @@ export function CustomColorSelector({
                           <Button
                             type="button"
                             size="sm"
-                            onClick={closeColorPicker}
+                            onClick={closeColorPickerWithValidation}
                             className="flex-1"
                           >
                             {t('done')}

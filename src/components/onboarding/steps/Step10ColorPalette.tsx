@@ -45,7 +45,9 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
     ]
   })
 
-  // Sync custom colors with form data on mount
+  // Sync custom colors with form data on mount only
+  // We intentionally use an empty dependency array to restore state only once
+  // Adding currentColorPalette would cause unwanted re-initialization on every form update
   useEffect(() => {
     if (currentColorPalette && currentColorPalette.length > 0) {
       setCustomColors([
@@ -55,7 +57,8 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
         { name: 'background', value: currentColorPalette[3] }
       ])
     }
-  }, []) // Run only on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Run only on mount to restore from localStorage
 
   // Filter palettes based on search query
   const filteredPalettes = useMemo(() => {
