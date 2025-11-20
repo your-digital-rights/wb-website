@@ -157,32 +157,45 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
         </div>
       </motion.div>
 
-      {/* Custom Color Selector - Always Visible */}
+      {/* Color Palette Selection with Custom Colors */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <CustomColorSelector
-          colors={customColors}
-          onChange={handleCustomColorsChange}
-        />
-      </motion.div>
-
-      {/* Color Palette Selection */}
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-      >
         <Card>
           <CardContent className="pt-6 space-y-6">
+            {/* Card Title */}
             <div className="flex items-center gap-2">
               <Palette className="w-5 h-5 text-primary" />
               <h2 className="text-lg font-semibold text-foreground">{t('selection.title')}</h2>
               <Badge variant="secondary" className="ml-auto">
                 {t('selection.optional')}
               </Badge>
+            </div>
+
+            {/* Custom Color Selector - Inside the same card */}
+            <div className="space-y-4 border-2 border-dashed rounded-lg p-4">
+              <div className="flex items-center gap-2">
+                <Palette className="w-5 h-5 text-primary" />
+                <h3 className="text-lg font-semibold text-foreground">
+                  {t('customColors.title')}
+                </h3>
+              </div>
+
+              <p className="text-sm text-muted-foreground">
+                {t('customColors.description')}
+              </p>
+
+              <CustomColorSelector
+                colors={customColors}
+                onChange={handleCustomColorsChange}
+                renderWithoutCard
+              />
+
+              <p className="text-xs text-muted-foreground italic">
+                {t('customColors.hint')}
+              </p>
             </div>
 
             {/* Search Bar */}

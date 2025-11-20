@@ -19,12 +19,14 @@ interface CustomColorSelectorProps {
   colors: CustomColor[]
   onChange: (colors: CustomColor[]) => void
   className?: string
+  renderWithoutCard?: boolean
 }
 
 export function CustomColorSelector({
   colors,
   onChange,
-  className
+  className,
+  renderWithoutCard = false
 }: CustomColorSelectorProps) {
   const t = useTranslations('onboarding.steps.10.customColors')
   const [activeColorPicker, setActiveColorPicker] = useState<string | null>(null)
@@ -75,21 +77,25 @@ export function CustomColorSelector({
     setActiveColorPicker(colorName)
   }
 
-  return (
-    <Card className={cn("border-2 border-dashed", className)}>
-      <CardContent className="pt-6 space-y-4">
-        <div className="flex items-center gap-2">
-          <Palette className="w-5 h-5 text-primary" />
-          <h3 className="text-lg font-semibold text-foreground">
-            {t('title')}
-          </h3>
-        </div>
+  const content = (
+    <>
+      {!renderWithoutCard && (
+        <>
+          <div className="flex items-center gap-2">
+            <Palette className="w-5 h-5 text-primary" />
+            <h3 className="text-lg font-semibold text-foreground">
+              {t('title')}
+            </h3>
+          </div>
 
-        <p className="text-sm text-muted-foreground">
-          {t('description')}
-        </p>
+          <p className="text-sm text-muted-foreground">
+            {t('description')}
+          </p>
+        </>
+      )}
 
-        {/* Color Selectors Grid */}
+      {/* Color Selectors Grid */}
+      <div className={cn("space-y-4", renderWithoutCard ? "" : "")}>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {currentColors.map((color) => {
             const isActive = activeColorPicker === color.name
@@ -225,10 +231,23 @@ export function CustomColorSelector({
           })}
         </div>
 
-        {/* Helper Text */}
-        <p className="text-xs text-muted-foreground italic">
-          {t('hint')}
-        </p>
+        {!renderWithoutCard && (
+          <p className="text-xs text-muted-foreground italic">
+            {t('hint')}
+          </p>
+        )}
+      </div>
+    </>
+  )
+
+  if (renderWithoutCard) {
+    return <div className={className}>{content}</div>
+  }
+
+  return (
+    <Card className={cn("border-2 border-dashed", className)}>
+      <CardContent className="pt-6 space-y-4">
+        {content}
       </CardContent>
     </Card>
   )
