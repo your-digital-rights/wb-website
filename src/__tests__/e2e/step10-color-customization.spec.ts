@@ -96,7 +96,8 @@ test.describe('Step 10 - Color Palette Customization', () => {
       // ========================================
       console.log('Testing: Palette selection is optional...')
 
-      await expect(page.locator('text=Optional')).toBeVisible()
+      // Use more specific selector to target the Badge component (not the hint text)
+      await expect(page.locator('[data-slot="badge"]').filter({ hasText: 'Optional' })).toBeVisible()
 
       console.log('✓ Palette selection marked as optional')
 
