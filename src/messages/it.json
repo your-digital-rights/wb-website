@@ -780,70 +780,8 @@
         }
       },
       "11": {
-        "title": "Struttura del Sito Web",
-        "description": "Definisci lo scopo del tuo sito web e organizza efficacemente i suoi contenuti",
-        "intro": {
-          "title": "Pianifica la Struttura del Tuo Sito Web",
-          "description": "Definisci i tuoi obiettivi principali e scegli le sezioni che ti aiuteranno a raggiungerli. Un sito web ben strutturato guida i visitatori in modo fluido verso le tue azioni desiderate."
-        },
-        "goal": {
-          "title": "Obiettivo Primario del Sito Web",
-          "required": "Richiesto",
-          "selection": {
-            "label": "Qual è il tuo obiettivo principale per questo sito web?",
-            "placeholder": "Seleziona il tuo obiettivo primario",
-            "hint": "Questo influenzerà quali sezioni raccomandiamo e come strutturiamo i tuoi contenuti"
-          }
-        },
-        "sections": {
-          "title": "Sezioni del Sito Web",
-          "required": "Richiesto",
-          "alwaysIncluded": "Sempre incluso",
-          "recommended": {
-            "title": "Sezioni raccomandate per",
-            "badge": "Raccomandato"
-          }
-        },
-        "offerings": {
-          "title": "Prodotti e Servizi",
-          "optional": "Facoltativo",
-          "examples": {
-            "title": "Esempi di ciò che potresti offrire:",
-            "consulting": "Servizi di consulenza aziendale",
-            "design": "Web design e branding",
-            "development": "Sviluppo software",
-            "photography": "Fotografia professionale",
-            "marketing": "Servizi di marketing digitale",
-            "training": "Formazione e workshop"
-          },
-          "list": {
-            "label": "I Tuoi Prodotti/Servizi",
-            "placeholder": "Inserisci un prodotto o servizio",
-            "addButton": "Aggiungi Elemento",
-            "hint": "Elenca i tuoi principali prodotti o servizi - questo ci aiuta a creare contenuti mirati per ogni offerta"
-          }
-        },
-        "insights": {
-          "title": "Struttura ed Esperienza Utente",
-          "navigation": {
-            "title": "Design della Navigazione",
-            "clear": "Struttura di menu chiara e intuitiva",
-            "logical": "Gerarchia delle informazioni logica",
-            "mobile": "Modelli di navigazione mobile-friendly"
-          },
-          "conversion": {
-            "title": "Ottimizzazione delle Conversioni",
-            "cta": "Posizionamento strategico delle call-to-action",
-            "trust": "Segnali di fiducia e posizionamento delle prove sociali",
-            "contact": "Accesso facile alle informazioni di contatto"
-          }
-        },
-        "tips": {
-          "title": "Suggerimenti per la struttura:",
-          "essential": "Includi sezioni essenziali",
-          "goal": "Allinea con il tuo obiettivo principale",
-          "simple": "Mantieni la navigazione semplice"
-        }
+        "title": "Prodotti e Servizi",
+        "description": "Mostra cosa offri con foto e dettagli"
       },
       "12": {
         "title": "Risorse Aziendali",
