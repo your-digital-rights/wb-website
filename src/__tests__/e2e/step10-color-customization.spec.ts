@@ -45,17 +45,17 @@ test.describe('Step 10 - Color Palette Customization', () => {
       console.log('✓ Navigated to Step 10')
 
       // ========================================
-      // TEST 1: Always-visible custom color selector
+      // TEST 1: Always-visible custom color selector at bottom
       // ========================================
-      console.log('Testing: Always-visible custom color selector...')
+      console.log('Testing: Custom color selector at bottom of page...')
 
-      await expect(page.locator('text=Customize Your Brand Colors')).toBeVisible({ timeout: 10000 })
+      await expect(page.locator('text=Advanced: Custom Colors')).toBeVisible({ timeout: 10000 })
       await expect(page.locator('text=Primary').first()).toBeVisible()
       await expect(page.locator('text=Secondary').first()).toBeVisible()
       await expect(page.locator('text=Accent').first()).toBeVisible()
       await expect(page.locator('text=Background').first()).toBeVisible()
 
-      console.log('✓ Custom color selector is always visible with all 4 labels')
+      console.log('✓ Custom color selector visible at bottom with all 4 labels')
 
       // ========================================
       // TEST 2: Empty state for color selectors

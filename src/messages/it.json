@@ -718,8 +718,8 @@
           "description": "I colori giocano un ruolo cruciale nella percezione del tuo brand da parte dei clienti. Scegli una palette che rifletta la personalità della tua attività e attragga il tuo pubblico target."
         },
         "customColors": {
-          "title": "Personalizza i Colori del Tuo Brand",
-          "description": "Seleziona o personalizza i quattro colori principali per il tuo brand. Puoi scegliere una palette predefinita qui sotto o creare la tua combinazione unica.",
+          "title": "Avanzato: Colori Personalizzati",
+          "description": "Perfeziona i colori del tuo brand selezionando prima una palette qui sopra, poi modifica i singoli colori qui se necessario. La maggior parte degli utenti non avrà bisogno di questa sezione.",
           "labels": {
             "primary": "Primario",
             "secondary": "Secondario",
@@ -729,7 +729,7 @@
           "empty": "Seleziona Colore",
           "clear": "Cancella",
           "done": "Fatto",
-          "hint": "Tutti i colori sono opzionali. Seleziona una palette qui sotto per popolare automaticamente, oppure clicca su ogni casella colore per personalizzare individualmente."
+          "hint": "Opzionale: Scegli una palette qui sopra per iniziare, poi personalizza i singoli colori qui. Clicca su una casella colore per scegliere visivamente, oppure inserisci un codice esadecimale."
         },
         "selection": {
           "title": "Scegli la Tua Palette di Colori",

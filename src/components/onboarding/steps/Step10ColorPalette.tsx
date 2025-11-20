@@ -174,30 +174,6 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
               </Badge>
             </div>
 
-            {/* Custom Color Selector - Inside the same card */}
-            <div className="space-y-4 border-2 border-dashed rounded-lg p-4">
-              <div className="flex items-center gap-2">
-                <Palette className="w-5 h-5 text-primary" />
-                <h3 className="text-lg font-semibold text-foreground">
-                  {t('customColors.title')}
-                </h3>
-              </div>
-
-              <p className="text-sm text-muted-foreground">
-                {t('customColors.description')}
-              </p>
-
-              <CustomColorSelector
-                colors={customColors}
-                onChange={handleCustomColorsChange}
-                renderWithoutCard
-              />
-
-              <p className="text-xs text-muted-foreground italic">
-                {t('customColors.hint')}
-              </p>
-            </div>
-
             {/* Search Bar */}
             <div className="space-y-2">
               <div className="relative">
@@ -243,6 +219,30 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
               showCategories={false}
               showPreview
             />
+
+            {/* Custom Color Selector - At the bottom for advanced users */}
+            <div className="space-y-4 border-2 border-dashed rounded-lg p-4 mt-6">
+              <div className="flex items-center gap-2">
+                <Palette className="w-5 h-5 text-primary" />
+                <h3 className="text-lg font-semibold text-foreground">
+                  {t('customColors.title')}
+                </h3>
+              </div>
+
+              <p className="text-sm text-muted-foreground">
+                {t('customColors.description')}
+              </p>
+
+              <CustomColorSelector
+                colors={customColors}
+                onChange={handleCustomColorsChange}
+                renderWithoutCard
+              />
+
+              <p className="text-xs text-muted-foreground italic">
+                {t('customColors.hint')}
+              </p>
+            </div>
           </CardContent>
         </Card>
       </motion.div>
