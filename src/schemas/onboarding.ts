@@ -185,8 +185,19 @@ export const step9Schema = z.object({
 // =============================================================================
 // STEP 10: COLOR PALETTE
 // =============================================================================
+// Helper: Validate hex color format (#RRGGBB or #RGB)
+const hexColorSchema = z.string().regex(
+  /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/,
+  'Invalid hex color format (expected #RRGGBB or #RGB)'
+)
+
 export const step10Schema = z.object({
-  colorPalette: z.string('Please select a color palette').min(1, 'Please select a color palette')
+  // Color palette is now an optional array of hex color values
+  // Order: [primary, secondary, accent, background, ...additional]
+  colorPalette: z.array(hexColorSchema)
+    .max(10, 'Maximum 10 colors allowed')
+    .optional()
+    .default([])
 })
 
 // =============================================================================

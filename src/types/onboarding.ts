@@ -64,8 +64,8 @@ export interface OnboardingFormData {
   // Step 9: Image Style Selection
   imageStyle: ImageStyleOption
   
-  // Step 10: Color Palette
-  colorPalette: ColorPaletteOption
+  // Step 10: Color Palette - Array of hex color values [primary, secondary, accent, background, ...additional]
+  colorPalette?: string[] // Optional array of hex color values
   
   // Step 11: Website Structure
   websiteSections: WebsiteSection[]
@@ -109,6 +109,8 @@ export type ImageStyleOption =
   | 'collage'
   | '3d'
 
+// @deprecated - No longer used. Keeping for backward compatibility.
+// Color palette is now stored as array of hex values in OnboardingFormData.colorPalette
 export type ColorPaletteOption =
   | 'palette-1'
   | 'palette-2'

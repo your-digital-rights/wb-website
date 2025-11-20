@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
-import { Palette, Sparkles, Eye, Search, X } from 'lucide-react'
+import { Palette, Eye, Search, X } from 'lucide-react'
 
 import { ColorPalette } from '@/components/onboarding/ColorPalette'
+import { CustomColorSelector } from '@/components/onboarding/CustomColorSelector'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
@@ -15,14 +16,46 @@ import { StepComponentProps } from './index'
 import { getColorPalettes } from '@/lib/color-palettes'
 import colorPalettesData from '@/data/color_palettes.json'
 
+interface CustomColor {
+  name: 'primary' | 'secondary' | 'accent' | 'background'
+  value?: string
+}
+
 export function Step10ColorPalette({ form, errors, isLoading }: StepComponentProps) {
   const t = useTranslations('onboarding.steps.10')
   const locale = useLocale()
-  const { control } = form
+  const { control, setValue, watch } = form
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectedPaletteId, setSelectedPaletteId] = useState<string>('')
+
+  // Watch the current color palette value (array of hex colors)
+  const currentColorPalette = watch('colorPalette') as string[] | undefined
 
   // Load color palettes based on current locale
   const allColorPalettes = getColorPalettes(locale)
+
+  // Initialize custom colors from form data or empty
+  const [customColors, setCustomColors] = useState<CustomColor[]>(() => {
+    const colors = currentColorPalette || []
+    return [
+      { name: 'primary', value: colors[0] },
+      { name: 'secondary', value: colors[1] },
+      { name: 'accent', value: colors[2] },
+      { name: 'background', value: colors[3] }
+    ]
+  })
+
+  // Sync custom colors with form data on mount
+  useEffect(() => {
+    if (currentColorPalette && currentColorPalette.length > 0) {
+      setCustomColors([
+        { name: 'primary', value: currentColorPalette[0] },
+        { name: 'secondary', value: currentColorPalette[1] },
+        { name: 'accent', value: currentColorPalette[2] },
+        { name: 'background', value: currentColorPalette[3] }
+      ])
+    }
+  }, []) // Run only on mount
 
   // Filter palettes based on search query
   const filteredPalettes = useMemo(() => {
@@ -31,7 +64,6 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
     }
 
     const query = searchQuery.toLowerCase().trim()
-    const isItalian = locale === 'it'
 
     return allColorPalettes.filter((palette, index) => {
       const rawPalette = colorPalettesData[index]
@@ -60,7 +92,47 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
     })
   }, [searchQuery, allColorPalettes, locale])
 
-  const colorPaletteOptions = filteredPalettes
+  // Handle palette selection - populates custom colors
+  const handlePaletteSelection = (paletteId: string) => {
+    setSelectedPaletteId(paletteId)
+
+    // Find the selected palette
+    const selectedPalette = allColorPalettes.find(p => p.id === paletteId)
+
+    if (selectedPalette && selectedPalette.preview) {
+      // Populate custom colors with palette preview colors
+      const newCustomColors: CustomColor[] = [
+        { name: 'primary', value: selectedPalette.preview.primary },
+        { name: 'secondary', value: selectedPalette.preview.secondary },
+        { name: 'accent', value: selectedPalette.preview.accent },
+        { name: 'background', value: selectedPalette.preview.background }
+      ]
+      setCustomColors(newCustomColors)
+
+      // Update form with color values array
+      const colorValues = [
+        selectedPalette.preview.primary,
+        selectedPalette.preview.secondary,
+        selectedPalette.preview.accent,
+        selectedPalette.preview.background,
+        // Include any additional colors from the palette
+        ...selectedPalette.colors.slice(4).map(c => c.hex)
+      ]
+      setValue('colorPalette', colorValues, { shouldValidate: true })
+    }
+  }
+
+  // Handle custom color changes
+  const handleCustomColorsChange = (newColors: CustomColor[]) => {
+    setCustomColors(newColors)
+
+    // Convert custom colors to array of hex values (filter out empty values)
+    const colorValues = newColors
+      .map(c => c.value)
+      .filter((v): v is string => !!v)
+
+    setValue('colorPalette', colorValues, { shouldValidate: true })
+  }
 
   return (
     <div className="space-y-8">
@@ -73,7 +145,7 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
         <div className="w-16 h-16 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
           <Palette className="w-8 h-8 text-primary" />
         </div>
-        
+
         <div className="space-y-2">
           <h2 className="text-xl font-semibold text-foreground">{t('intro.title')}</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-sm">
@@ -82,11 +154,23 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
         </div>
       </motion.div>
 
-      {/* Color Palette Selection */}
+      {/* Custom Color Selector - Always Visible */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
+      >
+        <CustomColorSelector
+          colors={customColors}
+          onChange={handleCustomColorsChange}
+        />
+      </motion.div>
+
+      {/* Color Palette Selection */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
       >
         <Card>
           <CardContent className="pt-6 space-y-6">
@@ -94,7 +178,7 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
               <Palette className="w-5 h-5 text-primary" />
               <h2 className="text-lg font-semibold text-foreground">{t('selection.title')}</h2>
               <Badge variant="secondary" className="ml-auto">
-                {t('selection.required')}
+                {t('selection.optional')}
               </Badge>
             </div>
 
@@ -132,22 +216,16 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
               )}
             </div>
 
-            <Controller
-              name="colorPalette"
-              control={control}
-              render={({ field }) => (
-                <ColorPalette
-                  label=""
-                  options={colorPaletteOptions}
-                  value={field.value}
-                  onSelectionChange={field.onChange}
-                  error={(errors as any).colorPalette?.message}
-                  showNames
-                  showDescriptions
-                  showCategories={false}
-                  showPreview
-                />
-              )}
+            <ColorPalette
+              label=""
+              options={filteredPalettes}
+              value={selectedPaletteId}
+              onSelectionChange={handlePaletteSelection}
+              error={(errors as any).colorPalette?.message}
+              showNames
+              showDescriptions
+              showCategories={false}
+              showPreview
             />
           </CardContent>
         </Card>
@@ -155,9 +233,9 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
 
       {/* Color Psychology */}
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
+        transition={{ delay: 0.6 }}
       >
         <Card className="bg-gradient-to-r from-violet-50 to-purple-50 border-violet-200">
           <CardContent className="pt-6 space-y-4">
@@ -165,7 +243,7 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
               <Eye className="w-5 h-5 text-violet-600" />
               <h4 className="font-semibold text-violet-700">{t('psychology.title')}</h4>
             </div>
-            
+
             <div className="grid md:grid-cols-2 gap-6 text-sm">
               <div className="space-y-3">
                 <h5 className="font-medium text-violet-700">{t('psychology.emotional.title')}</h5>
@@ -188,7 +266,7 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
                   </li>
                 </ul>
               </div>
-              
+
               <div className="space-y-3">
                 <h5 className="font-medium text-violet-700">{t('psychology.business.title')}</h5>
                 <ul className="space-y-1 text-violet-600">
@@ -215,84 +293,6 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
         </Card>
       </motion.div>
 
-      {/* Industry Color Trends */}
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-      >
-        <Card className="bg-muted/50 border-dashed">
-          <CardContent className="pt-6 space-y-4">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-muted-foreground" />
-              <h4 className="font-medium text-sm text-foreground">{t('trends.title')}</h4>
-            </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs">
-              <div className="space-y-2">
-                <h6 className="font-medium text-muted-foreground">{t('trends.finance.title')}</h6>
-                <div className="flex gap-1">
-                  <div className="w-4 h-4 rounded bg-blue-600"></div>
-                  <div className="w-4 h-4 rounded bg-green-600"></div>
-                  <div className="w-4 h-4 rounded bg-gray-600"></div>
-                </div>
-                <p className="text-muted-foreground">{t('trends.finance.description')}</p>
-              </div>
-              
-              <div className="space-y-2">
-                <h6 className="font-medium text-muted-foreground">{t('trends.health.title')}</h6>
-                <div className="flex gap-1">
-                  <div className="w-4 h-4 rounded bg-green-500"></div>
-                  <div className="w-4 h-4 rounded bg-blue-400"></div>
-                  <div className="w-4 h-4 rounded bg-teal-500"></div>
-                </div>
-                <p className="text-muted-foreground">{t('trends.health.description')}</p>
-              </div>
-              
-              <div className="space-y-2">
-                <h6 className="font-medium text-muted-foreground">{t('trends.food.title')}</h6>
-                <div className="flex gap-1">
-                  <div className="w-4 h-4 rounded bg-orange-500"></div>
-                  <div className="w-4 h-4 rounded bg-red-500"></div>
-                  <div className="w-4 h-4 rounded bg-yellow-500"></div>
-                </div>
-                <p className="text-muted-foreground">{t('trends.food.description')}</p>
-              </div>
-              
-              <div className="space-y-2">
-                <h6 className="font-medium text-muted-foreground">{t('trends.tech.title')}</h6>
-                <div className="flex gap-1">
-                  <div className="w-4 h-4 rounded bg-purple-600"></div>
-                  <div className="w-4 h-4 rounded bg-blue-600"></div>
-                  <div className="w-4 h-4 rounded bg-gray-800"></div>
-                </div>
-                <p className="text-muted-foreground">{t('trends.tech.description')}</p>
-              </div>
-              
-              <div className="space-y-2">
-                <h6 className="font-medium text-muted-foreground">{t('trends.fashion.title')}</h6>
-                <div className="flex gap-1">
-                  <div className="w-4 h-4 rounded bg-pink-500"></div>
-                  <div className="w-4 h-4 rounded bg-black"></div>
-                  <div className="w-4 h-4 rounded bg-purple-400"></div>
-                </div>
-                <p className="text-muted-foreground">{t('trends.fashion.description')}</p>
-              </div>
-              
-              <div className="space-y-2">
-                <h6 className="font-medium text-muted-foreground">{t('trends.education.title')}</h6>
-                <div className="flex gap-1">
-                  <div className="w-4 h-4 rounded bg-blue-500"></div>
-                  <div className="w-4 h-4 rounded bg-green-500"></div>
-                  <div className="w-4 h-4 rounded bg-orange-400"></div>
-                </div>
-                <p className="text-muted-foreground">{t('trends.education.description')}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
       {/* Color Accessibility Note */}
       <motion.div
         initial={{ opacity: 0, y: 60 }}
@@ -305,11 +305,11 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
               <Eye className="w-4 h-4 text-amber-600" />
               <h4 className="font-medium text-amber-700">{t('accessibility.title')}</h4>
             </div>
-            
+
             <p className="text-sm text-amber-600">
               {t('accessibility.description')}
             </p>
-            
+
             <ul className="text-xs text-amber-600 space-y-1">
               <li className="flex items-start gap-2">
                 <div className="w-1 h-1 rounded-full bg-amber-600 mt-2 flex-shrink-0" />

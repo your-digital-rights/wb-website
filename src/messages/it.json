@@ -717,9 +717,24 @@
           "title": "Selezione Palette di Colori",
           "description": "I colori giocano un ruolo cruciale nella percezione del tuo brand da parte dei clienti. Scegli una palette che rifletta la personalità della tua attività e attragga il tuo pubblico target."
         },
+        "customColors": {
+          "title": "Personalizza i Colori del Tuo Brand",
+          "description": "Seleziona o personalizza i quattro colori principali per il tuo brand. Puoi scegliere una palette predefinita qui sotto o creare la tua combinazione unica.",
+          "labels": {
+            "primary": "Primario",
+            "secondary": "Secondario",
+            "accent": "Accento",
+            "background": "Sfondo"
+          },
+          "empty": "Seleziona Colore",
+          "clear": "Cancella",
+          "done": "Fatto",
+          "hint": "Tutti i colori sono opzionali. Seleziona una palette qui sotto per popolare automaticamente, oppure clicca su ogni casella colore per personalizzare individualmente."
+        },
         "selection": {
           "title": "Scegli la Tua Palette di Colori",
-          "required": "Richiesto"
+          "required": "Richiesto",
+          "optional": "Opzionale"
         },
         "psychology": {
           "title": "Psicologia dei Colori",
@@ -736,33 +751,6 @@
             "branding": "Colori coerenti migliorano il riconoscimento del brand dell'80%",
             "accessibility": "Il contrasto appropriato garantisce accessibilità per tutti gli utenti",
             "recognition": "Colori distintivi rendono il tuo brand memorabile"
-          }
-        },
-        "trends": {
-          "title": "Tendenze Colori per Settore",
-          "finance": {
-            "title": "Finanza e Banking",
-            "description": "Blu, verdi e grigi per fiducia e stabilità"
-          },
-          "health": {
-            "title": "Salute e Benessere",
-            "description": "Verdi, blu e azzurri per guarigione e crescita"
-          },
-          "food": {
-            "title": "Cibo e Ristorazione",
-            "description": "Arancioni, rossi e gialli caldi per stimolare l'appetito"
-          },
-          "tech": {
-            "title": "Tecnologia",
-            "description": "Viola, blu e toni scuri per innovazione"
-          },
-          "fashion": {
-            "title": "Moda e Bellezza",
-            "description": "Rosa audaci, neri e viola per stile"
-          },
-          "education": {
-            "title": "Educazione",
-            "description": "Blu, verdi e arancioni per apprendimento e crescita"
           }
         },
         "accessibility": {
