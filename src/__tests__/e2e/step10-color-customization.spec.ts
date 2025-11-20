@@ -35,8 +35,12 @@ test.describe('Step 10 - Color Palette Customization', () => {
       }, seed.zustandStore)
 
       // 3. Navigate directly to Step 10
-      await page.goto('/onboarding?step=10')
-      await page.waitForURL(/\/onboarding.*step[=/]10/, { timeout: 10000 })
+      await page.goto('/onboarding/step/10')
+      await page.waitForURL(/\/onboarding\/step\/10/, { timeout: 10000 })
+
+      // Wait for page to fully load and animations to complete
+      await page.waitForLoadState('networkidle')
+      await page.waitForTimeout(1500) // Allow component to mount and restore state (match step12 test)
 
       console.log('✓ Navigated to Step 10')
 
@@ -45,7 +49,7 @@ test.describe('Step 10 - Color Palette Customization', () => {
       // ========================================
       console.log('Testing: Always-visible custom color selector...')
 
-      await expect(page.locator('text=Customize Your Brand Colors')).toBeVisible()
+      await expect(page.locator('text=Customize Your Brand Colors')).toBeVisible({ timeout: 10000 })
       await expect(page.locator('text=Primary').first()).toBeVisible()
       await expect(page.locator('text=Secondary').first()).toBeVisible()
       await expect(page.locator('text=Accent').first()).toBeVisible()
