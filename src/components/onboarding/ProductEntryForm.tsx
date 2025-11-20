@@ -4,14 +4,14 @@
  *
  * Form for adding or editing a product
  * - Name, description, price fields with validation
- * - Photo upload integration
+ * - Photo upload integration using FileUploadWithProgress (reused from Step 12)
  * - Real-time character counters
  * - Form state management with react-hook-form
  */
 
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -20,7 +20,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Product, UploadedFile } from '@/types/onboarding'
-import { ProductPhotoUpload } from './ProductPhotoUpload'
+import { FileUploadWithProgress, FileUploadProgress } from '@/components/onboarding/FileUploadWithProgress'
+import { useOnboardingStore } from '@/stores/onboarding'
 import { cn } from '@/lib/utils'
 
 // Validation schema for product input (before UUID generation)
@@ -55,8 +56,9 @@ export function ProductEntryForm({
   onCancel,
   disabled = false
 }: ProductEntryFormProps) {
+  const sessionId = useOnboardingStore((state) => state.sessionId)
   const [photos, setPhotos] = useState<UploadedFile[]>(product?.photos || [])
-  const [isUploading, setIsUploading] = useState(false)
+  const [photosUploadState, setPhotosUploadState] = useState<FileUploadProgress[]>([])
 
   const {
     register,
@@ -78,6 +80,56 @@ export function ProductEntryForm({
   const nameValue = watch('name') || ''
   const descriptionValue = watch('description') || ''
   const priceValue = watch('price')
+
+  // Convert UploadedFile to FileUploadProgress for display (following Step 12 pattern)
+  const convertToFileUploadProgress = useCallback((savedFile: UploadedFile): FileUploadProgress | null => {
+    try {
+      if (!savedFile || !savedFile.url || !savedFile.fileName) return null
+
+      // Create a mock File object for display purposes
+      const mockFile = new File([], savedFile.fileName, {
+        type: savedFile.mimeType || 'application/octet-stream'
+      })
+
+      // Override the size property to show the actual file size
+      if (savedFile.fileSize && typeof savedFile.fileSize === 'number') {
+        Object.defineProperty(mockFile, 'size', {
+          value: savedFile.fileSize,
+          writable: false,
+          configurable: true
+        })
+      }
+
+      return {
+        id: savedFile.id,
+        file: mockFile,
+        progress: 100,
+        status: 'completed',
+        url: savedFile.url
+      }
+    } catch (error) {
+      console.error('Failed to convert saved file to progress:', error, savedFile)
+      return null
+    }
+  }, [])
+
+  // Derive photos display state from photos state (following Step 12 pattern)
+  const photosDisplay = useMemo(() => {
+    if (!photos || photos.length === 0) return []
+    return photos
+      .map(convertToFileUploadProgress)
+      .filter((p): p is FileUploadProgress => p !== null)
+  }, [photos, convertToFileUploadProgress])
+
+  // Merge derived display state with ephemeral upload state (following Step 12 pattern)
+  const mergedPhotosState = useMemo(() => {
+    const hasUploadingPhotos = photosUploadState.some(f => f.status === 'uploading')
+    if (hasUploadingPhotos) return photosUploadState
+    return photosDisplay
+  }, [photosUploadState, photosDisplay])
+
+  // Check if any files are currently uploading
+  const isUploading = photosUploadState.some(f => f.status === 'uploading')
 
   // Handle price input conversion (string to number)
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -209,19 +261,49 @@ export function ProductEntryForm({
         </p>
       </div>
 
-      {/* Photo Upload */}
+      {/* Photo Upload using FileUploadWithProgress (following Step 12 pattern) */}
       <div>
         <Label className="text-sm font-medium mb-3 block">
           Photos (Optional)
         </Label>
-        <ProductPhotoUpload
-          productId={productId}
-          photos={photos}
-          onPhotosChange={setPhotos}
-          onUploadStart={() => setIsUploading(true)}
-          onUploadComplete={() => setIsUploading(false)}
-          maxPhotos={5}
+        <FileUploadWithProgress
+          label="Upload product photos"
+          description="Drag and drop up to 5 photos or click to browse"
+          accept={['image/jpeg', 'image/png', 'image/webp']}
+          maxFiles={5}
+          maxFileSize={10 * 1024 * 1024} // 10MB
+          sessionId={sessionId || undefined}
+          uploadType="business-asset"
+          existingFiles={mergedPhotosState}
           disabled={disabled}
+          onFilesChange={(files: FileUploadProgress[]) => {
+            // Track upload state for UI
+            setPhotosUploadState(files)
+
+            // Find completed files and convert to UploadedFile format
+            const completedFiles = files.filter(f => f.status === 'completed')
+
+            if (completedFiles.length > 0) {
+              const newPhotos: UploadedFile[] = completedFiles.map(f => {
+                const meta = f.uploadedFileMeta
+                return {
+                  id: meta?.id || f.id,
+                  fileName: meta?.fileName || f.file.name,
+                  fileSize: typeof meta?.fileSize === 'number' ? meta.fileSize : f.file.size,
+                  mimeType: meta?.mimeType || f.file.type,
+                  url: meta?.url || f.url || '',
+                  width: undefined,
+                  height: undefined,
+                  uploadedAt: new Date().toISOString()
+                }
+              })
+
+              setPhotos(newPhotos)
+            } else if (files.length === 0) {
+              // User removed all photos
+              setPhotos([])
+            }
+          }}
         />
       </div>
 

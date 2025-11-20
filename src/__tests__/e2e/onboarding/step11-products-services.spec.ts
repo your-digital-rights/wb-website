@@ -36,6 +36,12 @@ async function seedSessionThroughStep10(page: Page) {
   // TODO: Implement fast-path session seeding through Step 10
   // For now, navigate directly to Step 11 (will be replaced with proper seeding)
   await page.goto('/onboarding/step/11')
+
+  // Wait for the page to be fully loaded
+  await page.waitForLoadState('networkidle')
+
+  // Wait for the step heading to appear (confirms React components mounted)
+  await expect(page.getByRole('heading', { name: 'Products & Services' })).toBeVisible()
 }
 
 test.describe('Step 11: Enhanced Products & Services Entry', () => {
