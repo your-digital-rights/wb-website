@@ -46,9 +46,9 @@
 
 **Objective**: Prepare infrastructure for product management feature
 
-- [ ] T001 [P] Create database migration file to add products JSONB column in `supabase/migrations/[timestamp]_add_products_to_onboarding.sql`
-- [ ] T002 [P] Run database migration to update onboarding_sessions table with `pnpm supabase db push`
-- [ ] T003 [P] Extend Product and UploadedFile types in `src/types/onboarding.ts`
+- [X] T001 [P] Create database migration file to add products JSONB column in `supabase/migrations/[timestamp]_add_products_to_onboarding.sql`
+- [ ] T002 [P] Run database migration to update onboarding_sessions table with `pnpm supabase db push` **[BLOCKED: Network connectivity issue with remote Supabase - needs resolution]**
+- [X] T003 [P] Extend Product and UploadedFile types in `src/types/onboarding.ts`
 
 ---
 
@@ -57,16 +57,16 @@
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation begins**
 
 ### Contract Tests (API Endpoints)
-- [ ] T004 [P] Verify contract test for PATCH /api/onboarding/sessions/{sessionId} exists in `specs/002-improved-products-service/contracts/update-session-products.test.ts`
-- [ ] T005 [P] Verify contract test for POST /api/onboarding/sessions/{sessionId}/products/{productId}/photos exists in `specs/002-improved-products-service/contracts/upload-product-photo.test.ts`
-- [ ] T006 [P] Verify contract test for DELETE /api/onboarding/sessions/{sessionId}/products/{productId}/photos/{photoId} exists in `specs/002-improved-products-service/contracts/delete-product-photo.test.ts`
+- [X] T004 [P] Verify contract test for PATCH /api/onboarding/sessions/{sessionId} exists in `specs/002-improved-products-service/contracts/update-session-products.test.ts`
+- [X] T005 [P] Verify contract test for POST /api/onboarding/sessions/{sessionId}/products/{productId}/photos exists in `specs/002-improved-products-service/contracts/upload-product-photo.test.ts`
+- [X] T006 [P] Verify contract test for DELETE /api/onboarding/sessions/{sessionId}/products/{productId}/photos/{photoId} exists in `specs/002-improved-products-service/contracts/delete-product-photo.test.ts`
 
 ### Comprehensive E2E Test
-- [ ] T007 Write comprehensive E2E test covering all 11 phases (empty state, validation, CRUD, photos, reorder, i18n, performance, accessibility) in `__tests__/e2e/onboarding/step11-products-services.spec.ts`
+- [X] T007 Write comprehensive E2E test covering all 11 phases (empty state, validation, CRUD, photos, reorder, i18n, performance, accessibility) in `__tests__/e2e/onboarding/step11-products-services.spec.ts`
 
 ### Run Tests to Confirm Failure
-- [ ] T008 Run contract tests with `pnpm test specs/002-improved-products-service/contracts/` to confirm all 3 contract tests FAIL (expected before implementation)
-- [ ] T009 Run E2E test with `PORT=3783 pnpm exec playwright test __tests__/e2e/onboarding/step11-products-services.spec.ts --reporter=line` to confirm test FAILS (expected before implementation)
+- [X] T008 Run contract tests with `pnpm test specs/002-improved-products-service/contracts/` to confirm all 3 contract tests FAIL (expected before implementation) **✓ CONFIRMED: All contract tests failing as expected**
+- [X] T009 Run E2E test with `PORT=3783 pnpm exec playwright test src/__tests__/e2e/onboarding/step11-products-services.spec.ts --reporter=line --project=chromium` to confirm test FAILS (expected before implementation) **✓ CONFIRMED: E2E test failing as expected**
 
 ---
 
