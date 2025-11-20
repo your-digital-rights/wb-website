@@ -1,7 +1,8 @@
 import { z } from 'zod'
+import { ProductsArraySchema } from '@/lib/validation/product-schema'
 
 // =============================================================================
-// VALIDATION SCHEMAS FOR ALL 12 ONBOARDING STEPS
+// VALIDATION SCHEMAS FOR ALL 14 ONBOARDING STEPS
 // =============================================================================
 
 // Helper schemas and validators
@@ -190,34 +191,11 @@ export const step10Schema = z.object({
 })
 
 // =============================================================================
-// STEP 11: WEBSITE STRUCTURE
+// STEP 11: ENHANCED PRODUCTS & SERVICES ENTRY
+// Feature: 002-improved-products-service
 // =============================================================================
-const websiteSectionSchema = z.enum([
-  'hero',
-  'contact',
-  'about',
-  'portfolio',
-  'services',
-  'testimonials',
-  'events'
-])
-
-const primaryGoalSchema = z.enum([
-  'phone-call',
-  'contact-form',
-  'visit-location',
-  'purchase',
-  'other'
-])
-
 export const step11Schema = z.object({
-  websiteSections: z.array(websiteSectionSchema)
-    .min(1, 'Please select at least one website section'),
-  primaryGoal: primaryGoalSchema,
-  offeringType: z.enum(['products', 'services', 'both']).optional(),
-  offerings: z.array(z.string().min(1, 'Offering cannot be empty'))
-    .max(6, 'Please provide no more than 6 offerings')
-    .optional()
+  products: ProductsArraySchema.optional().default([])
 })
 
 // =============================================================================
@@ -496,10 +474,7 @@ export const completeFormSchema = z.object({
   colorPalette: step10Schema.shape.colorPalette,
 
   // Step 11
-  websiteSections: step11Schema.shape.websiteSections,
-  primaryGoal: step11Schema.shape.primaryGoal,
-  offeringType: step11Schema.shape.offeringType,
-  offerings: step11Schema.shape.offerings,
+  products: step11Schema.shape.products,
 
   // Step 12
   logoUpload: step12Schema.shape.logoUpload,
