@@ -55,9 +55,13 @@ export async function PATCH(
       try {
         ProductsArraySchema.parse(body.formData.products)
       } catch (validationError: any) {
+        // Extract first error message from Zod validation
+        const firstError = validationError.errors?.[0]
+        const errorMessage = firstError?.message || 'Invalid product data'
+
         return NextResponse.json(
           {
-            error: validationError.errors?.[0]?.message || 'Invalid product data',
+            error: errorMessage,
             details: validationError.errors
           },
           { status: 400 }
