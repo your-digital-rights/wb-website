@@ -20,7 +20,7 @@ export const UploadedFileSchema = z.object({
     .positive('File size must be positive')
     .max(10485760, 'File size cannot exceed 10 MB'), // 10 MB in bytes
   mimeType: z.enum(['image/jpeg', 'image/png', 'image/webp'], {
-    errorMap: () => ({ message: 'Only JPEG, PNG, and WebP images are supported' })
+    message: 'Only JPEG, PNG, and WebP images are supported'
   }),
   url: z.string().url('Invalid photo URL'),
   width: z.number().int().positive().optional(),

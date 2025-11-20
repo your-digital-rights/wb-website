@@ -93,9 +93,9 @@ export function ProductList({
             layout
             className={cn('relative', isDragging && 'opacity-50')}
             draggable={!disabled}
-            onDragStart={(e) => handleDragStart(e, product.id)}
+            onDragStart={(e) => handleDragStart(e as any, product.id)}
             onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, product.id)}
+            onDrop={(e) => handleDrop(e as any, product.id)}
             onDragEnd={handleDragEnd}
           >
             <Card className="overflow-hidden group">

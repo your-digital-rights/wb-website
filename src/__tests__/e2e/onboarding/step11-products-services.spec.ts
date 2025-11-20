@@ -352,7 +352,7 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       const metrics = await page.evaluate(() => {
         return new Promise((resolve) => {
           if ('web-vitals' in window) {
-            // @ts-ignore
+            // @ts-expect-error - web-vitals not in window type
             const vitals = window.webVitals || {}
             resolve(vitals)
           } else {
@@ -363,16 +363,16 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       })
 
       // Verify LCP ≤ 1.8s (1800ms)
-      // @ts-ignore
+      // @ts-expect-error - metrics type not strictly defined
       if (metrics.LCP) {
-        // @ts-ignore
+        // @ts-expect-error - metrics type not strictly defined
         expect(metrics.LCP).toBeLessThan(1800)
       }
 
       // Verify CLS < 0.1
-      // @ts-ignore
+      // @ts-expect-error - metrics type not strictly defined
       if (metrics.CLS) {
-        // @ts-ignore
+        // @ts-expect-error - metrics type not strictly defined
         expect(metrics.CLS).toBeLessThan(0.1)
       }
 
