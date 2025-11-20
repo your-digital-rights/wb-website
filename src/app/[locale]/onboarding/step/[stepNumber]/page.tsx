@@ -173,10 +173,7 @@ export default function OnboardingStep() {
         }
       case 11:
         return {
-          websiteSections: formData?.websiteSections || [],
-          primaryGoal: formData?.primaryGoal || '',
-          offeringType: formData?.offeringType || undefined,
-          offerings: formData?.offerings || []
+          products: formData?.products || []
         }
       case 12:
         // CRITICAL FIX: Don't include logoUpload/businessPhotos if undefined or empty
@@ -231,12 +228,8 @@ export default function OnboardingStep() {
     !!(watchedValues?.customerProblems &&
        watchedValues?.customerProblems.length >= 30) : isValid
 
-  const isStep11Valid = stepNumber === 11 ?
-    (() => {
-      const hasWebsiteSections = watchedValues?.websiteSections && watchedValues?.websiteSections.length >= 1;
-      const hasPrimaryGoal = !!watchedValues?.primaryGoal;
-      return !!(hasWebsiteSections && hasPrimaryGoal);
-    })() : isValid
+  // Step 11: Products are optional, so step is always valid
+  const isStep11Valid = stepNumber === 11 ? true : isValid
 
   // Step 12: Check if any files are uploading
   const isStep12Valid = stepNumber === 12 ?
@@ -371,7 +364,7 @@ export default function OnboardingStep() {
           { step: 8, title: 'Design Style', requiredFields: ['designStyle'] },
           { step: 9, title: 'Image Style', requiredFields: ['imageStyle'] },
           { step: 10, title: 'Color Palette', requiredFields: ['colorPalette'] },
-          { step: 11, title: 'Website Structure', requiredFields: ['websiteSections', 'primaryGoal'] }
+          { step: 11, title: 'Products & Services', requiredFields: [] } // Products are optional
         ]
 
         // Check each step
