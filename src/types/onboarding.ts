@@ -73,7 +73,10 @@ export interface OnboardingFormData {
   primaryGoal: PrimaryGoal
   offeringType?: 'products' | 'services' | 'both' // Conditional on sections
   offerings?: string[] // Dynamic list (1-6 items)
-  
+
+  // Step 11 (Enhanced): Products & Services Entry
+  products?: Product[] // Array of 0-6 products with photos (Feature: 002-improved-products-service)
+
   // Step 12: Business Assets
   logoUpload?: UploadedFile
   businessPhotos?: UploadedFile[]
@@ -146,6 +149,36 @@ export interface UploadedFile {
   width?: number
   height?: number
   uploadedAt: string
+}
+
+// =============================================================================
+// PRODUCT TYPES - For Step 11 Enhanced Products & Services
+// =============================================================================
+
+export interface Product {
+  /** Unique identifier (UUID v4, client-generated) */
+  id: string
+
+  /** Product name (3-50 characters, required) */
+  name: string
+
+  /** Product description (10-100 characters, required) */
+  description: string
+
+  /** Price in euros (optional, positive number with max 2 decimals) */
+  price?: number
+
+  /** Ordered array of product photos (0-5 photos, using UploadedFile interface) */
+  photos: UploadedFile[]
+
+  /** Display order in product list (0-based integer) */
+  displayOrder: number
+
+  /** ISO 8601 timestamp when product was created */
+  createdAt: string
+
+  /** ISO 8601 timestamp when product was last modified */
+  updatedAt: string
 }
 
 // =============================================================================
@@ -336,6 +369,16 @@ export interface OnboardingStore {
   recoverSession: () => Promise<boolean>
   refreshSession: () => Promise<void>
   checkSessionExpired: () => void
+
+  // Product management actions (Step 11 Enhanced)
+  addProduct: (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => void
+  updateProduct: (id: string, updates: Partial<Product>) => void
+  deleteProduct: (id: string) => void
+  reorderProducts: (fromIndex: number, toIndex: number) => void
+  addProductPhoto: (productId: string, photo: UploadedFile) => void
+  updateProductPhoto: (productId: string, photoId: string, updates: Partial<UploadedFile>) => void
+  deleteProductPhoto: (productId: string, photoId: string) => void
+  reorderProductPhotos: (productId: string, fromIndex: number, toIndex: number) => void
 
   // Email verification (Step 2)
   verifyEmail: (email: string, code: string) => Promise<boolean>
