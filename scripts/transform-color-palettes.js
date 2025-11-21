@@ -57,6 +57,7 @@ const transformedData = data.map((palette, index) => {
   }
 
   // Remove old hex_colours property and add new colors property
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { hex_colours: _hex_colours, ...rest } = palette;
 
   return {
