@@ -173,6 +173,9 @@ export default function OnboardingStep() {
         }
       case 11:
         return {
+          websiteSections: formData?.websiteSections || [],
+          primaryGoal: formData?.primaryGoal || '',
+          offeringType: formData?.offeringType || undefined,
           products: formData?.products || []
         }
       case 12:

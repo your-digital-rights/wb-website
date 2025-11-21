@@ -780,8 +780,70 @@
         }
       },
       "11": {
-        "title": "Products & Services",
-        "description": "Showcase what you offer with photos and details"
+        "title": "Website Structure",
+        "description": "Define your website's purpose and organize its content effectively",
+        "intro": {
+          "title": "Plan Your Website Structure",
+          "description": "Define your primary goals and choose the sections that will help you achieve them. A well-structured website guides visitors smoothly toward your desired actions."
+        },
+        "goal": {
+          "title": "Primary Website Goal",
+          "required": "Required",
+          "selection": {
+            "label": "What is your main goal for this website?",
+            "placeholder": "Select your primary objective",
+            "hint": "This will influence which sections we recommend and how we structure your content"
+          }
+        },
+        "sections": {
+          "title": "Website Sections",
+          "required": "Required",
+          "alwaysIncluded": "Always included",
+          "recommended": {
+            "title": "Recommended sections for",
+            "badge": "Recommended"
+          }
+        },
+        "offerings": {
+          "title": "Products & Services",
+          "optional": "Optional",
+          "examples": {
+            "title": "Examples of what you might offer:",
+            "consulting": "Business consulting services",
+            "design": "Web design and branding",
+            "development": "Software development",
+            "photography": "Professional photography",
+            "marketing": "Digital marketing services",
+            "training": "Training and workshops"
+          },
+          "list": {
+            "label": "Your Products/Services",
+            "placeholder": "Enter a product or service",
+            "addButton": "Add Item",
+            "hint": "List your main products or services - this helps us create targeted content for each offering"
+          }
+        },
+        "insights": {
+          "title": "Structure & User Experience",
+          "navigation": {
+            "title": "Navigation Design",
+            "clear": "Clear, intuitive menu structure",
+            "logical": "Logical information hierarchy",
+            "mobile": "Mobile-friendly navigation patterns"
+          },
+          "conversion": {
+            "title": "Conversion Optimization",
+            "cta": "Strategic call-to-action placement",
+            "trust": "Trust signals and social proof positioning",
+            "contact": "Easy access to contact information"
+          }
+        },
+        "tips": {
+          "title": "Structure tips:",
+          "essential": "Include essential sections",
+          "goal": "Align with your main goal",
+          "simple": "Keep navigation simple"
+        }
       },
       "12": {
         "title": "Business Assets",

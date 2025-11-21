@@ -86,15 +86,23 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get public URL
-    const { data: publicUrlData } = supabaseAdmin.storage
+    // Create signed URL for private bucket (expires in 7 days)
+    const { data: signedUrlData, error: signedUrlError } = await supabaseAdmin.storage
       .from('onboarding-uploads')
-      .getPublicUrl(data.path)
+      .createSignedUrl(data.path, 604800) // 7 days in seconds
+
+    if (signedUrlError) {
+      console.error('Failed to create signed URL:', signedUrlError)
+      return NextResponse.json(
+        { error: 'Failed to generate access URL for uploaded file' },
+        { status: 500 }
+      )
+    }
 
     const uploadResponse = {
       id: data.id,
       path: data.path,
-      url: publicUrlData.publicUrl,
+      url: signedUrlData.signedUrl,
       fileName: file.name,
       fileSize: file.size,
       mimeType: file.type,
@@ -107,7 +115,7 @@ export async function POST(request: NextRequest) {
       await OnboardingServerService.recordFileUpload(
         sessionId,
         type === 'business-asset' ? 'photo' : 'logo', // Map type to file_type
-        publicUrlData.publicUrl,
+        signedUrlData.signedUrl,
         file.name,
         file.size,
         file.type

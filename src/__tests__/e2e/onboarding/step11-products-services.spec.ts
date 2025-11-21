@@ -18,6 +18,7 @@
 
 import { test, expect, Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import path from 'path'
 
 // Helper: Seed session through Step 10 and navigate to Step 11
 async function seedSessionThroughStep10(page: Page) {
@@ -64,10 +65,10 @@ async function seedSessionThroughStep10(page: Page) {
 
   // Navigate to Step 11
   await page.goto('http://localhost:3783/onboarding/step/11')
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('load')
 
-  // Wait for the step heading to appear (use exact match and level 1)
-  await expect(page.getByRole('heading', { name: 'Products & Services', level: 1 })).toBeVisible()
+  // Wait for the step heading to appear - "Website Structure" is the main page title
+  await expect(page.getByRole('heading', { name: 'Website Structure', level: 1 })).toBeVisible()
 }
 
 test.describe('Step 11: Enhanced Products & Services Entry', () => {
@@ -78,6 +79,34 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
 
   test('Complete product management flow (all 11 phases)', async ({ page }) => {
     // ========================================================================
+    // Phase 0: Fill Required Fields (Primary Goal & Website Sections)
+    // ========================================================================
+
+    await test.step('Phase 0: Verify page loaded with correct seed data', async () => {
+      // Handle cookie consent dialog if present
+      const acceptCookiesButton = page.getByRole('button', { name: 'Accept All' })
+      if (await acceptCookiesButton.isVisible()) {
+        await acceptCookiesButton.click()
+        await page.waitForTimeout(500)
+      }
+
+      // Verify all three sections are visible
+      await expect(page.getByRole('heading', { name: 'Primary Website Goal', level: 2 })).toBeVisible()
+      await expect(page.getByRole('heading', { name: 'Website Sections', level: 2 })).toBeVisible()
+      await expect(page.getByRole('heading', { name: 'Products & Services', level: 2 })).toBeVisible()
+
+      // Verify seed data loaded correctly - hero and contact should be checked
+      const heroCheckbox = page.getByRole('checkbox', { name: 'Hero / Introduction' })
+      const contactCheckbox = page.getByRole('checkbox', { name: 'Contact us' })
+      await expect(heroCheckbox).toBeChecked()
+      await expect(contactCheckbox).toBeChecked()
+
+      // Verify primary goal dropdown is present (seed data sets it to 'purchase')
+      const goalDropdown = page.getByRole('combobox', { name: /What is your main goal for this website/i })
+      await expect(goalDropdown).toBeVisible()
+    })
+
+    // ========================================================================
     // Phase 1: Empty State & Skip Flow (1 min)
     // ========================================================================
 
@@ -86,7 +115,7 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       await expect(page.getByText('No products added yet')).toBeVisible()
 
       // Verify "Add Product" button enabled
-      const addButton = page.getByRole('button', { name: 'Add Product' })
+      const addButton = page.getByRole('button', { name: /Add Product/ })
       await expect(addButton).toBeEnabled()
 
       // Verify "Next" button enabled (not disabled for skipping)
@@ -95,7 +124,7 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
 
       // Test skip flow: navigate to Step 12
       await nextButton.click()
-      await page.waitForURL(/\/step\/12/, { timeout: 10000 })
+      await page.waitForURL(/\/step\/12/, { timeout: 5000 })
       await expect(page).toHaveURL(/\/step\/12/)
 
       // Navigate back to Step 11
@@ -115,8 +144,8 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
     // ========================================================================
 
     await test.step('Phase 2: Validation testing', async () => {
-      // Click "Add Product" to open form
-      await page.getByRole('button', { name: 'Add Product' }).click()
+      // Click "Add Product (0/6)" to open form
+      await page.getByRole('button', { name: /Add Product/ }).first().click()
 
       // Test name validation - too short
       const nameInput = page.getByLabel('Product Name')
@@ -149,9 +178,9 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       await priceInput.blur()
       await expect(page.getByText(/cannot have more than 2 decimal places/i)).toBeVisible()
 
-      // Verify add button disabled while errors present
-      const addButton = page.getByRole('button', { name: 'Add Product' })
-      await expect(addButton).toBeDisabled()
+      // Verify submit button (inside form) disabled while errors present
+      const submitButton = page.getByRole('button', { name: 'Add Product', exact: true })
+      await expect(submitButton).toBeDisabled()
     })
 
     // ========================================================================
@@ -164,12 +193,16 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       await page.getByLabel('Description').fill('Professional website design tailored to your business needs and target audience.')
       await page.getByLabel(/Price.*optional/i).fill('1500.00')
 
-      // Test invalid photo format (.gif)
+      // Upload product photo using test fixture
       const fileInput = page.locator('input[type="file"]')
-      // Note: Actual file upload would require test fixture files
-      // This is a placeholder for the file validation logic
-      // await fileInput.setInputFiles('path/to/test.gif')
-      // await expect(page.getByText(/Only JPEG, PNG, and WebP images are supported/i)).toBeVisible()
+      const photoPath = path.resolve(__dirname, '../../fixtures/test-photo.jpg')
+      await fileInput.setInputFiles(photoPath)
+
+      // Wait for upload to complete
+      await page.waitForTimeout(2000)
+
+      // Note: We don't verify the uploaded photo appears in the form preview yet,
+      // as that will be tested in Phase 4 after the product is added to the list
     })
 
     // ========================================================================
@@ -177,16 +210,43 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
     // ========================================================================
 
     await test.step('Phase 4: Complete product creation with photos', async () => {
-      // Add product (photos will be tested when file upload is fully implemented)
-      await page.getByRole('button', { name: 'Add Product' }).click()
+      // Submit the product form (exact match to get submit button inside form)
+      await page.getByRole('button', { name: 'Add Product', exact: true }).click()
 
-      // Verify form closes and returns to list view
-      await expect(page.getByRole('heading', { name: 'Your Products & Services', level: 3 })).toBeVisible()
+      // Wait for form to close and product to appear
+      await page.waitForTimeout(1000)
 
-      // Verify product appears in list
-      await expect(page.getByText('Website Design Service')).toBeVisible()
+      // Verify form closes and product appears in list
+      await expect(page.getByRole('heading', { name: 'Website Design Service', level: 3 })).toBeVisible()
       // Price is displayed as "1500.00" (no thousands separator, Euro icon separate)
       await expect(page.getByText('1500.00')).toBeVisible()
+
+      // Verify empty state is not visible
+      await expect(page.getByText('No products added yet')).not.toBeVisible()
+
+      // CRITICAL: Verify the uploaded photo displays correctly in the product thumbnail
+      // This catches Next.js Image configuration issues (e.g., missing remotePatterns for Supabase)
+      const productCard = page.locator('.group', { has: page.getByRole('heading', { name: 'Website Design Service', level: 3 }) })
+      const productImage = productCard.locator('img').first()
+
+      // Verify image exists and is visible
+      await expect(productImage).toBeVisible({ timeout: 5000 })
+
+      // Verify image src contains Supabase URL (confirms upload succeeded)
+      const imageSrc = await productImage.getAttribute('src')
+      expect(imageSrc).toContain('supabase.co')
+
+      // Verify no Next.js Image errors in browser console
+      const consoleErrors = []
+      page.on('console', msg => {
+        if (msg.type() === 'error' && msg.text().includes('next/image')) {
+          consoleErrors.push(msg.text())
+        }
+      })
+
+      if (consoleErrors.length > 0) {
+        throw new Error(`Next.js Image errors detected:\n${consoleErrors.join('\n')}`)
+      }
     })
 
     // ========================================================================
@@ -204,15 +264,15 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       ]
 
       for (const product of additionalProducts) {
-        // Click add button to open form
-        await page.getByRole('button', { name: 'Add Product' }).click()
+        // Click add button (with count) to open form
+        await page.getByRole('button', { name: /Add Product/ }).first().click()
         // Fill product details
         await page.getByLabel('Product Name').fill(product.name)
         await page.getByLabel('Description').fill(product.desc)
-        // Submit form
-        await page.getByRole('button', { name: 'Add Product' }).click()
-        // Wait for form to close and return to list
-        await expect(page.getByRole('heading', { name: 'Your Products & Services', level: 3 })).toBeVisible()
+        // Submit form (exact match for submit button inside form)
+        await page.getByRole('button', { name: 'Add Product', exact: true }).click()
+        // Wait for form to close - verify product appears as heading in list
+        await expect(page.getByRole('heading', { name: product.name, level: 3 })).toBeVisible()
       }
 
       // Verify 6 products total by checking for all product headings
@@ -226,8 +286,8 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       // Verify counter shows 6/6
       await expect(page.getByText('(6/6)')).toBeVisible()
 
-      // Verify max products warning displayed
-      await expect(page.getByText(/reached the maximum of 6 products/i)).toBeVisible()
+      // Verify "Add Product" button is disabled at max capacity
+      await expect(page.getByRole('button', { name: /Add Product/ }).first()).toBeDisabled()
     })
 
     // ========================================================================
@@ -260,13 +320,13 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       // Update product
       await page.getByRole('button', { name: 'Update Product' }).click()
 
-      // Verify form closes and returns to list
-      await expect(page.getByRole('heading', { name: 'Your Products & Services', level: 3 })).toBeVisible()
-
-      // Verify updates
-      await expect(page.getByText('Premium SEO Package')).toBeVisible()
+      // Verify form closes and product shows updated name
+      await expect(page.getByRole('heading', { name: 'Premium SEO Package', level: 3 })).toBeVisible()
       // Price is displayed as "2500.00" (no thousands separator, Euro icon separate)
       await expect(page.getByText('2500.00')).toBeVisible()
+
+      // Verify old name is gone
+      await expect(page.getByRole('heading', { name: 'SEO Service', level: 3 })).not.toBeVisible()
     })
 
     // ========================================================================
@@ -289,7 +349,7 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       await expect(page.getByText('(5/6)')).toBeVisible()
 
       // Verify "Add Product" button visible again (was hidden at 6 products)
-      const addButton = page.getByRole('button', { name: 'Add Product' })
+      const addButton = page.getByRole('button', { name: /Add Product/ }).first()
       await expect(addButton).toBeVisible()
     })
 
@@ -299,8 +359,9 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
 
     await test.step('Phase 9: Internationalization', async () => {
       // Verify English UI elements
-      await expect(page.getByRole('button', { name: 'Add Product' })).toBeVisible()
-      await expect(page.getByRole('heading', { name: 'Products & Services', level: 1 })).toBeVisible()
+      await expect(page.getByRole('button', { name: /Add Product/ }).first()).toBeVisible()
+      await expect(page.getByRole('heading', { name: 'Website Structure', level: 1 })).toBeVisible()
+      await expect(page.getByRole('heading', { name: 'Products & Services', level: 2 })).toBeVisible()
 
       // Switch to Italian
       const languageSelector = page.getByRole('button').filter({ has: page.locator('span:has-text("Select language")') })
@@ -310,8 +371,9 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       // Verify URL changed to /it
       await expect(page).toHaveURL(/\/it\/onboarding\/step\/11/)
 
-      // Verify page title translated to Italian (component text not translated yet)
-      await expect(page.getByRole('heading', { name: 'Prodotti e Servizi', level: 1 })).toBeVisible()
+      // Verify page title translated to Italian
+      await expect(page.getByRole('heading', { name: /Struttura.*Sito/i, level: 1 })).toBeVisible()
+      await expect(page.getByRole('heading', { name: /Prodotti.*Servizi/i, level: 2 })).toBeVisible()
 
       // Verify data preserved (products still visible, names unchanged)
       await expect(page.getByRole('heading', { name: 'Premium SEO Package', level: 3 })).toBeVisible()

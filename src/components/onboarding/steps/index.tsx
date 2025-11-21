@@ -13,7 +13,7 @@ import { Step7VisualInspiration } from './Step7VisualInspiration'
 import { Step8DesignStyle } from './Step8DesignStyle'
 import { Step9ImageStyle } from './Step9ImageStyle'
 import { Step10ColorPalette } from './Step10ColorPalette'
-import { Step11ProductsServices } from './Step11ProductsServices'
+import { Step11WebsiteStructure } from './Step11WebsiteStructure'
 import { Step12BusinessAssets } from './Step12BusinessAssets'
 import { Step13AddOns } from './Step13AddOns'
 import { Step14Checkout } from './Step14Checkout'
@@ -40,7 +40,7 @@ const stepComponents: Record<number, StepComponent> = {
   8: Step8DesignStyle,
   9: Step9ImageStyle,
   10: Step10ColorPalette,
-  11: Step11ProductsServices,
+  11: Step11WebsiteStructure,
   12: Step12BusinessAssets,
   13: Step13AddOns,
   14: Step14Checkout,
@@ -62,7 +62,7 @@ export const stepTitles: Record<number, string> = {
   8: 'designStyle',
   9: 'imageStyle',
   10: 'colorPalette',
-  11: 'productsServices',
+  11: 'websiteStructure',
   12: 'businessAssets',
   13: 'languageAddOns',
   14: 'checkout',
@@ -79,7 +79,7 @@ export {
   Step8DesignStyle,
   Step9ImageStyle,
   Step10ColorPalette,
-  Step11ProductsServices,
+  Step11WebsiteStructure,
   Step12BusinessAssets,
   Step13AddOns,
   Step14Checkout,
