@@ -16,8 +16,9 @@
  * }
  */
 
-/* eslint-disable @typescript-eslint/no-require-imports */
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const path = require('path');
 
 const INPUT_FILE = path.join(__dirname, '../src/data/color_palettes.json');
@@ -56,7 +57,7 @@ const transformedData = data.map((palette, index) => {
   }
 
   // Remove old hex_colours property and add new colors property
-  const { hex_colours, ...rest } = palette;
+  const { hex_colours: _hex_colours, ...rest } = palette;
 
   return {
     ...rest,
