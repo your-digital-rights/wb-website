@@ -3,26 +3,20 @@
  *
  * This module processes color palettes from src/data/color_palettes.json
  *
- * IMPORTANT: Color Order in color_palettes.json
- * ===============================================
- * The hex_colours array in each palette follows this order:
+ * IMPORTANT: Color Structure in color_palettes.json
+ * ==================================================
+ * Each palette has a "colors" object with explicit properties:
  *
- * Index 0: Background color (lightest color, usually neutral)
- * Index 1: Primary color (main brand color)
- * Index 2: Secondary color (supporting brand color)
- * Index 3: Accent color (highlight/call-to-action color)
- * Index 4+: Additional colors (optional)
+ * {
+ *   "background": "FDF0D5",  // Background color (lightest, usually neutral)
+ *   "primary": "003049",     // Primary color (main brand color)
+ *   "secondary": "780000",   // Secondary color (supporting brand color)
+ *   "accent": "C1121F",      // Accent color (highlight/call-to-action color)
+ *   "additional": ["669BBC"] // Additional colors (optional array)
+ * }
  *
- * Example:
- * "hex_colours": [
- *   "FDF0D5",  // Index 0: Background (Cream)
- *   "003049",  // Index 1: Primary (Navy)
- *   "780000",  // Index 2: Secondary (Dark red)
- *   "C1121F",  // Index 3: Accent (Bright red)
- *   "669BBC"   // Index 4: Additional (Sky blue)
- * ]
- *
- * This order is preserved when saving to the database as colorPalette array.
+ * This explicit structure is self-documenting and preserved when saving
+ * to the database as colorPalette array: [background, primary, secondary, accent, ...additional]
  */
 import colorPalettesData from '@/data/color_palettes.json'
 
@@ -50,7 +44,13 @@ export interface ColorPaletteOption {
 interface RawPalette {
   palette_name_en: string
   palette_name_it: string
-  hex_colours: string[]
+  colors: {
+    background: string
+    primary: string
+    secondary: string
+    accent: string
+    additional?: string[]
+  }
   main_colors_en: string[]
   main_colors_it: string[]
   description_en: string
@@ -121,8 +121,17 @@ export function getColorPalettes(locale: string = 'en'): ColorPaletteOption[] {
   const isItalian = locale === 'it'
 
   return (colorPalettesData as RawPalette[]).map((palette) => {
-    // Normalize hex colors (add # prefix if missing)
-    const hexColors = palette.hex_colours.map(normalizeHex)
+    // Extract colors from the new object structure
+    const { background, primary, secondary, accent, additional = [] } = palette.colors
+
+    // Build array of hex colors in order: [background, primary, secondary, accent, ...additional]
+    const hexColors = [
+      normalizeHex(background),
+      normalizeHex(primary),
+      normalizeHex(secondary),
+      normalizeHex(accent),
+      ...additional.map(normalizeHex)
+    ]
 
     // Get localized color names
     const colorNames = isItalian ? palette.main_colors_it : palette.main_colors_en
@@ -134,14 +143,13 @@ export function getColorPalettes(locale: string = 'en'): ColorPaletteOption[] {
       hex
     }))
 
-    // Generate preview colors using curated order
-    // Palettes are pre-ordered: [background, primary, secondary, accent, ...others]
+    // Generate preview colors using explicit structure
     const preview = {
-      primary: hexColors[1] || hexColors[0], // Primary text (or fallback to first color)
-      secondary: hexColors[2] || hexColors[1] || hexColors[0], // Secondary text
-      accent: hexColors[3] || hexColors[2] || hexColors[1] || hexColors[0], // Accent
-      background: hexColors[0], // Background
-      text: getContrastingTextColor(hexColors[0])
+      background: normalizeHex(background),
+      primary: normalizeHex(primary),
+      secondary: normalizeHex(secondary),
+      accent: normalizeHex(accent),
+      text: getContrastingTextColor(background)
     }
 
     return {

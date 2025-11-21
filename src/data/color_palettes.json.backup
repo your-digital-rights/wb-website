@@ -2,6 +2,13 @@
   {
     "palette_name_en": "Fiery Ocean",
     "palette_name_it": "Oceano Ardente",
+    "hex_colours": [
+      "FDF0D5",
+      "003049",
+      "780000",
+      "C1121F",
+      "669BBC"
+    ],
     "main_colors_en": [
       "Cream",
       "Navy",
@@ -17,20 +24,18 @@
       "Azzurro"
     ],
     "description_en": "Bold reds with deep blues for a dramatic, high-impact brand presence.",
-    "description_it": "Rossi intensi con blu profondi per una presenza drammatica e d’impatto.",
-    "colors": {
-      "background": "FDF0D5",
-      "primary": "003049",
-      "secondary": "780000",
-      "accent": "C1121F",
-      "additional": [
-        "669BBC"
-      ]
-    }
+    "description_it": "Rossi intensi con blu profondi per una presenza drammatica e d’impatto."
   },
   {
     "palette_name_en": "Olive Garden Feast",
     "palette_name_it": "Banchetto dell’Orto d’Olive",
+    "hex_colours": [
+      "FEFAE0",
+      "283618",
+      "606C38",
+      "8A5620",
+      "DDA15E"
+    ],
     "main_colors_en": [
       "Beige",
       "Dark green",
@@ -46,20 +51,18 @@
       "Oliva dorato"
     ],
     "description_en": "Rustic greens and warm browns that evoke natural, organic authenticity.",
-    "description_it": "Verdi rustici e marroni caldi che evocano autenticità naturale e biologica.",
-    "colors": {
-      "background": "FEFAE0",
-      "primary": "283618",
-      "secondary": "606C38",
-      "accent": "8A5620",
-      "additional": [
-        "DDA15E"
-      ]
-    }
+    "description_it": "Verdi rustici e marroni caldi che evocano autenticità naturale e biologica."
   },
   {
     "palette_name_en": "Refreshing Summer Fun",
     "palette_name_it": "Divertimento Estivo Rinfrescante",
+    "hex_colours": [
+      "023047",
+      "FFB703",
+      "8ECAE6",
+      "FB8500",
+      "219EBC"
+    ],
     "main_colors_en": [
       "Navy",
       "Yellow",
@@ -75,20 +78,18 @@
       "Verde acqua"
     ],
     "description_en": "Bright aqua and citrus tones for playful, energetic appeal.",
-    "description_it": "Toni acquatici e agrumati vivaci per un fascino giocoso ed energico.",
-    "colors": {
-      "background": "023047",
-      "primary": "FFB703",
-      "secondary": "8ECAE6",
-      "accent": "FB8500",
-      "additional": [
-        "219EBC"
-      ]
-    }
+    "description_it": "Toni acquatici e agrumati vivaci per un fascino giocoso ed energico."
   },
   {
     "palette_name_en": "Pastel Dreamland Adventure",
     "palette_name_it": "Avventura nel Paese dei Sogni Pastello",
+    "hex_colours": [
+      "BDE0FE",
+      "5D5D90",
+      "CDB4DB",
+      "FFAFCC",
+      "FFC8DD"
+    ],
     "main_colors_en": [
       "Baby blue",
       "Indigo",
@@ -104,20 +105,18 @@
       "Rosa antico"
     ],
     "description_en": "Soft pastel rainbow for whimsical, dreamy aesthetics.",
-    "description_it": "Arcobaleno pastello tenue per un’estetica fiabesca e sognante.",
-    "colors": {
-      "background": "BDE0FE",
-      "primary": "5D5D90",
-      "secondary": "CDB4DB",
-      "accent": "FFAFCC",
-      "additional": [
-        "FFC8DD"
-      ]
-    }
+    "description_it": "Arcobaleno pastello tenue per un’estetica fiabesca e sognante."
   },
   {
     "palette_name_en": "Golden Summer Fields",
     "palette_name_it": "Campi Estivi Dorati",
+    "hex_colours": [
+      "FEFAE0",
+      "283618",
+      "606C38",
+      "8A5620",
+      "FAEDCD"
+    ],
     "main_colors_en": [
       "Golden beige",
       "Dark green",
@@ -133,20 +132,18 @@
       "Crema"
     ],
     "description_en": "Gentle golden hues with earthy greens and neutrals for calm, sunny warmth.",
-    "description_it": "Toni dorati delicati con verdi terrosi e neutri per un calore solare e rilassante.",
-    "colors": {
-      "background": "FEFAE0",
-      "primary": "283618",
-      "secondary": "606C38",
-      "accent": "8A5620",
-      "additional": [
-        "FAEDCD"
-      ]
-    }
+    "description_it": "Toni dorati delicati con verdi terrosi e neutri per un calore solare e rilassante."
   },
   {
     "palette_name_en": "Earthy Tones (soft)",
     "palette_name_it": "Toni Terrosi (morbidi)",
+    "hex_colours": [
+      "F7E1D7",
+      "4A5759",
+      "B0C4B1",
+      "8C5A5A",
+      "DEDBD2"
+    ],
     "main_colors_en": [
       "Cream",
       "Charcoal",
@@ -162,20 +159,18 @@
       "Pietra"
     ],
     "description_en": "Muted earth tones for approachable, down-to-earth sophistication.",
-    "description_it": "Toni terrosi attenuati per una raffinatezza accessibile e concreta.",
-    "colors": {
-      "background": "F7E1D7",
-      "primary": "4A5759",
-      "secondary": "B0C4B1",
-      "accent": "8C5A5A",
-      "additional": [
-        "DEDBD2"
-      ]
-    }
+    "description_it": "Toni terrosi attenuati per una raffinatezza accessibile e concreta."
   },
   {
     "palette_name_en": "Earthy Forest Hues",
     "palette_name_it": "Toni di Foresta Terrosa",
+    "hex_colours": [
+      "DAD7CD",
+      "344E41",
+      "3A5A40",
+      "663000",
+      "A3B18A"
+    ],
     "main_colors_en": [
       "Sage",
       "Forest green",
@@ -191,20 +186,18 @@
       "Oliva"
     ],
     "description_en": "Deep greens and woodsy browns creating grounded, natural stability.",
-    "description_it": "Verdi profondi e toni legnosi che creano stabilità naturale e radicata.",
-    "colors": {
-      "background": "DAD7CD",
-      "primary": "344E41",
-      "secondary": "3A5A40",
-      "accent": "663000",
-      "additional": [
-        "A3B18A"
-      ]
-    }
+    "description_it": "Verdi profondi e toni legnosi che creano stabilità naturale e radicata."
   },
   {
     "palette_name_en": "Ocean Breeze",
     "palette_name_it": "Brezza Oceanica",
+    "hex_colours": [
+      "03045E",
+      "00B4D8",
+      "90E0EF",
+      "CAF0F8",
+      "0077B6"
+    ],
     "main_colors_en": [
       "Navy",
       "Cyan",
@@ -220,20 +213,18 @@
       "Azzurro"
     ],
     "description_en": "Cool blues for fresh, trustworthy, oceanic calm.",
-    "description_it": "Blu freddi per una calma oceanica fresca e affidabile.",
-    "colors": {
-      "background": "03045E",
-      "primary": "00B4D8",
-      "secondary": "90E0EF",
-      "accent": "CAF0F8",
-      "additional": [
-        "0077B6"
-      ]
-    }
+    "description_it": "Blu freddi per una calma oceanica fresca e affidabile."
   },
   {
     "palette_name_en": "Deep Sea (blue)",
     "palette_name_it": "Mare Profondo (blu)",
+    "hex_colours": [
+      "E0E1DD",
+      "0D1B2A",
+      "1B263B",
+      "415A77",
+      "778DA9"
+    ],
     "main_colors_en": [
       "Eggshell",
       "Midnight blue",
@@ -249,20 +240,18 @@
       "Grigio freddo"
     ],
     "description_en": "Dark navy with cool grays for sleek, professional confidence.",
-    "description_it": "Blu scuri con grigi freddi per un’eleganza professionale e sicura.",
-    "colors": {
-      "background": "E0E1DD",
-      "primary": "0D1B2A",
-      "secondary": "1B263B",
-      "accent": "415A77",
-      "additional": [
-        "778DA9"
-      ]
-    }
+    "description_it": "Blu scuri con grigi freddi per un’eleganza professionale e sicura."
   },
   {
     "palette_name_en": "Fiery Palette",
     "palette_name_it": "Tavolozza Ardente",
+    "hex_colours": [
+      "FFFFFF",
+      "5F0F40",
+      "9A031E",
+      "E36414",
+      "FB8B24"
+    ],
     "main_colors_en": [
       "White",
       "Maroon",
@@ -278,20 +267,18 @@
       "Ambra"
     ],
     "description_en": "Hot reds and oranges for bold, high-energy creativity.",
-    "description_it": "Rossi e arancioni accesi per una creatività audace e ad alta energia.",
-    "colors": {
-      "background": "FFFFFF",
-      "primary": "5F0F40",
-      "secondary": "9A031E",
-      "accent": "E36414",
-      "additional": [
-        "FB8B24"
-      ]
-    }
+    "description_it": "Rossi e arancioni accesi per una creatività audace e ad alta energia."
   },
   {
     "palette_name_en": "Warm Neutral Tones",
     "palette_name_it": "Toni Neutri Caldi",
+    "hex_colours": [
+      "EDEDE9",
+      "582F0E",
+      "7F4F24",
+      "936639",
+      "B6AD90"
+    ],
     "main_colors_en": [
       "Ivory",
       "Coffee brown",
@@ -307,20 +294,18 @@
       "Grigio caldo"
     ],
     "description_en": "Layered browns and olives for timeless, cozy reliability.",
-    "description_it": "Sovrapposizioni di marroni e oliva per un’affidabilità accogliente e senza tempo.",
-    "colors": {
-      "background": "EDEDE9",
-      "primary": "582F0E",
-      "secondary": "7F4F24",
-      "accent": "936639",
-      "additional": [
-        "B6AD90"
-      ]
-    }
+    "description_it": "Sovrapposizioni di marroni e oliva per un’affidabilità accogliente e senza tempo."
   },
   {
     "palette_name_en": "Warm Neutral Tones (bright)",
     "palette_name_it": "Toni Neutri Caldi (vivaci)",
+    "hex_colours": [
+      "F1FAEE",
+      "1D3557",
+      "A8DADC",
+      "E63946",
+      "457B9D"
+    ],
     "main_colors_en": [
       "Mint white",
       "Navy",
@@ -336,20 +321,18 @@
       "Blu acciaio"
     ],
     "description_en": "Crisp neutrals with a bold accent red for modern vitality.",
-    "description_it": "Neutri nitidi con un rosso deciso per una vitalità moderna.",
-    "colors": {
-      "background": "F1FAEE",
-      "primary": "1D3557",
-      "secondary": "A8DADC",
-      "accent": "E63946",
-      "additional": [
-        "457B9D"
-      ]
-    }
+    "description_it": "Neutri nitidi con un rosso deciso per una vitalità moderna."
   },
   {
     "palette_name_en": "Summer Ocean Breeze",
     "palette_name_it": "Brezza Oceanica Estiva",
+    "hex_colours": [
+      "003049",
+      "EAE2B7",
+      "FCBF49",
+      "F77F00",
+      "D62828"
+    ],
     "main_colors_en": [
       "Navy",
       "Beige",
@@ -365,20 +348,18 @@
       "Rosso"
     ],
     "description_en": "Coastal blues with sunny oranges for vibrant seaside energy.",
-    "description_it": "Blu costieri con arancioni solari per un’energia marina vibrante.",
-    "colors": {
-      "background": "003049",
-      "primary": "EAE2B7",
-      "secondary": "FCBF49",
-      "accent": "F77F00",
-      "additional": [
-        "D62828"
-      ]
-    }
+    "description_it": "Blu costieri con arancioni solari per un’energia marina vibrante."
   },
   {
     "palette_name_en": "Warm Autumn Glow",
     "palette_name_it": "Calore d’Autunno",
+    "hex_colours": [
+      "6F1D1B",
+      "FFE6A7",
+      "FF8FAB",
+      "FB6F92",
+      "FFC2D1"
+    ],
     "main_colors_en": [
       "Burgundy",
       "Cream",
@@ -394,20 +375,18 @@
       "Rosa cipria"
     ],
     "description_en": "Warm pinks and corals for a soft, cozy, and welcoming charm.",
-    "description_it": "Toni rosa caldi e corallo per un fascino morbido, accogliente e invitante.",
-    "colors": {
-      "background": "6F1D1B",
-      "primary": "FFE6A7",
-      "secondary": "FF8FAB",
-      "accent": "FB6F92",
-      "additional": [
-        "FFC2D1"
-      ]
-    }
+    "description_it": "Toni rosa caldi e corallo per un fascino morbido, accogliente e invitante."
   },
   {
     "palette_name_en": "Soft Pink Delight",
     "palette_name_it": "Delizia Rosa Morbida",
+    "hex_colours": [
+      "FFE6A7",
+      "6F1D1B",
+      "BB9457",
+      "99582A",
+      "432818"
+    ],
     "main_colors_en": [
       "Butter",
       "Deep brown",
@@ -423,20 +402,18 @@
       "Cioccolato"
     ],
     "description_en": "Deep browns with blush accents for comforting elegance.",
-    "description_it": "Marroni profondi con accenti rosa per un’eleganza rassicurante.",
-    "colors": {
-      "background": "FFE6A7",
-      "primary": "6F1D1B",
-      "secondary": "BB9457",
-      "accent": "99582A",
-      "additional": [
-        "432818"
-      ]
-    }
+    "description_it": "Marroni profondi con accenti rosa per un’eleganza rassicurante."
   },
   {
     "palette_name_en": "Autumn Harvest (classic)",
     "palette_name_it": "Raccolto d’Autunno (classico)",
+    "hex_colours": [
+      "000000",
+      "FFFFFF",
+      "E5E5E5",
+      "FCA311",
+      "14213D"
+    ],
     "main_colors_en": [
       "Black",
       "White",
@@ -452,20 +429,18 @@
       "Blu navy"
     ],
     "description_en": "Black, gold, and white contrast for strong, classic authority.",
-    "description_it": "Contrasto tra nero, oro e bianco per un’autorità forte e classica.",
-    "colors": {
-      "background": "000000",
-      "primary": "FFFFFF",
-      "secondary": "E5E5E5",
-      "accent": "FCA311",
-      "additional": [
-        "14213D"
-      ]
-    }
+    "description_it": "Contrasto tra nero, oro e bianco per un’autorità forte e classica."
   },
   {
     "palette_name_en": "Black & Gold Elegance",
     "palette_name_it": "Eleganza Nero & Oro",
+    "hex_colours": [
+      "1F1E1C",
+      "FFD8A8",
+      "D6CCC2",
+      "F5EBE0",
+      "A47E3C"
+    ],
     "main_colors_en": [
       "Charcoal",
       "Champagne",
@@ -481,20 +456,18 @@
       "Oro"
     ],
     "description_en": "Subtle neutrals with golden undertones for refined luxury.",
-    "description_it": "Neutri delicati con sottotoni dorati per un lusso raffinato.",
-    "colors": {
-      "background": "1F1E1C",
-      "primary": "FFD8A8",
-      "secondary": "D6CCC2",
-      "accent": "F5EBE0",
-      "additional": [
-        "A47E3C"
-      ]
-    }
+    "description_it": "Neutri delicati con sottotoni dorati per un lusso raffinato."
   },
   {
     "palette_name_en": "Soft Sand",
     "palette_name_it": "Sabbia Morbida",
+    "hex_colours": [
+      "001D3D",
+      "FFD60A",
+      "FFC300",
+      "003566",
+      "000814"
+    ],
     "main_colors_en": [
       "Cobalt",
       "Yellow",
@@ -510,20 +483,18 @@
       "Nero"
     ],
     "description_en": "Strong navy with golden accents for trustworthy energy.",
-    "description_it": "Blu intensi con accenti dorati per un’energia affidabile.",
-    "colors": {
-      "background": "001D3D",
-      "primary": "FFD60A",
-      "secondary": "FFC300",
-      "accent": "003566",
-      "additional": [
-        "000814"
-      ]
-    }
+    "description_it": "Blu intensi con accenti dorati per un’energia affidabile."
   },
   {
     "palette_name_en": "Golden Twilight",
     "palette_name_it": "Crepuscolo Dorato",
+    "hex_colours": [
+      "001219",
+      "E9D8A6",
+      "94D2BD",
+      "0A9396",
+      "005F73"
+    ],
     "main_colors_en": [
       "Black blue",
       "Gold",
@@ -539,20 +510,18 @@
       "Verde petrolio"
     ],
     "description_en": "Jewel-like blend of teals and golds for rich storytelling.",
-    "description_it": "Miscela preziosa di verdi acqua e ori per un racconto ricco.",
-    "colors": {
-      "background": "001219",
-      "primary": "E9D8A6",
-      "secondary": "94D2BD",
-      "accent": "0A9396",
-      "additional": [
-        "005F73"
-      ]
-    }
+    "description_it": "Miscela preziosa di verdi acqua e ori per un racconto ricco."
   },
   {
     "palette_name_en": "Ocean Sunset",
     "palette_name_it": "Tramonto Oceanico",
+    "hex_colours": [
+      "F8F9FA",
+      "252422",
+      "403D39",
+      "EB5E28",
+      "CCC5B9"
+    ],
     "main_colors_en": [
       "Off-white",
       "Charcoal",
@@ -568,20 +537,18 @@
       "Tortora"
     ],
     "description_en": "Soft grays for sleek, minimal professionalism.",
-    "description_it": "Grigi morbidi per un minimalismo professionale e pulito.",
-    "colors": {
-      "background": "F8F9FA",
-      "primary": "252422",
-      "secondary": "403D39",
-      "accent": "EB5E28",
-      "additional": [
-        "CCC5B9"
-      ]
-    }
+    "description_it": "Grigi morbidi per un minimalismo professionale e pulito."
   },
   {
     "palette_name_en": "Light Steel",
     "palette_name_it": "Acciaio Leggero",
+    "hex_colours": [
+      "335C67",
+      "FFF3B0",
+      "E09F3E",
+      "540B0E",
+      "9E2A2B"
+    ],
     "main_colors_en": [
       "Steel blue",
       "Butter",
@@ -597,20 +564,18 @@
       "Mattone"
     ],
     "description_en": "Steel blue with fiery accents for a balance of strength and passion.",
-    "description_it": "Blu acciaio con accenti caldi per un equilibrio tra forza e passione.",
-    "colors": {
-      "background": "335C67",
-      "primary": "FFF3B0",
-      "secondary": "E09F3E",
-      "accent": "540B0E",
-      "additional": [
-        "9E2A2B"
-      ]
-    }
+    "description_it": "Blu acciaio con accenti caldi per un equilibrio tra forza e passione."
   },
   {
     "palette_name_en": "Dark Sunset",
     "palette_name_it": "Tramonto Scuro",
+    "hex_colours": [
+      "3D405B",
+      "F4F1DE",
+      "E07A5F",
+      "F2CC8F",
+      "81B29A"
+    ],
     "main_colors_en": [
       "Indigo",
       "Cream",
@@ -626,20 +591,18 @@
       "Salvia"
     ],
     "description_en": "Muted oranges and teals for warm, modern sophistication.",
-    "description_it": "Arancioni e verdi acqua attenuati per una sofisticazione calda e moderna.",
-    "colors": {
-      "background": "3D405B",
-      "primary": "F4F1DE",
-      "secondary": "E07A5F",
-      "accent": "F2CC8F",
-      "additional": [
-        "81B29A"
-      ]
-    }
+    "description_it": "Arancioni e verdi acqua attenuati per una sofisticazione calda e moderna."
   },
   {
     "palette_name_en": "Neutral Harmony Bliss",
     "palette_name_it": "Armonia Neutrale Gioiosa",
+    "hex_colours": [
+      "E9FF70",
+      "70D6FF",
+      "FF9770",
+      "FF70A6",
+      "FFD670"
+    ],
     "main_colors_en": [
       "Lime",
       "Sky blue",
@@ -655,20 +618,18 @@
       "Giallo"
     ],
     "description_en": "Playful candy-like tones for cheerful, creative brands.",
-    "description_it": "Toni zuccherini e giocosi per brand allegri e creativi.",
-    "colors": {
-      "background": "E9FF70",
-      "primary": "70D6FF",
-      "secondary": "FF9770",
-      "accent": "FF70A6",
-      "additional": [
-        "FFD670"
-      ]
-    }
+    "description_it": "Toni zuccherini e giocosi per brand allegri e creativi."
   },
   {
     "palette_name_en": "Pastel Rainbow",
     "palette_name_it": "Arcobaleno Pastello",
+    "hex_colours": [
+      "38040E",
+      "AD2831",
+      "640D14",
+      "800E13",
+      "250902"
+    ],
     "main_colors_en": [
       "Maroon",
       "Crimson",
@@ -684,20 +645,18 @@
       "Nero"
     ],
     "description_en": "Dark red gradations for moody, dramatic intensity.",
-    "description_it": "Gradazioni di rosso scuro per un’intensità cupa e drammatica.",
-    "colors": {
-      "background": "38040E",
-      "primary": "AD2831",
-      "secondary": "640D14",
-      "accent": "800E13",
-      "additional": [
-        "250902"
-      ]
-    }
+    "description_it": "Gradazioni di rosso scuro per un’intensità cupa e drammatica."
   },
   {
     "palette_name_en": "Crimson Hues",
     "palette_name_it": "Sfumature Cremisi",
+    "hex_colours": [
+      "F2E9E4",
+      "22223B",
+      "4A4E69",
+      "9A8C98",
+      "C9ADA7"
+    ],
     "main_colors_en": [
       "Ivory",
       "Indigo",
@@ -713,20 +672,18 @@
       "Rosa antico"
     ],
     "description_en": "Deep plums and muted roses for romantic professionalism.",
-    "description_it": "Prugne profonde e rose attenuate per un romanticismo professionale.",
-    "colors": {
-      "background": "F2E9E4",
-      "primary": "22223B",
-      "secondary": "4A4E69",
-      "accent": "9A8C98",
-      "additional": [
-        "C9ADA7"
-      ]
-    }
+    "description_it": "Prugne profonde e rose attenuate per un romanticismo professionale."
   },
   {
     "palette_name_en": "Soft Lavender",
     "palette_name_it": "Lavanda Morbida",
+    "hex_colours": [
+      "D8E2DC",
+      "9D8189",
+      "F4ACB7",
+      "FFCAD4",
+      "FFE5D9"
+    ],
     "main_colors_en": [
       "Mint",
       "Dusty mauve",
@@ -742,20 +699,18 @@
       "Crema"
     ],
     "description_en": "Gentle lavenders and pinks for feminine, calming comfort.",
-    "description_it": "Lilla e rosa delicati per un comfort femminile e rilassante.",
-    "colors": {
-      "background": "D8E2DC",
-      "primary": "9D8189",
-      "secondary": "F4ACB7",
-      "accent": "FFCAD4",
-      "additional": [
-        "FFE5D9"
-      ]
-    }
+    "description_it": "Lilla e rosa delicati per un comfort femminile e rilassante."
   },
   {
     "palette_name_en": "Peachy Delight",
     "palette_name_it": "Delizia alla Pesca",
+    "hex_colours": [
+      "EDF6F9",
+      "006D77",
+      "83C5BE",
+      "E29578",
+      "FFDDD2"
+    ],
     "main_colors_en": [
       "Ivory",
       "Teal",
@@ -771,20 +726,18 @@
       "Pesca"
     ],
     "description_en": "Soft peaches and aquas for refreshing, friendly charm.",
-    "description_it": "Pesca e acquamarina delicate per un fascino fresco e amichevole.",
-    "colors": {
-      "background": "EDF6F9",
-      "primary": "006D77",
-      "secondary": "83C5BE",
-      "accent": "E29578",
-      "additional": [
-        "FFDDD2"
-      ]
-    }
+    "description_it": "Pesca e acquamarina delicate per un fascino fresco e amichevole."
   },
   {
     "palette_name_en": "Ocean Pearl Delight",
     "palette_name_it": "Delizia Perla Oceanica",
+    "hex_colours": [
+      "EDE0D4",
+      "7F5539",
+      "B08968",
+      "DDB892",
+      "E6CCB2"
+    ],
     "main_colors_en": [
       "Ivory",
       "Chestnut",
@@ -800,20 +753,18 @@
       "Sabbia"
     ],
     "description_en": "Warm tans and browns for earthy, timeless elegance.",
-    "description_it": "Toni caldi del cuoio e marroni per un’eleganza terrena e senza tempo.",
-    "colors": {
-      "background": "EDE0D4",
-      "primary": "7F5539",
-      "secondary": "B08968",
-      "accent": "DDB892",
-      "additional": [
-        "E6CCB2"
-      ]
-    }
+    "description_it": "Toni caldi del cuoio e marroni per un’eleganza terrena e senza tempo."
   },
   {
     "palette_name_en": "Autumn Harvest (fresh)",
     "palette_name_it": "Raccolto d’Autunno (fresco)",
+    "hex_colours": [
+      "F2E8CF",
+      "386641",
+      "6A994E",
+      "BC4749",
+      "A7C957"
+    ],
     "main_colors_en": [
       "Ivory",
       "Forest green",
@@ -829,20 +780,18 @@
       "Lime"
     ],
     "description_en": "Fresh greens with warm red for natural yet bold branding.",
-    "description_it": "Verdi freschi con un rosso caldo per un’identità naturale ma decisa.",
-    "colors": {
-      "background": "F2E8CF",
-      "primary": "386641",
-      "secondary": "6A994E",
-      "accent": "BC4749",
-      "additional": [
-        "A7C957"
-      ]
-    }
+    "description_it": "Verdi freschi con un rosso caldo per un’identità naturale ma decisa."
   },
   {
     "palette_name_en": "Fresh Greens",
     "palette_name_it": "Verdi Freschi",
+    "hex_colours": [
+      "E0B1CB",
+      "231942",
+      "5E548E",
+      "9F86C0",
+      "BE95C4"
+    ],
     "main_colors_en": [
       "Rose",
       "Indigo",
@@ -858,20 +807,18 @@
       "Lavanda"
     ],
     "description_en": "Purples with gentle pinks for creative sophistication.",
-    "description_it": "Viola con rosa delicati per una sofisticazione creativa.",
-    "colors": {
-      "background": "E0B1CB",
-      "primary": "231942",
-      "secondary": "5E548E",
-      "accent": "9F86C0",
-      "additional": [
-        "BE95C4"
-      ]
-    }
+    "description_it": "Viola con rosa delicati per una sofisticazione creativa."
   },
   {
     "palette_name_en": "Purple Dream",
     "palette_name_it": "Sogno Viola",
+    "hex_colours": [
+      "EDF2F4",
+      "2B2D42",
+      "8D99AE",
+      "EF233C",
+      "D90429"
+    ],
     "main_colors_en": [
       "Ivory",
       "Charcoal",
@@ -887,20 +834,18 @@
       "Cremisi"
     ],
     "description_en": "Cool grays with sharp red accents for striking authority.",
-    "description_it": "Grigi freddi con accenti rossi decisi per un’autorità incisiva.",
-    "colors": {
-      "background": "EDF2F4",
-      "primary": "2B2D42",
-      "secondary": "8D99AE",
-      "accent": "EF233C",
-      "additional": [
-        "D90429"
-      ]
-    }
+    "description_it": "Grigi freddi con accenti rossi decisi per un’autorità incisiva."
   },
   {
     "palette_name_en": "Cool Coastal Vibes",
     "palette_name_it": "Vibrazioni Costiere Fresche",
+    "hex_colours": [
+      "132A13",
+      "ECF39E",
+      "90A955",
+      "4F772D",
+      "31572C"
+    ],
     "main_colors_en": [
       "Deep green",
       "Pale yellow-green",
@@ -916,20 +861,18 @@
       "Verde foresta"
     ],
     "description_en": "Bright coastal rainbow for youthful, energetic dynamism.",
-    "description_it": "Arcobaleno brillante e costiero per un dinamismo giovane ed energico.",
-    "colors": {
-      "background": "132A13",
-      "primary": "ECF39E",
-      "secondary": "90A955",
-      "accent": "4F772D",
-      "additional": [
-        "31572C"
-      ]
-    }
+    "description_it": "Arcobaleno brillante e costiero per un dinamismo giovane ed energico."
   },
   {
     "palette_name_en": "Candy Pop",
     "palette_name_it": "Caramella Pop",
+    "hex_colours": [
+      "1E1B47",
+      "F72585",
+      "4CC9F0",
+      "FFD60A",
+      "7209B7"
+    ],
     "main_colors_en": [
       "Deep violet",
       "Hot pink",
@@ -945,20 +888,18 @@
       "Viola"
     ],
     "description_en": "Neon pinks and blues on a dark base for playful, eye-catching energy.",
-    "description_it": "Rosa e blu neon su base scura per un’energia giocosa e accattivante.",
-    "colors": {
-      "background": "1E1B47",
-      "primary": "F72585",
-      "secondary": "4CC9F0",
-      "accent": "FFD60A",
-      "additional": [
-        "7209B7"
-      ]
-    }
+    "description_it": "Rosa e blu neon su base scura per un’energia giocosa e accattivante."
   },
   {
     "palette_name_en": "Leafy Green Garden",
     "palette_name_it": "Giardino Foglioso",
+    "hex_colours": [
+      "FFFCF2",
+      "252422",
+      "403D39",
+      "EB5E28",
+      "CCC5B9"
+    ],
     "main_colors_en": [
       "Cream",
       "Charcoal",
@@ -974,20 +915,18 @@
       "Tortora"
     ],
     "description_en": "Neutral creams with earthy browns for rustic authenticity.",
-    "description_it": "Creme neutre con marroni terrosi per un’autenticità rustica.",
-    "colors": {
-      "background": "FFFCF2",
-      "primary": "252422",
-      "secondary": "403D39",
-      "accent": "EB5E28",
-      "additional": [
-        "CCC5B9"
-      ]
-    }
+    "description_it": "Creme neutre con marroni terrosi per un’autenticità rustica."
   },
   {
     "palette_name_en": "Rustic Charm",
     "palette_name_it": "Fascino Rustico",
+    "hex_colours": [
+      "264653",
+      "E9C46A",
+      "2A9D8F",
+      "E76F51",
+      "F4A261"
+    ],
     "main_colors_en": [
       "Teal",
       "Gold",
@@ -1003,20 +942,18 @@
       "Arancione"
     ],
     "description_en": "Teals and oranges for adventurous, welcoming warmth.",
-    "description_it": "Verdi acqua e arancioni per un calore accogliente e avventuroso.",
-    "colors": {
-      "background": "264653",
-      "primary": "E9C46A",
-      "secondary": "2A9D8F",
-      "accent": "E76F51",
-      "additional": [
-        "F4A261"
-      ]
-    }
+    "description_it": "Verdi acqua e arancioni per un calore accogliente e avventuroso."
   },
   {
     "palette_name_en": "Sunny Beach Day",
     "palette_name_it": "Giornata di Spiaggia Soleggiata",
+    "hex_colours": [
+      "CAD2C5",
+      "2F3E46",
+      "52796F",
+      "84A98C",
+      "354F52"
+    ],
     "main_colors_en": [
       "Sage",
       "Slate",
@@ -1032,20 +969,18 @@
       "Grigio piombo"
     ],
     "description_en": "Muted sea greens for calm, coastal relaxation.",
-    "description_it": "Verdi marini attenuati per un relax costiero e calmo.",
-    "colors": {
-      "background": "CAD2C5",
-      "primary": "2F3E46",
-      "secondary": "52796F",
-      "accent": "84A98C",
-      "additional": [
-        "354F52"
-      ]
-    }
+    "description_it": "Verdi marini attenuati per un relax costiero e calmo."
   },
   {
     "palette_name_en": "Earthy Green",
     "palette_name_it": "Verde Terroso",
+    "hex_colours": [
+      "FFFFFF",
+      "004B23",
+      "006400",
+      "007200",
+      "38B000"
+    ],
     "main_colors_en": [
       "White",
       "Deep green",
@@ -1061,20 +996,18 @@
       "Lime"
     ],
     "description_en": "Lush greens for fresh, eco-driven energy and vitality.",
-    "description_it": "Verdi rigogliosi per energia e vitalità a trazione ecologica.",
-    "colors": {
-      "background": "FFFFFF",
-      "primary": "004B23",
-      "secondary": "006400",
-      "accent": "007200",
-      "additional": [
-        "38B000"
-      ]
-    }
+    "description_it": "Verdi rigogliosi per energia e vitalità a trazione ecologica."
   },
   {
     "palette_name_en": "Bright Green",
     "palette_name_it": "Verde Brillante",
+    "hex_colours": [
+      "FFFFFF",
+      "10002B",
+      "240046",
+      "5A189A",
+      "7B2CBF"
+    ],
     "main_colors_en": [
       "White",
       "Indigo",
@@ -1090,20 +1023,18 @@
       "Blu violaceo"
     ],
     "description_en": "Deep purples with bright highlights for bold, futuristic flair.",
-    "description_it": "Viola profondi con bagliori luminosi per un tocco audace e futuristico.",
-    "colors": {
-      "background": "FFFFFF",
-      "primary": "10002B",
-      "secondary": "240046",
-      "accent": "5A189A",
-      "additional": [
-        "7B2CBF"
-      ]
-    }
+    "description_it": "Viola profondi con bagliori luminosi per un tocco audace e futuristico."
   },
   {
     "palette_name_en": "Vivid Nightfall",
     "palette_name_it": "Crepuscolo Vivido",
+    "hex_colours": [
+      "BABD8D",
+      "7C6A0A",
+      "FA9500",
+      "EB6424",
+      "FFDAC6"
+    ],
     "main_colors_en": [
       "Sage",
       "Olive",
@@ -1119,20 +1050,18 @@
       "Pesca"
     ],
     "description_en": "Warm golds and fiery oranges for glowing nighttime energy.",
-    "description_it": "Oro caldo e arancioni vividi per un’energia notturna luminosa.",
-    "colors": {
-      "background": "BABD8D",
-      "primary": "7C6A0A",
-      "secondary": "FA9500",
-      "accent": "EB6424",
-      "additional": [
-        "FFDAC6"
-      ]
-    }
+    "description_it": "Oro caldo e arancioni vividi per un’energia notturna luminosa."
   },
   {
     "palette_name_en": "Golden Glow",
     "palette_name_it": "Bagliore Dorato",
+    "hex_colours": [
+      "F0EAD2",
+      "6C584C",
+      "A98467",
+      "ADC178",
+      "DDE5B6"
+    ],
     "main_colors_en": [
       "Ivory",
       "Brown",
@@ -1148,20 +1077,18 @@
       "Pistacchio"
     ],
     "description_en": "Subtle golds and tans for understated elegance and warmth.",
-    "description_it": "Oro tenue e cuoio per un’eleganza discreta e calda.",
-    "colors": {
-      "background": "F0EAD2",
-      "primary": "6C584C",
-      "secondary": "A98467",
-      "accent": "ADC178",
-      "additional": [
-        "DDE5B6"
-      ]
-    }
+    "description_it": "Oro tenue e cuoio per un’eleganza discreta e calda."
   },
   {
     "palette_name_en": "Earthy Tones (vivid)",
     "palette_name_it": "Toni Terrosi (vividi)",
+    "hex_colours": [
+      "FFFFFF",
+      "480CA8",
+      "560BAD",
+      "B5179E",
+      "F72585"
+    ],
     "main_colors_en": [
       "White",
       "Purple",
@@ -1177,20 +1104,18 @@
       "Rosa"
     ],
     "description_en": "Vivid jewel tones for bold, eclectic creativity.",
-    "description_it": "Toni gioiello vividi per una creatività audace ed eclettica.",
-    "colors": {
-      "background": "FFFFFF",
-      "primary": "480CA8",
-      "secondary": "560BAD",
-      "accent": "B5179E",
-      "additional": [
-        "F72585"
-      ]
-    }
+    "description_it": "Toni gioiello vividi per una creatività audace ed eclettica."
   },
   {
     "palette_name_en": "Purple Raindrops",
     "palette_name_it": "Gocce di Viola",
+    "hex_colours": [
+      "EDF2FB",
+      "C1D3FE",
+      "CCDBFD",
+      "D7E3FC",
+      "E2EAFC"
+    ],
     "main_colors_en": [
       "Pale blue",
       "Lavender blue",
@@ -1206,20 +1131,18 @@
       "Azzurro polvere"
     ],
     "description_en": "Gentle pastel blues for airy, calming freshness.",
-    "description_it": "Azzurri pastello delicati per una freschezza ariosa e calmante.",
-    "colors": {
-      "background": "EDF2FB",
-      "primary": "C1D3FE",
-      "secondary": "CCDBFD",
-      "accent": "D7E3FC",
-      "additional": [
-        "E2EAFC"
-      ]
-    }
+    "description_it": "Azzurri pastello delicati per una freschezza ariosa e calmante."
   },
   {
     "palette_name_en": "Blue Serenity",
     "palette_name_it": "Serenità Blu",
+    "hex_colours": [
+      "03045E",
+      "00B4D8",
+      "0096C7",
+      "0077B6",
+      "023E8A"
+    ],
     "main_colors_en": [
       "Navy",
       "Cyan",
@@ -1235,20 +1158,18 @@
       "Blu di Prussia"
     ],
     "description_en": "Layered ocean blues for trust, calm, and expansive clarity.",
-    "description_it": "Strati di blu oceanici per fiducia, calma e chiarezza ampia.",
-    "colors": {
-      "background": "03045E",
-      "primary": "00B4D8",
-      "secondary": "0096C7",
-      "accent": "0077B6",
-      "additional": [
-        "023E8A"
-      ]
-    }
+    "description_it": "Strati di blu oceanici per fiducia, calma e chiarezza ampia."
   },
   {
     "palette_name_en": "Ocean Blue Serenity",
     "palette_name_it": "Serenità Blu Oceano",
+    "hex_colours": [
+      "F9DBBD",
+      "450920",
+      "A53860",
+      "DA627D",
+      "FFA5AB"
+    ],
     "main_colors_en": [
       "Peach",
       "Burgundy",
@@ -1264,20 +1185,18 @@
       "Rosa"
     ],
     "description_en": "Coral pinks with deep maroons for warm, romantic intensity.",
-    "description_it": "Rosa corallo con bordeaux profondi per un’intensità calda e romantica.",
-    "colors": {
-      "background": "F9DBBD",
-      "primary": "450920",
-      "secondary": "A53860",
-      "accent": "DA627D",
-      "additional": [
-        "FFA5AB"
-      ]
-    }
+    "description_it": "Rosa corallo con bordeaux profondi per un’intensità calda e romantica."
   },
   {
     "palette_name_en": "Bold Berry",
     "palette_name_it": "Bacca Decisa",
+    "hex_colours": [
+      "F0EBD8",
+      "0D1321",
+      "1D2D44",
+      "3E5C76",
+      "748CAB"
+    ],
     "main_colors_en": [
       "Cream",
       "Midnight blue",
@@ -1293,20 +1212,18 @@
       "Blu acciaio"
     ],
     "description_en": "Bold berry blues with cream for trustworthy sophistication.",
-    "description_it": "Blu bacca decisi con crema per una raffinatezza affidabile.",
-    "colors": {
-      "background": "F0EBD8",
-      "primary": "0D1321",
-      "secondary": "1D2D44",
-      "accent": "3E5C76",
-      "additional": [
-        "748CAB"
-      ]
-    }
+    "description_it": "Blu bacca decisi con crema per una raffinatezza affidabile."
   },
   {
     "palette_name_en": "Deep Sea (neutral)",
     "palette_name_it": "Mare Profondo (neutro)",
+    "hex_colours": [
+      "F1F0EA",
+      "2D232E",
+      "474448",
+      "534B52",
+      "E0DDCF"
+    ],
     "main_colors_en": [
       "Off-white",
       "Eggplant",
@@ -1322,20 +1239,18 @@
       "Panna"
     ],
     "description_en": "Neutral grays with soft taupes for minimal, modern calm.",
-    "description_it": "Grigi neutri con tortora morbidi per una calma moderna e minimale.",
-    "colors": {
-      "background": "F1F0EA",
-      "primary": "2D232E",
-      "secondary": "474448",
-      "accent": "534B52",
-      "additional": [
-        "E0DDCF"
-      ]
-    }
+    "description_it": "Grigi neutri con tortora morbidi per una calma moderna e minimale."
   },
   {
     "palette_name_en": "Monochrome Chic",
     "palette_name_it": "Chic Monocromatico",
+    "hex_colours": [
+      "FFDAB9",
+      "F08080",
+      "F4978E",
+      "F8AD9D",
+      "FBC4AB"
+    ],
     "main_colors_en": [
       "Peach",
       "Coral",
@@ -1351,20 +1266,18 @@
       "Albicocca"
     ],
     "description_en": "Warm pink monochrome for stylish, feminine branding.",
-    "description_it": "Monocromia rosa calda per un branding femminile e alla moda.",
-    "colors": {
-      "background": "FFDAB9",
-      "primary": "F08080",
-      "secondary": "F4978E",
-      "accent": "F8AD9D",
-      "additional": [
-        "FBC4AB"
-      ]
-    }
+    "description_it": "Monocromia rosa calda per un branding femminile e alla moda."
   },
   {
     "palette_name_en": "Peach Sorbet",
     "palette_name_it": "Sorbetto alla Pesca",
+    "hex_colours": [
+      "073B4C",
+      "EF476F",
+      "FFD166",
+      "06D6A0",
+      "118AB2"
+    ],
     "main_colors_en": [
       "Navy",
       "Raspberry",
@@ -1380,20 +1293,19 @@
       "Verde acqua"
     ],
     "description_en": "Bright tropical mix for playful, adventurous energy.",
-    "description_it": "Mix tropicale brillante per un'energia giocosa e avventurosa.",
-    "colors": {
-      "background": "073B4C",
-      "primary": "EF476F",
-      "secondary": "FFD166",
-      "accent": "06D6A0",
-      "additional": [
-        "118AB2"
-      ]
-    }
+    "description_it": "Mix tropicale brillante per un'energia giocosa e avventurosa."
   },
   {
     "palette_name_en": "Monochrome Grayscale",
     "palette_name_it": "Monocromatico Grigio",
+    "hex_colours": [
+      "FFFFFF",
+      "000000",
+      "333333",
+      "666666",
+      "999999",
+      "CCCCCC"
+    ],
     "main_colors_en": [
       "White",
       "Black",
@@ -1411,21 +1323,18 @@
       "Argento"
     ],
     "description_en": "Pure grayscale palette for timeless, minimal elegance and versatility.",
-    "description_it": "Tavolozza monocromatica pura per un'eleganza minimalista e versatile senza tempo.",
-    "colors": {
-      "background": "FFFFFF",
-      "primary": "000000",
-      "secondary": "333333",
-      "accent": "666666",
-      "additional": [
-        "999999",
-        "CCCCCC"
-      ]
-    }
+    "description_it": "Tavolozza monocromatica pura per un'eleganza minimalista e versatile senza tempo."
   },
   {
     "palette_name_en": "Peach Fuzz Pop",
     "palette_name_it": "Effetto Pesca Frizzante",
+    "hex_colours": [
+      "FFEDE4",
+      "802A2A",
+      "C04330",
+      "A84E00",
+      "A83C54"
+    ],
     "main_colors_en": [
       "Peach",
       "Maroon",
@@ -1441,20 +1350,18 @@
       "Rosa scuro"
     ],
     "description_en": "Soft peach base with bold coral and orange accents, balanced by a touch of deep pink for a modern, energetic vibe.",
-    "description_it": "Base pesca delicata con accenti vivaci corallo e arancione bilanciati da un tocco di rosa intenso, per un’atmosfera moderna ed energica.",
-    "colors": {
-      "background": "FFEDE4",
-      "primary": "802A2A",
-      "secondary": "C04330",
-      "accent": "A84E00",
-      "additional": [
-        "A83C54"
-      ]
-    }
+    "description_it": "Base pesca delicata con accenti vivaci corallo e arancione bilanciati da un tocco di rosa intenso, per un’atmosfera moderna ed energica."
   },
   {
     "palette_name_en": "Color Me Coral",
     "palette_name_it": "Tutto Corallo",
+    "hex_colours": [
+      "FFF8F5",
+      "C14A09",
+      "B55454",
+      "B80F50",
+      "FFD7D7"
+    ],
     "main_colors_en": [
       "Blush",
       "Burnt orange",
@@ -1470,20 +1377,18 @@
       "Rosa"
     ],
     "description_en": "A blend of mature pinks and burnt orange, with a vibrant magenta accent for a warm yet playful look.",
-    "description_it": "Un mix di rosa maturi e arancione bruciato, con un vivace accento magenta per un look caldo ma giocoso.",
-    "colors": {
-      "background": "FFF8F5",
-      "primary": "C14A09",
-      "secondary": "B55454",
-      "accent": "B80F50",
-      "additional": [
-        "FFD7D7"
-      ]
-    }
+    "description_it": "Un mix di rosa maturi e arancione bruciato, con un vivace accento magenta per un look caldo ma giocoso."
   },
   {
     "palette_name_en": "Lavender Haze",
     "palette_name_it": "Foschia di Lavanda",
+    "hex_colours": [
+      "EDF7EF",
+      "4E2A84",
+      "7D5BA6",
+      "2B5E3D",
+      "BEF2C8"
+    ],
     "main_colors_en": [
       "Mint gray",
       "Deep violet",
@@ -1499,20 +1404,18 @@
       "Menta"
     ],
     "description_en": "Soft purples pair with fresh green for a soothing, dreamy palette reminiscent of spring.",
-    "description_it": "Toni di viola delicati si abbinano a un verde fresco per una palette rilassante e da sogno che ricorda la primavera.",
-    "colors": {
-      "background": "EDF7EF",
-      "primary": "4E2A84",
-      "secondary": "7D5BA6",
-      "accent": "2B5E3D",
-      "additional": [
-        "BEF2C8"
-      ]
-    }
+    "description_it": "Toni di viola delicati si abbinano a un verde fresco per una palette rilassante e da sogno che ricorda la primavera."
   },
   {
     "palette_name_en": "Blue Nova",
     "palette_name_it": "Blu Nova",
+    "hex_colours": [
+      "F5F3EF",
+      "2F3E7C",
+      "706A5F",
+      "944B1C",
+      "89A7C7"
+    ],
     "main_colors_en": [
       "Cream",
       "Starry blue",
@@ -1528,20 +1431,18 @@
       "Azzurro cielo"
     ],
     "description_en": "Starry blues balanced by soft neutrals, with a rustic orange accent adding warmth.",
-    "description_it": "Blu stellari bilanciati da neutri delicati, con un accento arancione rustico ad aggiungere calore.",
-    "colors": {
-      "background": "F5F3EF",
-      "primary": "2F3E7C",
-      "secondary": "706A5F",
-      "accent": "944B1C",
-      "additional": [
-        "89A7C7"
-      ]
-    }
+    "description_it": "Blu stellari bilanciati da neutri delicati, con un accento arancione rustico ad aggiungere calore."
   },
   {
     "palette_name_en": "Spring Forward",
     "palette_name_it": "Balzo Verso la Primavera",
+    "hex_colours": [
+      "FEFDF6",
+      "054A29",
+      "7A6825",
+      "704214",
+      "C4D6B0"
+    ],
     "main_colors_en": [
       "Ivory",
       "Emerald",
@@ -1557,20 +1458,18 @@
       "Verde pallido"
     ],
     "description_en": "Golden yellows, soft greens, and a deep emerald create a fresh springtime feel balanced by creamy neutrals.",
-    "description_it": "Gialli dorati, verdi delicati e un verde smeraldo profondo creano un fresco clima primaverile, bilanciato da neutri cremosi.",
-    "colors": {
-      "background": "FEFDF6",
-      "primary": "054A29",
-      "secondary": "7A6825",
-      "accent": "704214",
-      "additional": [
-        "C4D6B0"
-      ]
-    }
+    "description_it": "Gialli dorati, verdi delicati e un verde smeraldo profondo creano un fresco clima primaverile, bilanciato da neutri cremosi."
   },
   {
     "palette_name_en": "Millennial Pink",
     "palette_name_it": "Rosa Millennial",
+    "hex_colours": [
+      "FFFAF5",
+      "9C3F72",
+      "AE4F80",
+      "1B7F8A",
+      "FDF1C7"
+    ],
     "main_colors_en": [
       "Blush pink",
       "Plum",
@@ -1586,20 +1485,18 @@
       "Crema al burro"
     ],
     "description_en": "A medley of pink hues with a hint of teal for a fun yet elegant feminine palette.",
-    "description_it": "Una miscela di tonalità rosa con un tocco di verde acqua per una palette femminile divertente e al contempo elegante.",
-    "colors": {
-      "background": "FFFAF5",
-      "primary": "9C3F72",
-      "secondary": "AE4F80",
-      "accent": "1B7F8A",
-      "additional": [
-        "FDF1C7"
-      ]
-    }
+    "description_it": "Una miscela di tonalità rosa con un tocco di verde acqua per una palette femminile divertente e al contempo elegante."
   },
   {
     "palette_name_en": "Feeling Fresh",
     "palette_name_it": "Sensazione di Freschezza",
+    "hex_colours": [
+      "F5F5F4",
+      "145C2E",
+      "5A646D",
+      "8A653A",
+      "DDE0DD"
+    ],
     "main_colors_en": [
       "Light gray",
       "Forest green",
@@ -1615,20 +1512,18 @@
       "Nebbia"
     ],
     "description_en": "Vibrant forest green pairs with soft grays, grounded by a warm honey-brown accent for an invigorating yet stable palette.",
-    "description_it": "Un vivace verde foresta si abbina a grigi delicati, radicato da un accento marrone miele caldo per una palette rinvigorente ma equilibrata.",
-    "colors": {
-      "background": "F5F5F4",
-      "primary": "145C2E",
-      "secondary": "5A646D",
-      "accent": "8A653A",
-      "additional": [
-        "DDE0DD"
-      ]
-    }
+    "description_it": "Un vivace verde foresta si abbina a grigi delicati, radicato da un accento marrone miele caldo per una palette rinvigorente ma equilibrata."
   },
   {
     "palette_name_en": "Tones on Tones",
     "palette_name_it": "Tonalità su Tonalità",
+    "hex_colours": [
+      "F9F5F0",
+      "4B3A30",
+      "7A634F",
+      "A65F2B",
+      "D7C6B4"
+    ],
     "main_colors_en": [
       "Ivory",
       "Umber",
@@ -1644,20 +1539,18 @@
       "Beige"
     ],
     "description_en": "A layered neutral palette using varying shades of warm tan and brown for a sophisticated, monochromatic look.",
-    "description_it": "Una palette neutra stratificata che utilizza diverse sfumature di marrone caldo per un look sofisticato e monocromatico.",
-    "colors": {
-      "background": "F9F5F0",
-      "primary": "4B3A30",
-      "secondary": "7A634F",
-      "accent": "A65F2B",
-      "additional": [
-        "D7C6B4"
-      ]
-    }
+    "description_it": "Una palette neutra stratificata che utilizza diverse sfumature di marrone caldo per un look sofisticato e monocromatico."
   },
   {
     "palette_name_en": "Nautical Prep",
     "palette_name_it": "Stile Nautico",
+    "hex_colours": [
+      "F7F3EC",
+      "4A4E59",
+      "0A3055",
+      "3F6585",
+      "D9D4C5"
+    ],
     "main_colors_en": [
       "Cream",
       "Charcoal blue",
@@ -1673,20 +1566,18 @@
       "Sabbia"
     ],
     "description_en": "Soft cream and deep ocean blue evoke a classic nautical vibe, anchored by a strong charcoal primary for a polished, preppy feel.",
-    "description_it": "Una morbida crema e un blu oceano intenso evocano un classico stile nautico, ancorato da un forte colore antracite primario per un’atmosfera curata e preppy.",
-    "colors": {
-      "background": "F7F3EC",
-      "primary": "4A4E59",
-      "secondary": "0A3055",
-      "accent": "3F6585",
-      "additional": [
-        "D9D4C5"
-      ]
-    }
+    "description_it": "Una morbida crema e un blu oceano intenso evocano un classico stile nautico, ancorato da un forte colore antracite primario per un’atmosfera curata e preppy."
   },
   {
     "palette_name_en": "Study Hard",
     "palette_name_it": "Studio Intenso",
+    "hex_colours": [
+      "ECE1D3",
+      "3B2F2F",
+      "7B5E57",
+      "755C48",
+      "BFA58C"
+    ],
     "main_colors_en": [
       "Tan",
       "Dark brown",
@@ -1702,20 +1593,18 @@
       "Cachi"
     ],
     "description_en": "An array of warm browns creates an academic, grounded feel. Best used with a light tan base instead of stark white for a cozy effect.",
-    "description_it": "Una gamma di marroni caldi crea un’atmosfera accademica e solida. Da usare preferibilmente con una base beige chiaro invece del bianco puro per un effetto accogliente.",
-    "colors": {
-      "background": "ECE1D3",
-      "primary": "3B2F2F",
-      "secondary": "7B5E57",
-      "accent": "755C48",
-      "additional": [
-        "BFA58C"
-      ]
-    }
+    "description_it": "Una gamma di marroni caldi crea un’atmosfera accademica e solida. Da usare preferibilmente con una base beige chiaro invece del bianco puro per un effetto accogliente."
   },
   {
     "palette_name_en": "Spiced Autumn",
     "palette_name_it": "Autunno Speziato",
+    "hex_colours": [
+      "F6E4D6",
+      "8B2E2E",
+      "944A1E",
+      "C41E3A",
+      "E8C4A2"
+    ],
     "main_colors_en": [
       "Apricot",
       "Bordeaux",
@@ -1731,20 +1620,18 @@
       "Crema"
     ],
     "description_en": "Soft pink and rich spice tones (saffron, chili, paprika) blend for a warm palette with balanced depth. A bright crimson accent adds lively energy.",
-    "description_it": "Toni rosa tenui e ricchi toni speziati (zafferano, peperoncino, paprica) si fondono per una palette calda e bilanciata in profondità. Un vivace accento cremisi aggiunge energia.",
-    "colors": {
-      "background": "F6E4D6",
-      "primary": "8B2E2E",
-      "secondary": "944A1E",
-      "accent": "C41E3A",
-      "additional": [
-        "E8C4A2"
-      ]
-    }
+    "description_it": "Toni rosa tenui e ricchi toni speziati (zafferano, peperoncino, paprica) si fondono per una palette calda e bilanciata in profondità. Un vivace accento cremisi aggiunge energia."
   },
   {
     "palette_name_en": "Spring Bloom",
     "palette_name_it": "Fioritura Primaverile",
+    "hex_colours": [
+      "F4F0FB",
+      "2B6B3D",
+      "6C5C88",
+      "A84104",
+      "FBEDE2"
+    ],
     "main_colors_en": [
       "Lavender",
       "Leaf green",
@@ -1760,20 +1647,18 @@
       "Pesca"
     ],
     "description_en": "A fresh spring palette combining soft lavender and minty green with a pop of tangerine. Light pastels and a bright accent capture the feeling of new blooms.",
-    "description_it": "Una fresca palette primaverile che unisce un lavanda delicato e un verde menta con un tocco di mandarino a contrasto. Pastelli chiari e un accento vivace catturano la sensazione di nuove fioriture.",
-    "colors": {
-      "background": "F4F0FB",
-      "primary": "2B6B3D",
-      "secondary": "6C5C88",
-      "accent": "A84104",
-      "additional": [
-        "FBEDE2"
-      ]
-    }
+    "description_it": "Una fresca palette primaverile che unisce un lavanda delicato e un verde menta con un tocco di mandarino a contrasto. Pastelli chiari e un accento vivace catturano la sensazione di nuove fioriture."
   },
   {
     "palette_name_en": "Country Club Chic",
     "palette_name_it": "Chic da Country Club",
+    "hex_colours": [
+      "F2EDE3",
+      "254D32",
+      "7A613E",
+      "4A637D",
+      "D0CBC1"
+    ],
     "main_colors_en": [
       "Cream",
       "Oak green",
@@ -1789,20 +1674,18 @@
       "Pietra"
     ],
     "description_en": "Sophisticated neutrals (taupes and browns) get a pop of country club style with a rich oak green and a powdery blue accent, evoking an English countryside elegance.",
-    "description_it": "Neutri sofisticati (taupe e marroni) sono ravvivati dallo stile country club con un ricco verde quercia e un accento blu polvere, evocando un’eleganza da campagna inglese.",
-    "colors": {
-      "background": "F2EDE3",
-      "primary": "254D32",
-      "secondary": "7A613E",
-      "accent": "4A637D",
-      "additional": [
-        "D0CBC1"
-      ]
-    }
+    "description_it": "Neutri sofisticati (taupe e marroni) sono ravvivati dallo stile country club con un ricco verde quercia e un accento blu polvere, evocando un’eleganza da campagna inglese."
   },
   {
     "palette_name_en": "Palm Beach Chic",
     "palette_name_it": "Chic da Palm Beach",
+    "hex_colours": [
+      "E1ECE4",
+      "4B3621",
+      "355F44",
+      "A43F4F",
+      "F5E8DD"
+    ],
     "main_colors_en": [
       "Seafoam",
       "Chocolate",
@@ -1818,20 +1701,18 @@
       "Alabastro"
     ],
     "description_en": "Soft tropical greens form the base of this classy palette, accented by a rosy pink and grounded with warm neutrals, embodying an elegant coastal vibe.",
-    "description_it": "Morbidi verdi tropicali formano la base di questa palette raffinata, arricchita da un rosa cipria e radicata da neutri caldi, per un’atmosfera costiera elegante.",
-    "colors": {
-      "background": "E1ECE4",
-      "primary": "4B3621",
-      "secondary": "355F44",
-      "accent": "A43F4F",
-      "additional": [
-        "F5E8DD"
-      ]
-    }
+    "description_it": "Morbidi verdi tropicali formano la base di questa palette raffinata, arricchita da un rosa cipria e radicata da neutri caldi, per un’atmosfera costiera elegante."
   },
   {
     "palette_name_en": "Upward Sky",
     "palette_name_it": "Ascesa Celeste",
+    "hex_colours": [
+      "FBF7EF",
+      "1F4E79",
+      "3F74A4",
+      "B25830",
+      "EAE6D8"
+    ],
     "main_colors_en": [
       "Cream",
       "Navy",
@@ -1847,20 +1728,18 @@
       "Avena"
     ],
     "description_en": "Delicate sky blues are paired with a deeper navy and grounded by creamy whites, while a touch of warm apricot adds an inviting highlight.",
-    "description_it": "Delicati azzurri del cielo si abbinano a un blu marino più profondo e sono bilanciati da bianchi cremosi, con un tocco di albicocca calda ad aggiungere un accento accogliente.",
-    "colors": {
-      "background": "FBF7EF",
-      "primary": "1F4E79",
-      "secondary": "3F74A4",
-      "accent": "B25830",
-      "additional": [
-        "EAE6D8"
-      ]
-    }
+    "description_it": "Delicati azzurri del cielo si abbinano a un blu marino più profondo e sono bilanciati da bianchi cremosi, con un tocco di albicocca calda ad aggiungere un accento accogliente."
   },
   {
     "palette_name_en": "Warm Earth",
     "palette_name_it": "Terra Calda",
+    "hex_colours": [
+      "F3EEE8",
+      "5C5438",
+      "8E4B3A",
+      "7D6222",
+      "C9C2B8"
+    ],
     "main_colors_en": [
       "Sand",
       "Olive brown",
@@ -1876,20 +1755,18 @@
       "Grigio beige"
     ],
     "description_en": "Rich olive and clay tones blend with soft sand neutrals for a palette that's both earthy and comforting.",
-    "description_it": "Ricche tonalità oliva e argilla si fondono con neutri color sabbia per una palette al tempo stesso terrosa e accogliente.",
-    "colors": {
-      "background": "F3EEE8",
-      "primary": "5C5438",
-      "secondary": "8E4B3A",
-      "accent": "7D6222",
-      "additional": [
-        "C9C2B8"
-      ]
-    }
+    "description_it": "Ricche tonalità oliva e argilla si fondono con neutri color sabbia per una palette al tempo stesso terrosa e accogliente."
   },
   {
     "palette_name_en": "Italian Countryside",
     "palette_name_it": "Campagna Italiana",
+    "hex_colours": [
+      "F5F3F0",
+      "4B0E26",
+      "574F45",
+      "0B1828",
+      "CEC8BF"
+    ],
     "main_colors_en": [
       "Ivory",
       "Burgundy",
@@ -1905,20 +1782,18 @@
       "Grigio beige"
     ],
     "description_en": "A decadent palette featuring deep burgundy and midnight blue contrasted against airy neutrals, whisking you away to an Italian villa.",
-    "description_it": "Una palette sontuosa con un bordeaux profondo e un blu mezzanotte a contrasto su neutri ariosi, che ti trasporta in una villa nella campagna italiana.",
-    "colors": {
-      "background": "F5F3F0",
-      "primary": "4B0E26",
-      "secondary": "574F45",
-      "accent": "0B1828",
-      "additional": [
-        "CEC8BF"
-      ]
-    }
+    "description_it": "Una palette sontuosa con un bordeaux profondo e un blu mezzanotte a contrasto su neutri ariosi, che ti trasporta in una villa nella campagna italiana."
   },
   {
     "palette_name_en": "Cyberpunk Neon",
     "palette_name_it": "Neon Cyberpunk",
+    "hex_colours": [
+      "000000",
+      "39FF14",
+      "FF1493",
+      "00E5FF",
+      "1A1A1A"
+    ],
     "main_colors_en": [
       "Black",
       "Neon green",
@@ -1934,20 +1809,18 @@
       "Grafite"
     ],
     "description_en": "High-contrast neon magenta, cyan, and green on a pure black background for a futuristic, attention-grabbing style.",
-    "description_it": "Neon magenta, ciano e verde ad alto contrasto su sfondo nero puro per uno stile futuristico e accattivante.",
-    "colors": {
-      "background": "000000",
-      "primary": "39FF14",
-      "secondary": "FF1493",
-      "accent": "00E5FF",
-      "additional": [
-        "1A1A1A"
-      ]
-    }
+    "description_it": "Neon magenta, ciano e verde ad alto contrasto su sfondo nero puro per uno stile futuristico e accattivante."
   },
   {
     "palette_name_en": "Black & Gold",
     "palette_name_it": "Nero e Oro",
+    "hex_colours": [
+      "000000",
+      "FFFFFF",
+      "FFD700",
+      "BBBBBB",
+      "333333"
+    ],
     "main_colors_en": [
       "Black",
       "White",
@@ -1963,20 +1836,18 @@
       "Grigio scuro"
     ],
     "description_en": "Dramatic black and white with golden accents for a classic, high-contrast look.",
-    "description_it": "Drammatica combinazione di nero e bianco con accenti dorati per un look classico ad alto contrasto.",
-    "colors": {
-      "background": "000000",
-      "primary": "FFFFFF",
-      "secondary": "FFD700",
-      "accent": "BBBBBB",
-      "additional": [
-        "333333"
-      ]
-    }
+    "description_it": "Drammatica combinazione di nero e bianco con accenti dorati per un look classico ad alto contrasto."
   },
   {
     "palette_name_en": "Mint Chocolate",
     "palette_name_it": "Menta e Cioccolato",
+    "hex_colours": [
+      "E0FFF5",
+      "3F292B",
+      "8B5E34",
+      "F5E1A4",
+      "97D5C2"
+    ],
     "main_colors_en": [
       "Mint",
       "Dark brown",
@@ -1992,20 +1863,18 @@
       "Schiuma di mare"
     ],
     "description_en": "Cool minty greens paired with rich chocolate browns and a touch of creamy vanilla – a sweet, inviting combination.",
-    "description_it": "Freschi verdi menta abbinati a ricchi marroni cioccolato e un tocco di crema vaniglia – una combinazione dolce e invitante.",
-    "colors": {
-      "background": "E0FFF5",
-      "primary": "3F292B",
-      "secondary": "8B5E34",
-      "accent": "F5E1A4",
-      "additional": [
-        "97D5C2"
-      ]
-    }
+    "description_it": "Freschi verdi menta abbinati a ricchi marroni cioccolato e un tocco di crema vaniglia – una combinazione dolce e invitante."
   },
   {
     "palette_name_en": "Berry Burst",
     "palette_name_it": "Esplosione di Bacche",
+    "hex_colours": [
+      "FFF7F9",
+      "4B2142",
+      "7A3164",
+      "C2185B",
+      "E6B5D2"
+    ],
     "main_colors_en": [
       "Blush",
       "Eggplant",
@@ -2021,20 +1890,18 @@
       "Lavanda"
     ],
     "description_en": "A light base with deep berry and plum tones, accented by bright fuchsia – energetic yet elegant.",
-    "description_it": "Base chiara con tonalità di bacche e prugna profonde, accentuate da fucsia brillante – energico e al contempo elegante.",
-    "colors": {
-      "background": "FFF7F9",
-      "primary": "4B2142",
-      "secondary": "7A3164",
-      "accent": "C2185B",
-      "additional": [
-        "E6B5D2"
-      ]
-    }
+    "description_it": "Base chiara con tonalità di bacche e prugna profonde, accentuate da fucsia brillante – energico e al contempo elegante."
   },
   {
     "palette_name_en": "Serene Spa",
     "palette_name_it": "Spa Sereno",
+    "hex_colours": [
+      "EFF8FA",
+      "4D637A",
+      "8AA9B0",
+      "A9DDD6",
+      "FFFFFF"
+    ],
     "main_colors_en": [
       "Ice blue",
       "Slate blue",
@@ -2050,20 +1917,18 @@
       "Bianco"
     ],
     "description_en": "Tranquil blues and greens create a soothing spa-like palette, with slate and seafoam balanced by crisp white.",
-    "description_it": "Blu e verdi tranquilli creano una palette rilassante da spa, con ardesia e verde mare bilanciati da un bianco nitido.",
-    "colors": {
-      "background": "EFF8FA",
-      "primary": "4D637A",
-      "secondary": "8AA9B0",
-      "accent": "A9DDD6",
-      "additional": [
-        "FFFFFF"
-      ]
-    }
+    "description_it": "Blu e verdi tranquilli creano una palette rilassante da spa, con ardesia e verde mare bilanciati da un bianco nitido."
   },
   {
     "palette_name_en": "Energy Burst",
     "palette_name_it": "Esplosione di Energia",
+    "hex_colours": [
+      "1E1E1E",
+      "F46036",
+      "EEEEEE",
+      "2E2E2E",
+      "FFC800"
+    ],
     "main_colors_en": [
       "Charcoal",
       "Orange",
@@ -2079,20 +1944,18 @@
       "Giallo"
     ],
     "description_en": "A dark modern base energized by a burst of bright orange and yellow, tempered with sleek grays for balance.",
-    "description_it": "Una base moderna scura energizzata da un'esplosione di arancione e giallo brillante, temperata da grigi eleganti per equilibrio.",
-    "colors": {
-      "background": "1E1E1E",
-      "primary": "F46036",
-      "secondary": "EEEEEE",
-      "accent": "2E2E2E",
-      "additional": [
-        "FFC800"
-      ]
-    }
+    "description_it": "Una base moderna scura energizzata da un'esplosione di arancione e giallo brillante, temperata da grigi eleganti per equilibrio."
   },
   {
     "palette_name_en": "Citrus Splash",
     "palette_name_it": "Schizzo Agrumato",
+    "hex_colours": [
+      "FFFFFF",
+      "1B3A30",
+      "F25C05",
+      "FFC900",
+      "7AB87F"
+    ],
     "main_colors_en": [
       "White",
       "Pine",
@@ -2108,20 +1971,18 @@
       "Verde menta"
     ],
     "description_en": "Bright citrus hues – zesty orange and lemon – pop against clean white and deep green for a fresh, lively look.",
-    "description_it": "Vivaci tonalità agrumate – arancione e limone frizzanti – risaltano su bianco pulito e verde intenso per un look fresco e vivace.",
-    "colors": {
-      "background": "FFFFFF",
-      "primary": "1B3A30",
-      "secondary": "F25C05",
-      "accent": "FFC900",
-      "additional": [
-        "7AB87F"
-      ]
-    }
+    "description_it": "Vivaci tonalità agrumate – arancione e limone frizzanti – risaltano su bianco pulito e verde intenso per un look fresco e vivace."
   },
   {
     "palette_name_en": "Sunset Boulevard",
     "palette_name_it": "Viale al Tramonto",
+    "hex_colours": [
+      "2E1B4B",
+      "FEC5E5",
+      "F18F01",
+      "E7007E",
+      "300E3D"
+    ],
     "main_colors_en": [
       "Purple",
       "Petal pink",
@@ -2137,20 +1998,18 @@
       "Melanzana"
     ],
     "description_en": "Dramatic sunset tones of vivid orange and pink set against a deep purple sky, evoking an evening urban skyline.",
-    "description_it": "Drammatici toni da tramonto con arancione e rosa vividi su un cielo viola profondo, che evocano un profilo urbano serale.",
-    "colors": {
-      "background": "2E1B4B",
-      "primary": "FEC5E5",
-      "secondary": "F18F01",
-      "accent": "E7007E",
-      "additional": [
-        "300E3D"
-      ]
-    }
+    "description_it": "Drammatici toni da tramonto con arancione e rosa vividi su un cielo viola profondo, che evocano un profilo urbano serale."
   },
   {
     "palette_name_en": "Midnight Teal",
     "palette_name_it": "Verde Petrolio Notturno",
+    "hex_colours": [
+      "012F34",
+      "A0E7E5",
+      "FFB5A7",
+      "2EC4B6",
+      "034852"
+    ],
     "main_colors_en": [
       "Dark teal",
       "Aqua",
@@ -2166,20 +2025,18 @@
       "Verde acqua"
     ],
     "description_en": "A rich teal night sky brightened by soft aqua and coral highlights, creating a balanced mix of cool and warm tones.",
-    "description_it": "Un ricco cielo notturno color verde petrolio illuminato da delicati riflessi acquamarina e corallo, per un mix equilibrato di toni freddi e caldi.",
-    "colors": {
-      "background": "012F34",
-      "primary": "A0E7E5",
-      "secondary": "FFB5A7",
-      "accent": "2EC4B6",
-      "additional": [
-        "034852"
-      ]
-    }
+    "description_it": "Un ricco cielo notturno color verde petrolio illuminato da delicati riflessi acquamarina e corallo, per un mix equilibrato di toni freddi e caldi."
   },
   {
     "palette_name_en": "Pink Lemonade",
     "palette_name_it": "Limonata Rosa",
+    "hex_colours": [
+      "FFF9C4",
+      "800253",
+      "C2185B",
+      "146B3A",
+      "FEEFBF"
+    ],
     "main_colors_en": [
       "Lemon",
       "Deep pink",
@@ -2195,20 +2052,18 @@
       "Crema"
     ],
     "description_en": "Sunny lemon yellow mixed with bold berry pinks and a hint of green, like a refreshing glass of pink lemonade on a summer day.",
-    "description_it": "Un giallo limone solare mescolato a decisi rosa frutti di bosco e un tocco di verde, come un rinfrescante bicchiere di limonata rosa in un giorno d'estate.",
-    "colors": {
-      "background": "FFF9C4",
-      "primary": "800253",
-      "secondary": "C2185B",
-      "accent": "146B3A",
-      "additional": [
-        "FEEFBF"
-      ]
-    }
+    "description_it": "Un giallo limone solare mescolato a decisi rosa frutti di bosco e un tocco di verde, come un rinfrescante bicchiere di limonata rosa in un giorno d'estate."
   },
   {
     "palette_name_en": "Graphite & Lime",
     "palette_name_it": "Grafite e Lime",
+    "hex_colours": [
+      "1C1C1C",
+      "FFFFFF",
+      "D0FF00",
+      "37FFFC",
+      "555555"
+    ],
     "main_colors_en": [
       "Graphite",
       "White",
@@ -2224,20 +2079,18 @@
       "Grigio"
     ],
     "description_en": "Dark graphite paired with neon lime and cyan accents for an ultra-modern, techy aesthetic with high contrast.",
-    "description_it": "Grafite scuro abbinato ad accenti lime e ciano neon per un'estetica ultra moderna e tecnologica ad alto contrasto.",
-    "colors": {
-      "background": "1C1C1C",
-      "primary": "FFFFFF",
-      "secondary": "D0FF00",
-      "accent": "37FFFC",
-      "additional": [
-        "555555"
-      ]
-    }
+    "description_it": "Grafite scuro abbinato ad accenti lime e ciano neon per un'estetica ultra moderna e tecnologica ad alto contrasto."
   },
   {
     "palette_name_en": "Desert Oasis",
     "palette_name_it": "Oasi nel Deserto",
+    "hex_colours": [
+      "F4EFEA",
+      "66462A",
+      "8C694D",
+      "008D91",
+      "D9C2A2"
+    ],
     "main_colors_en": [
       "Sand",
       "Coffee brown",
@@ -2253,15 +2106,6 @@
       "Cuoio chiaro"
     ],
     "description_en": "Warm desert sands and browns with a splash of turquoise – evoking sun-soaked adobe and a cool oasis under the sky.",
-    "description_it": "Calde sabbie e toni bruni del deserto con un tocco di turchese – che evocano l’adobe baciato dal sole e una fresca oasi sotto il cielo.",
-    "colors": {
-      "background": "F4EFEA",
-      "primary": "66462A",
-      "secondary": "8C694D",
-      "accent": "008D91",
-      "additional": [
-        "D9C2A2"
-      ]
-    }
+    "description_it": "Calde sabbie e toni bruni del deserto con un tocco di turchese – che evocano l’adobe baciato dal sole e una fresca oasi sotto il cielo."
   }
 ]

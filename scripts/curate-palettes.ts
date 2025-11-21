@@ -1,10 +1,28 @@
 import colorPalettesData from '../src/data/color_palettes_original.json'
 import fs from 'fs'
 
-interface Palette {
+// Old format (used in color_palettes_original.json)
+interface OldPalette {
   palette_name_en: string
   palette_name_it: string
   hex_colours: string[]
+  main_colors_en: string[]
+  main_colors_it: string[]
+  description_en: string
+  description_it: string
+}
+
+// New format (what we output)
+interface Palette {
+  palette_name_en: string
+  palette_name_it: string
+  colors: {
+    background: string
+    primary: string
+    secondary: string
+    accent: string
+    additional?: string[]
+  }
   main_colors_en: string[]
   main_colors_it: string[]
   description_en: string
@@ -166,8 +184,25 @@ function deriveContrastingColor(
   }
 }
 
+// Transform old format to new format
+function transformToNewFormat(oldPalette: OldPalette): Palette {
+  const hexColors = oldPalette.hex_colours
+  return {
+    ...oldPalette,
+    colors: {
+      background: hexColors[0] || '',
+      primary: hexColors[1] || '',
+      secondary: hexColors[2] || '',
+      accent: hexColors[3] || '',
+      ...(hexColors.length > 4 ? { additional: hexColors.slice(4) } : {})
+    }
+  }
+}
+
 function curatePalette(palette: Palette): Palette {
-  const colors = palette.hex_colours.map(normalizeHex)
+  // Extract colors from the new object structure
+  const { background: bgColor, primary: primColor, secondary: secColor, accent: accColor, additional = [] } = palette.colors
+  const colors = [bgColor, primColor, secColor, accColor, ...additional].map(normalizeHex)
   const notes: string[] = []
 
   // 1. Analyze palette
@@ -297,16 +332,26 @@ function curatePalette(palette: Palette): Palette {
     notes.push(`WARNING: Length mismatch - original: ${colors.length}, reordered: ${reordered.length}`)
   }
 
+  // Build new colors object from reordered array
+  const newColors = {
+    background: reordered[0],
+    primary: reordered[1],
+    secondary: reordered[2],
+    accent: reordered[3],
+    ...(reordered.length > 4 ? { additional: reordered.slice(4) } : {})
+  }
+
   return {
     ...palette,
-    hex_colours: reordered,
+    colors: newColors,
     _curation_notes: notes.join('; ')
   }
 }
 
 // Process all palettes
-const palettes = colorPalettesData as Palette[]
-const curated = palettes.map(curatePalette)
+const oldPalettes = colorPalettesData as OldPalette[]
+const transformedPalettes = oldPalettes.map(transformToNewFormat)
+const curated = transformedPalettes.map(curatePalette)
 
 // Validation - check contrast ratios
 console.log('\n🎨 PALETTE CURATION VALIDATION\n')
@@ -317,10 +362,7 @@ let passCount = 0
 let failCount = 0
 
 curated.forEach((palette) => {
-  const bg = palette.hex_colours[0]
-  const primary = palette.hex_colours[1]
-  const secondary = palette.hex_colours[2]
-  const accent = palette.hex_colours[3]
+  const { background: bg, primary, secondary, accent } = palette.colors
 
   const primaryContrast = getContrastRatio(primary, bg)
   const secondaryContrast = getContrastRatio(secondary, bg)
