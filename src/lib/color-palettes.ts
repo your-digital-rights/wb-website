@@ -1,3 +1,29 @@
+/**
+ * Color Palettes Library
+ *
+ * This module processes color palettes from src/data/color_palettes.json
+ *
+ * IMPORTANT: Color Order in color_palettes.json
+ * ===============================================
+ * The hex_colours array in each palette follows this order:
+ *
+ * Index 0: Background color (lightest color, usually neutral)
+ * Index 1: Primary color (main brand color)
+ * Index 2: Secondary color (supporting brand color)
+ * Index 3: Accent color (highlight/call-to-action color)
+ * Index 4+: Additional colors (optional)
+ *
+ * Example:
+ * "hex_colours": [
+ *   "FDF0D5",  // Index 0: Background (Cream)
+ *   "003049",  // Index 1: Primary (Navy)
+ *   "780000",  // Index 2: Secondary (Dark red)
+ *   "C1121F",  // Index 3: Accent (Bright red)
+ *   "669BBC"   // Index 4: Additional (Sky blue)
+ * ]
+ *
+ * This order is preserved when saving to the database as colorPalette array.
+ */
 import colorPalettesData from '@/data/color_palettes.json'
 
 interface Color {

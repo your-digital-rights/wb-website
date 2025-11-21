@@ -104,20 +104,22 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
 
     if (selectedPalette && selectedPalette.preview) {
       // Populate custom colors with palette preview colors
+      // Order matches color_palettes.json: [background, primary, secondary, accent]
       const newCustomColors: CustomColor[] = [
+        { name: 'background', value: selectedPalette.preview.background },
         { name: 'primary', value: selectedPalette.preview.primary },
         { name: 'secondary', value: selectedPalette.preview.secondary },
-        { name: 'accent', value: selectedPalette.preview.accent },
-        { name: 'background', value: selectedPalette.preview.background }
+        { name: 'accent', value: selectedPalette.preview.accent }
       ]
       setCustomColors(newCustomColors)
 
       // Update form with color values array
+      // Order matches color_palettes.json: [background, primary, secondary, accent, ...additional]
       const colorValues = [
+        selectedPalette.preview.background,
         selectedPalette.preview.primary,
         selectedPalette.preview.secondary,
         selectedPalette.preview.accent,
-        selectedPalette.preview.background,
         // Include any additional colors from the palette
         ...selectedPalette.colors.slice(4).map(c => c.hex)
       ]

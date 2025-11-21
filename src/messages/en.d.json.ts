@@ -721,8 +721,8 @@ declare const messages: {
           "description": "Colors play a crucial role in how customers perceive your brand. Choose a palette that reflects your business personality and appeals to your target audience."
         },
         "customColors": {
-          "title": "Customize Your Brand Colors",
-          "description": "Select or customize the four core colors for your brand. You can choose a predefined palette below or create your own unique combination.",
+          "title": "Advanced: Custom Colors",
+          "description": "Fine-tune your brand colors by selecting a palette above first, then override individual colors here if needed. Most users won't need this section.",
           "labels": {
             "primary": "Primary",
             "secondary": "Secondary",
@@ -732,7 +732,7 @@ declare const messages: {
           "empty": "Select Color",
           "clear": "Clear",
           "done": "Done",
-          "hint": "All colors are optional. Select a palette below to auto-populate, or click each color box to customize individually."
+          "hint": "Optional: Choose a palette above to start, then customize individual colors here. Click a color box to pick a color visually, or enter a hex code."
         },
         "selection": {
           "title": "Choose Your Color Palette",

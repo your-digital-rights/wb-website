@@ -64,7 +64,8 @@ export interface OnboardingFormData {
   // Step 9: Image Style Selection
   imageStyle: ImageStyleOption
   
-  // Step 10: Color Palette - Array of hex color values [primary, secondary, accent, background, ...additional]
+  // Step 10: Color Palette - Array of hex color values [background, primary, secondary, accent, ...additional]
+  // Order matches color_palettes.json: index 0=background, 1=primary, 2=secondary, 3=accent, 4+=additional
   colorPalette?: string[] // Optional array of hex color values
   
   // Step 11: Website Structure

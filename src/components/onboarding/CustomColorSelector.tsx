@@ -30,11 +30,12 @@ export function CustomColorSelector({
   const t = useTranslations('onboarding.steps.10.customColors')
 
   // Initialize colors with empty values if not provided
+  // Order matches color_palettes.json: [background, primary, secondary, accent]
   const defaultColors: CustomColor[] = [
+    { name: 'background', value: undefined },
     { name: 'primary', value: undefined },
     { name: 'secondary', value: undefined },
-    { name: 'accent', value: undefined },
-    { name: 'background', value: undefined }
+    { name: 'accent', value: undefined }
   ]
 
   const currentColors = colors.length === 4 ? colors : defaultColors
