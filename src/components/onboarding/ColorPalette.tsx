@@ -136,7 +136,7 @@ export function ColorPalette({
             )}
 
             {/* Palette Grid - Scrollable with 2 rows visible */}
-            <div className="max-h-[680px] overflow-y-auto pr-2 scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40">
+            <div className="h-[600px] overflow-y-auto pr-2 scroll-smooth [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40">
               <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {categoryOptions.map((option, index) => {
                 const selected = isSelected(option.id)
@@ -273,63 +273,6 @@ export function ColorPalette({
           </div>
         ))}
       </div>
-
-      {/* Selected Palette Details */}
-      {selectedId && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="border-t pt-4"
-        >
-          {(() => {
-            const selectedPalette = options.find(opt => opt.id === selectedId)
-            if (!selectedPalette) return null
-
-            return (
-              <Card className="bg-muted/50">
-                <CardContent className="p-4 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Palette className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-medium">{t('selectedPalette')}: {selectedPalette.name}</span>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    {/* Color Details */}
-                    <div>
-                      <h5 className="font-medium mb-2">{t('colors')}:</h5>
-                      <div className="space-y-1">
-                        {selectedPalette.colors.map((color) => (
-                          <div key={color.hex} className="flex items-center gap-2">
-                            <div 
-                              className="w-4 h-4 rounded border"
-                              style={{ backgroundColor: color.hex }}
-                            />
-                            <span className="font-mono">{color.hex}</span>
-                            <span className="text-muted-foreground">{color.name}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    {/* Usage Guidelines */}
-                    {selectedPalette.preview && (
-                      <div>
-                        <h5 className="font-medium mb-2">{t('usage')}:</h5>
-                        <div className="space-y-1 text-muted-foreground">
-                          <div>Primary: {selectedPalette.preview.primary}</div>
-                          <div>Secondary: {selectedPalette.preview.secondary}</div>
-                          <div>Accent: {selectedPalette.preview.accent}</div>
-                          <div>Background: {selectedPalette.preview.background}</div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            )
-          })()}
-        </motion.div>
-      )}
 
       {/* No Options State */}
       {options.length === 0 && (
