@@ -1,18 +1,21 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import { Layout, Target, ShoppingBag, Users, FileText } from 'lucide-react'
 
 import { DropdownInput } from '@/components/onboarding/form-fields/DropdownInput'
-import { DynamicList } from '@/components/onboarding/DynamicList'
+import { ProductList } from '@/components/onboarding/ProductList'
+import { ProductEntryForm } from '@/components/onboarding/ProductEntryForm'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 import { StepComponentProps } from './index'
+import { useOnboardingStore } from '@/stores/onboarding'
 
 // Website section type definition
 type WebsiteSectionOption = {
@@ -73,6 +76,12 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
   const offeringType = watch('offeringType')
   const offerings = watch('offerings') || []
 
+  // Product management state
+  const [showProductForm, setShowProductForm] = useState(false)
+  const [editingProductId, setEditingProductId] = useState<string | null>(null)
+  const { formData, addProduct, updateProduct, deleteProduct, reorderProducts } = useOnboardingStore()
+  const products = formData.products || []
+
   const handleSectionChange = (sectionId: string, checked: boolean) => {
     // Prevent unchecking hero and contact (they're always included)
     if (!checked && (sectionId === 'hero' || sectionId === 'contact')) {
@@ -87,9 +96,14 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
     setValue('websiteSections', updated as any, { shouldValidate: true, shouldDirty: true })
   }
 
-  const handleOfferingsChange = (items: any[]) => {
-    const offeringsList = items.map(item => item.value)
-    setValue('offerings', offeringsList, { shouldValidate: true, shouldDirty: true })
+  const handleProductSave = (productData: any) => {
+    if (editingProductId) {
+      updateProduct(editingProductId, productData)
+    } else {
+      addProduct(productData)
+    }
+    setShowProductForm(false)
+    setEditingProductId(null)
   }
 
   const getRecommendedSections = (goal: string) => {
@@ -365,25 +379,45 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
                 </div>
               </div>
 
-              <DynamicList
-                label={t('offerings.list.label')}
-                items={offerings.map((offering: string, index: number) => ({
-                  id: `offering-${index}`,
-                  value: offering,
-                  order: index
-                }))}
-                placeholder={t('offerings.list.placeholder')}
-                addButtonText={t('offerings.list.addButton')}
-                hint={t('offerings.list.hint')}
-                error={(errors as any).offerings?.message}
-                maxItems={15}
-                minItems={0}
-                itemPrefix="🛍️"
-                showCounter
-                allowReorder
-                allowEdit
-                onItemsChange={handleOfferingsChange}
-              />
+              {/* Enhanced Product Entry */}
+              <div className="space-y-4">
+                {/* Add Product Button */}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowProductForm(true)}
+                  disabled={isLoading || products.length >= 6 || showProductForm}
+                  className="w-full"
+                >
+                  <ShoppingBag className="w-4 h-4 mr-2" />
+                  Add Product ({products.length}/6)
+                </Button>
+
+                {/* Product List */}
+                <ProductList
+                  products={products}
+                  onEdit={(id) => {
+                    setEditingProductId(id)
+                    setShowProductForm(true)
+                  }}
+                  onDelete={(id) => deleteProduct(id)}
+                  onReorder={(fromIndex, toIndex) => reorderProducts(fromIndex, toIndex)}
+                  disabled={isLoading || showProductForm}
+                />
+
+                {/* Product Entry Form */}
+                {showProductForm && (
+                  <ProductEntryForm
+                    product={editingProductId ? products.find(p => p.id === editingProductId) : undefined}
+                    productId={editingProductId || `temp-${Date.now()}`}
+                    onSave={handleProductSave}
+                    onCancel={() => {
+                      setShowProductForm(false)
+                      setEditingProductId(null)
+                    }}
+                  />
+                )}
+              </div>
             </div>
           </CardContent>
         </Card>

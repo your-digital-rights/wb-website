@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { ProductsArraySchema } from '@/lib/validation/product-schema'
 
 // =============================================================================
 // VALIDATION SCHEMAS FOR ALL 12 ONBOARDING STEPS
@@ -217,7 +218,8 @@ export const step11Schema = z.object({
   offeringType: z.enum(['products', 'services', 'both']).optional(),
   offerings: z.array(z.string().min(1, 'Offering cannot be empty'))
     .max(6, 'Please provide no more than 6 offerings')
-    .optional()
+    .optional(),
+  products: ProductsArraySchema.optional().default([])
 })
 
 // =============================================================================
@@ -500,6 +502,7 @@ export const completeFormSchema = z.object({
   primaryGoal: step11Schema.shape.primaryGoal,
   offeringType: step11Schema.shape.offeringType,
   offerings: step11Schema.shape.offerings,
+  products: step11Schema.shape.products,
 
   // Step 12
   logoUpload: step12Schema.shape.logoUpload,
