@@ -35,13 +35,14 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
   const allColorPalettes = getColorPalettes(locale)
 
   // Initialize custom colors from form data or empty
+  // Order matches color_palettes.json: [background, primary, secondary, accent]
   const [customColors, setCustomColors] = useState<CustomColor[]>(() => {
     const colors = currentColorPalette || []
     return [
-      { name: 'primary', value: colors[0] },
-      { name: 'secondary', value: colors[1] },
-      { name: 'accent', value: colors[2] },
-      { name: 'background', value: colors[3] }
+      { name: 'background', value: colors[0] },
+      { name: 'primary', value: colors[1] },
+      { name: 'secondary', value: colors[2] },
+      { name: 'accent', value: colors[3] }
     ]
   })
 
@@ -50,11 +51,12 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
   // Adding currentColorPalette would cause unwanted re-initialization on every form update
   useEffect(() => {
     if (currentColorPalette && currentColorPalette.length > 0) {
+      // Order matches color_palettes.json: [background, primary, secondary, accent]
       setCustomColors([
-        { name: 'primary', value: currentColorPalette[0] },
-        { name: 'secondary', value: currentColorPalette[1] },
-        { name: 'accent', value: currentColorPalette[2] },
-        { name: 'background', value: currentColorPalette[3] }
+        { name: 'background', value: currentColorPalette[0] },
+        { name: 'primary', value: currentColorPalette[1] },
+        { name: 'secondary', value: currentColorPalette[2] },
+        { name: 'accent', value: currentColorPalette[3] }
       ])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
