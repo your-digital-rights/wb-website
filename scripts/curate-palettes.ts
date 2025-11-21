@@ -67,9 +67,6 @@ function adjustBrightness(hex: string, targetBrightness: number): string {
 
   const currentBrightness = getBrightness(hex)
 
-  // Preserve hue by maintaining color ratios
-  const max = Math.max(rgb.r, rgb.g, rgb.b)
-
   // Calculate adjustment factor more aggressively
   let factor: number
 
@@ -151,8 +148,8 @@ function deriveContrastingColor(
   const targetBrightness = bgBrightness > 128 ? 35 : 225
 
   // Adjust the best palette color towards target
-  let derived = adjustBrightness(bestPaletteColor, targetBrightness)
-  let contrast = getContrastRatio(derived, background)
+  const derived = adjustBrightness(bestPaletteColor, targetBrightness)
+  const contrast = getContrastRatio(derived, background)
 
   // If still insufficient, use pure white or black
   if (contrast < minContrast) {
@@ -209,7 +206,6 @@ function curatePalette(palette: Palette): Palette {
   const brightnesses = colors.map((c) => getBrightness(c))
   const minBrightness = Math.min(...brightnesses)
   const maxBrightness = Math.max(...brightnesses)
-  const range = maxBrightness - minBrightness
 
   notes.push(`Brightness range: ${minBrightness.toFixed(0)}-${maxBrightness.toFixed(0)}`)
 
