@@ -13,8 +13,8 @@ importers:
   .:
     dependencies:
       '@anthropic-ai/claude-code':
-        specifier: ^1.0.128
-        version: 1.0.128
+        specifier: ^2.0.31
+        version: 2.0.31
       '@hookform/resolvers':
         specifier: ^5.2.1
         version: 5.2.2(react-hook-form@7.63.0(react@19.2.0))
@@ -239,8 +239,8 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@anthropic-ai/claude-code@1.0.128':
-    resolution: {integrity: sha512-uUg5cFMJfeQetQzFw76Vpbro6DAXst2Lpu8aoZWRFSoQVYu5ZSAnbBoxaWmW/IgnHSqIIvtMwzCoqmcA9j9rNQ==}
+  '@anthropic-ai/claude-code@2.0.31':
+    resolution: {integrity: sha512-UiWopkOqZD5EHoDa8jmkT4AOVtvGWjfCOZ+hGlDqbBY5D0hia6kRDgizLsIvMRqnQr1pBAPCpyeWhH/WndaT/A==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -4996,7 +4996,7 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@anthropic-ai/claude-code@1.0.128':
+  '@anthropic-ai/claude-code@2.0.31':
     optionalDependencies:
       '@img/sharp-darwin-arm64': 0.33.5
       '@img/sharp-darwin-x64': 0.33.5
