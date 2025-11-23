@@ -66,7 +66,7 @@ async function seedSessionThroughStep10(page: Page) {
   }, JSON.stringify(zustandStore))
 
   // Navigate to Step 11
-  await page.goto('http://localhost:3783/onboarding/step/11')
+  await page.goto(`${baseUrl}/onboarding/step/11`)
   await page.waitForLoadState('load')
 
   // Wait for the step heading to appear - "Website Structure" is the main page title
