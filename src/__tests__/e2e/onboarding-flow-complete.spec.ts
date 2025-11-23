@@ -918,24 +918,33 @@ test.describe('Complete Onboarding Flow', () => {
       await page.waitForTimeout(1000);
     }
 
-    // CRITICAL: Add at least one offering (required for validation)
-
-    // First, fill the offering input field (this enables the Add button)
-    const offeringInput = page.locator('input[placeholder="Enter a product or service"]').last();
-    if (await offeringInput.isVisible()) {
-      await offeringInput.fill('AI-Driven Digital Transformation Consulting');
+    // CRITICAL: Add at least one product using the new ProductEntryForm (required for validation)
+    const addProductButton = page.getByRole('button', { name: /Add Product/ }).first();
+    if (await addProductButton.isVisible()) {
+      await addProductButton.click();
       await page.waitForTimeout(500);
 
-      // Now click the Add button (should be enabled after filling input)
-      const addOfferingButton = page.locator('button').filter({ hasText: 'Add Item' }).first();
-      if (await addOfferingButton.isVisible()) {
-        await addOfferingButton.click();
-        await page.waitForTimeout(1000);
+      // Fill product name and description (labels include asterisk: "Product Name *")
+      const productNameInput = page.getByRole('textbox', { name: /Product Name/ });
+      if (await productNameInput.isVisible()) {
+        await productNameInput.fill('AI-Driven Consulting');
+        await page.getByRole('textbox', { name: /Description/ }).fill('Enterprise digital transformation services');
+        await page.waitForTimeout(500);
+
+        // Submit the product form
+        const submitProductButton = page.getByRole('button', { name: 'Add Product', exact: true });
+        if (await submitProductButton.isVisible() && await submitProductButton.isEnabled()) {
+          await submitProductButton.click();
+          await page.waitForTimeout(1000);
+          console.log('✓ Added product via new ProductEntryForm');
+        } else {
+          console.log('⚠️ Product submit button not enabled');
+        }
       } else {
-        console.log('⚠️ Could not find "Add Item" button after filling input');
+        console.log('⚠️ Product Name input not found');
       }
     } else {
-      console.log('⚠️ Could not find offering input field with correct placeholder');
+      console.log('⚠️ Could not find "Add Product" button');
     }
 
     // Wait a bit longer for form state to update after checkbox clicks
@@ -1202,9 +1211,10 @@ test.describe('Complete Onboarding Flow', () => {
     expect(formData?.websiteSections).toBeTruthy();
     expect(Array.isArray(formData?.websiteSections)).toBe(true);
     expect(formData?.primaryGoal).toBeTruthy();
-    expect(formData?.offerings).toBeTruthy();
-    expect(Array.isArray(formData?.offerings)).toBe(true);
-    expect(formData?.offerings?.length).toBeGreaterThan(0); // Must have at least one offering
+    // Check for products (new enhanced product entry) instead of offerings (old text list)
+    expect(formData?.products).toBeTruthy();
+    expect(Array.isArray(formData?.products)).toBe(true);
+    expect(formData?.products?.length).toBeGreaterThan(0); // Must have at least one product
     console.log('✓ Website structure validation passed');
 
     // 14. Verify business assets uploads (Step 12)
