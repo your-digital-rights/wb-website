@@ -22,7 +22,9 @@ import path from 'path'
 
 // Helper: Seed session through Step 10 and navigate to Step 11
 async function seedSessionThroughStep10(page: Page) {
-  const baseUrl = 'http://localhost:3783'
+  const baseUrl = (process.env.BASE_URL && process.env.BASE_URL.trim().length > 0)
+    ? process.env.BASE_URL.replace(/\/$/, '')
+    : 'http://localhost:3783'
 
   // Create a session with steps 1-10 completed
   const response = await fetch(`${baseUrl}/api/test/seed-session`, {
