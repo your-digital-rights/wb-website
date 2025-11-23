@@ -720,9 +720,24 @@ declare const messages: {
           "title": "Color Palette Selection",
           "description": "Colors play a crucial role in how customers perceive your brand. Choose a palette that reflects your business personality and appeals to your target audience."
         },
+        "customColors": {
+          "title": "Advanced: Custom Colors",
+          "description": "Fine-tune your brand colors by selecting a palette above first, then override individual colors here if needed. Most users won't need this section.",
+          "labels": {
+            "primary": "Primary",
+            "secondary": "Secondary",
+            "accent": "Accent",
+            "background": "Background"
+          },
+          "empty": "Select Color",
+          "clear": "Clear",
+          "done": "Done",
+          "hint": "Optional: Choose a palette above to start, then customize individual colors here. Click a color box to pick a color visually, or enter a hex code."
+        },
         "selection": {
           "title": "Choose Your Color Palette",
-          "required": "Required"
+          "required": "Required",
+          "optional": "Optional"
         },
         "psychology": {
           "title": "Color Psychology",
@@ -739,33 +754,6 @@ declare const messages: {
             "branding": "Consistent colors improve brand recognition by 80%",
             "accessibility": "Proper contrast ensures accessibility for all users",
             "recognition": "Signature colors make your brand memorable"
-          }
-        },
-        "trends": {
-          "title": "Industry Color Trends",
-          "finance": {
-            "title": "Finance & Banking",
-            "description": "Blues, greens, and grays for trust and stability"
-          },
-          "health": {
-            "title": "Health & Wellness",
-            "description": "Greens, blues, and teals for healing and growth"
-          },
-          "food": {
-            "title": "Food & Restaurant",
-            "description": "Warm oranges, reds, and yellows to stimulate appetite"
-          },
-          "tech": {
-            "title": "Technology",
-            "description": "Purples, blues, and dark tones for innovation"
-          },
-          "fashion": {
-            "title": "Fashion & Beauty",
-            "description": "Bold pinks, blacks, and purples for style"
-          },
-          "education": {
-            "title": "Education",
-            "description": "Blues, greens, and oranges for learning and growth"
           }
         },
         "accessibility": {
