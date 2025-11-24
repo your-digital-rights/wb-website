@@ -1068,6 +1068,7 @@ declare const messages: {
       "stepNavigation": "Step navigation",
       "stepIndicators": "Progress indicators showing completion status",
       "keyboardNavHint": "Use Alt plus Left Arrow to go back, Alt plus Right Arrow to go forward",
+      "keyboardNavHintShort": "Tip: Alt + Arrow keys to navigate",
       "goToPreviousStep": "Go back to step {step}",
       "goToNextStep": "Continue to step {step}",
       "completeOnboarding": "Complete onboarding",
