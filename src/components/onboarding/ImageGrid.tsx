@@ -80,6 +80,7 @@ export function ImageGrid({
 
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set())
+  const [previewImage, setPreviewImage] = useState<ImageOption | null>(null)
   const [announcement, setAnnouncement] = useState('')
 
   // Refs for keyboard navigation
