@@ -287,140 +287,142 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
         </Card>
       </motion.div>
 
-      {/* Products/Services Offerings */}
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-      >
-        <Card>
-          <CardContent className="pt-6 space-y-6">
-            <div className="flex items-center gap-2">
-              <ShoppingBag className="w-5 h-5 text-primary" />
-              <h2 className="text-lg font-semibold text-foreground">{t('offerings.title')}</h2>
-              <Badge variant="outline" className="ml-auto">
-                {t('offerings.optional')}
-              </Badge>
-            </div>
-
-            <div className="space-y-4">
-              {/* Offering Type Selection */}
-              <Controller
-                name="offeringType"
-                control={control}
-                render={({ field }) => {
-                  // Use both field.value and offeringType watch to ensure re-renders
-                  const currentValue = field.value || offeringType
-
-                  return (
-                    <div className="space-y-3">
-                      <Label className="text-sm font-medium">What do you offer?</Label>
-                      <div className="grid grid-cols-3 gap-3">
-                        {[
-                          { value: 'products', label: 'Products', description: 'Physical or digital goods' },
-                          { value: 'services', label: 'Services', description: 'Consulting, support, maintenance' },
-                          { value: 'both', label: 'Both', description: 'Products and services' }
-                        ].map((option) => {
-                          const isSelected = currentValue === option.value
-
-                          return (
-                            <button
-                              key={option.value}
-                              type="button"
-                              disabled={isLoading}
-                              onClick={(e) => {
-                                e.preventDefault()
-                                e.stopPropagation()
-                                field.onChange(option.value)
-                              }}
-                              className={`flex flex-col items-center space-y-2 border rounded-lg p-3 transition-colors ${
-                                isLoading
-                                  ? 'cursor-not-allowed opacity-50'
-                                  : 'cursor-pointer hover:bg-muted/50'
-                              } ${
-                                isSelected
-                                  ? 'border-primary bg-primary/5'
-                                  : 'border-muted'
-                              }`}
-                            >
-                              <div className={`w-4 h-4 rounded-full border-2 ${
-                                isSelected
-                                  ? 'border-primary bg-primary'
-                                  : 'border-muted-foreground'
-                              }`}>
-                                {isSelected && (
-                                  <div className="w-full h-full rounded-full bg-white scale-50" />
-                                )}
-                              </div>
-                              <span className="font-medium pointer-events-none">{option.label}</span>
-                              <span className="text-xs text-muted-foreground text-center pointer-events-none">{option.description}</span>
-                            </button>
-                          )
-                        })}
-                      </div>
-                    </div>
-                  )
-                }}
-              />
-
-              <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-                <h4 className="font-medium text-sm text-muted-foreground">{t('offerings.examples.title')}</h4>
-                <div className="grid md:grid-cols-2 gap-2 text-xs text-muted-foreground">
-                  <ul className="space-y-1">
-                    <li>• {t('offerings.examples.consulting')}</li>
-                    <li>• {t('offerings.examples.design')}</li>
-                    <li>• {t('offerings.examples.development')}</li>
-                  </ul>
-                  <ul className="space-y-1">
-                    <li>• {t('offerings.examples.photography')}</li>
-                    <li>• {t('offerings.examples.marketing')}</li>
-                    <li>• {t('offerings.examples.training')}</li>
-                  </ul>
-                </div>
+      {/* Products/Services Offerings - Only shown when 'Services / Products' section is selected */}
+      {selectedSections.includes('services') && (
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          <Card>
+            <CardContent className="pt-6 space-y-6">
+              <div className="flex items-center gap-2">
+                <ShoppingBag className="w-5 h-5 text-primary" />
+                <h2 className="text-lg font-semibold text-foreground">{t('offerings.title')}</h2>
+                <Badge variant="outline" className="ml-auto">
+                  {t('offerings.optional')}
+                </Badge>
               </div>
 
-              {/* Enhanced Product Entry */}
               <div className="space-y-4">
-                {/* Add Product Button */}
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setShowProductForm(true)}
-                  disabled={isLoading || products.length >= 6 || showProductForm}
-                  className="w-full"
-                >
-                  <ShoppingBag className="w-4 h-4 mr-2" />
-                  {t('products.addProduct')} ({products.length}/6)
-                </Button>
+                {/* Offering Type Selection */}
+                <Controller
+                  name="offeringType"
+                  control={control}
+                  render={({ field }) => {
+                    // Use both field.value and offeringType watch to ensure re-renders
+                    const currentValue = field.value || offeringType
 
-                {/* Product List */}
-                <ProductList
-                  products={products}
-                  onEdit={(id) => {
-                    setEditingProductId(id)
-                    setShowProductForm(true)
+                    return (
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium">What do you offer?</Label>
+                        <div className="grid grid-cols-3 gap-3">
+                          {[
+                            { value: 'products', label: 'Products', description: 'Physical or digital goods' },
+                            { value: 'services', label: 'Services', description: 'Consulting, support, maintenance' },
+                            { value: 'both', label: 'Both', description: 'Products and services' }
+                          ].map((option) => {
+                            const isSelected = currentValue === option.value
+
+                            return (
+                              <button
+                                key={option.value}
+                                type="button"
+                                disabled={isLoading}
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                  field.onChange(option.value)
+                                }}
+                                className={`flex flex-col items-center space-y-2 border rounded-lg p-3 transition-colors ${
+                                  isLoading
+                                    ? 'cursor-not-allowed opacity-50'
+                                    : 'cursor-pointer hover:bg-muted/50'
+                                } ${
+                                  isSelected
+                                    ? 'border-primary bg-primary/5'
+                                    : 'border-muted'
+                                }`}
+                              >
+                                <div className={`w-4 h-4 rounded-full border-2 ${
+                                  isSelected
+                                    ? 'border-primary bg-primary'
+                                    : 'border-muted-foreground'
+                                }`}>
+                                  {isSelected && (
+                                    <div className="w-full h-full rounded-full bg-white scale-50" />
+                                  )}
+                                </div>
+                                <span className="font-medium pointer-events-none">{option.label}</span>
+                                <span className="text-xs text-muted-foreground text-center pointer-events-none">{option.description}</span>
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )
                   }}
-                  onDelete={(id) => deleteProduct(id)}
-                  onReorder={(fromIndex, toIndex) => reorderProducts(fromIndex, toIndex)}
-                  disabled={isLoading || showProductForm}
                 />
 
-                {/* Product Entry Form */}
-                {showProductForm && (
-                  <ProductEntryForm
-                    product={editingProductId ? products.find(p => p.id === editingProductId) : undefined}
-                    onSave={handleProductSave}
-                    onCancel={() => {
-                      setShowProductForm(false)
-                      setEditingProductId(null)
+                <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+                  <h4 className="font-medium text-sm text-muted-foreground">{t('offerings.examples.title')}</h4>
+                  <div className="grid md:grid-cols-2 gap-2 text-xs text-muted-foreground">
+                    <ul className="space-y-1">
+                      <li>• {t('offerings.examples.consulting')}</li>
+                      <li>• {t('offerings.examples.design')}</li>
+                      <li>• {t('offerings.examples.development')}</li>
+                    </ul>
+                    <ul className="space-y-1">
+                      <li>• {t('offerings.examples.photography')}</li>
+                      <li>• {t('offerings.examples.marketing')}</li>
+                      <li>• {t('offerings.examples.training')}</li>
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Enhanced Product Entry */}
+                <div className="space-y-4">
+                  {/* Add Product Button */}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowProductForm(true)}
+                    disabled={isLoading || products.length >= 6 || showProductForm}
+                    className="w-full"
+                  >
+                    <ShoppingBag className="w-4 h-4 mr-2" />
+                    {t('products.addProduct')} ({products.length}/6)
+                  </Button>
+
+                  {/* Product List */}
+                  <ProductList
+                    products={products}
+                    onEdit={(id) => {
+                      setEditingProductId(id)
+                      setShowProductForm(true)
                     }}
+                    onDelete={(id) => deleteProduct(id)}
+                    onReorder={(fromIndex, toIndex) => reorderProducts(fromIndex, toIndex)}
+                    disabled={isLoading || showProductForm}
                   />
-                )}
+
+                  {/* Product Entry Form */}
+                  {showProductForm && (
+                    <ProductEntryForm
+                      product={editingProductId ? products.find(p => p.id === editingProductId) : undefined}
+                      onSave={handleProductSave}
+                      onCancel={() => {
+                        setShowProductForm(false)
+                        setEditingProductId(null)
+                      }}
+                    />
+                  )}
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Structure Insights */}
       <motion.div
