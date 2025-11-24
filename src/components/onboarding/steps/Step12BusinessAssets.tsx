@@ -66,7 +66,7 @@ export function Step12BusinessAssets({ form, errors, isLoading }: StepComponentP
     if (errorMessage.includes('type') || errorMessage.includes('format') || errorMessage.includes('not supported')) {
       return {
         type: 'type',
-        message: 'File type not supported. Please use PNG, JPG, or SVG format.',
+        message: 'File type not supported. Please use PNG or JPG format.',
         fileName
       }
     }
@@ -247,7 +247,7 @@ export function Step12BusinessAssets({ form, errors, isLoading }: StepComponentP
                   <FileUploadWithProgress
                     label={t('logo.upload.label')}
                     description={t('logo.upload.hint')}
-                    accept={['image/png', 'image/jpeg', 'image/svg+xml']}
+                    accept={['image/png', 'image/jpeg']}
                     maxFiles={1}
                     maxFileSize={2 * 1024 * 1024} // 2MB
                     sessionId={sessionId || undefined}

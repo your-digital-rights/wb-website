@@ -843,14 +843,14 @@
         "logo": {
           "title": "Logo Aziendale",
           "optional": "Facoltativo",
-          "guidelines": "Carica un logo di alta qualità in formato PNG, JPG o SVG. Dimensione massima del file: 2MB.",
+          "guidelines": "Carica un logo di alta qualità in formato PNG o JPG. Dimensione massima del file: 2MB.",
           "upload": {
             "label": "Carica Logo",
             "hint": "Trascina e rilascia il tuo logo qui o clicca per sfogliare i file"
           },
           "requirements": {
             "title": "Requisiti del Logo",
-            "format": "Formato PNG, JPG o SVG",
+            "format": "Formato PNG o JPG",
             "size": "Dimensione massima del file 2MB",
             "resolution": "Larghezza minima 300px",
             "background": "Sfondo trasparente preferito",

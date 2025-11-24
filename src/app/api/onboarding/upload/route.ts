@@ -44,17 +44,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate file type
+    // Validate file type (SVG excluded due to XSS risks from embedded scripts)
     const allowedTypes = [
       'image/png',
       'image/jpg',
-      'image/jpeg',
-      'image/svg+xml'
+      'image/jpeg'
     ]
 
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
-        { error: 'File type not allowed. Only PNG, JPG, JPEG, and SVG files are supported.' },
+        { error: 'File type not allowed. Only PNG, JPG, and JPEG files are supported.' },
         { status: 400 }
       )
     }

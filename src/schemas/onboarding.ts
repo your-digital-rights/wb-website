@@ -241,8 +241,8 @@ const uploadedFileSchema = z.object({
   fileName: z.string(),
   fileSize: z.number().max(10 * 1024 * 1024, 'Logo file size cannot exceed 10MB'),
   mimeType: z.string().regex(
-    /^image\/(png|jpg|jpeg|svg\+xml)$/,
-    'Logo must be PNG, JPG, or SVG format'
+    /^image\/(png|jpg|jpeg)$/,
+    'Logo must be PNG or JPG format'
   ),
   url: z.string().url(),
   width: z.number().optional(),

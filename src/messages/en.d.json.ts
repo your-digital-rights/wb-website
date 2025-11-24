@@ -846,14 +846,14 @@ declare const messages: {
         "logo": {
           "title": "Business Logo",
           "optional": "Optional",
-          "guidelines": "Upload a high-quality logo in PNG, JPG, or SVG format. Maximum file size: 2MB.",
+          "guidelines": "Upload a high-quality logo in PNG or JPG format. Maximum file size: 2MB.",
           "upload": {
             "label": "Upload Logo",
             "hint": "Drag and drop your logo here or click to browse files"
           },
           "requirements": {
             "title": "Logo Requirements",
-            "format": "PNG, JPG, or SVG format",
+            "format": "PNG or JPG format",
             "size": "Maximum 2MB file size",
             "resolution": "Minimum 300px width",
             "background": "Transparent background preferred",

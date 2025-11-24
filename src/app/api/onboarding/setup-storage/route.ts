@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       // Create the bucket
       const { data: bucketData, error: createError } = await supabaseAdmin.storage.createBucket(bucketName, {
         public: false,
-        allowedMimeTypes: ['image/png', 'image/jpg', 'image/jpeg', 'image/svg+xml'],
+        allowedMimeTypes: ['image/png', 'image/jpg', 'image/jpeg'],
         fileSizeLimit: 10485760 // 10MB
       })
 
