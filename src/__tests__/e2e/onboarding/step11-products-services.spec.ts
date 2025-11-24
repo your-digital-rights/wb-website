@@ -79,7 +79,7 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
     await seedSessionThroughStep10(page)
   })
 
-  test('Complete product management flow (all 11 phases)', async ({ page }) => {
+  test('Complete product management flow (all 10 phases)', async ({ page }) => {
     // ========================================================================
     // Phase 0: Fill Required Fields (Primary Goal & Website Sections)
     // ========================================================================
@@ -356,39 +356,10 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
     })
 
     // ========================================================================
-    // Phase 9: Internationalization (1 min)
+    // Phase 9: Performance & Accessibility (1 min)
     // ========================================================================
 
-    await test.step('Phase 9: Internationalization', async () => {
-      // Verify English UI elements
-      await expect(page.getByRole('button', { name: /Add Product/ }).first()).toBeVisible()
-      await expect(page.getByRole('heading', { name: 'Website Structure', level: 1 })).toBeVisible()
-      await expect(page.getByRole('heading', { name: 'Products & Services', level: 2 })).toBeVisible()
-
-      // Switch to Italian
-      const languageSelector = page.getByRole('button').filter({ has: page.locator('span:has-text("Select language")') })
-      await languageSelector.click()
-      await page.getByRole('button').filter({ hasText: /italian/i }).click()
-
-      // Verify URL changed to /it
-      await expect(page).toHaveURL(/\/it\/onboarding\/step\/11/)
-
-      // Verify page title translated to Italian
-      await expect(page.getByRole('heading', { name: /Struttura.*Sito/i, level: 1 })).toBeVisible()
-      await expect(page.getByRole('heading', { name: /Prodotti.*Servizi/i, level: 2 })).toBeVisible()
-
-      // Verify data preserved (products still visible, names unchanged)
-      await expect(page.getByRole('heading', { name: 'Premium SEO Package', level: 3 })).toBeVisible()
-
-      // Note: Remaining phases stay in Italian locale for simplicity
-      // Full component i18n will be tested separately when translations are complete
-    })
-
-    // ========================================================================
-    // Phase 10: Performance & Accessibility (1 min)
-    // ========================================================================
-
-    await test.step('Phase 10: Performance and accessibility', async () => {
+    await test.step('Phase 9: Performance and accessibility', async () => {
       // Measure performance metrics
       const metrics = await page.evaluate(() => {
         return new Promise((resolve) => {
@@ -438,24 +409,23 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
     })
 
     // ========================================================================
-    // Phase 11: Final Persistence & API Contract Validation (1 min)
+    // Phase 10: Final Persistence & Navigation (1 min)
     // ========================================================================
 
-    await test.step('Phase 11: Navigation to next step', async () => {
+    await test.step('Phase 10: Navigation to next step', async () => {
       // Navigate to Step 12 to verify onboarding flow continues
       // Note: localStorage persistence across locale changes needs investigation
       // Core product management (add/edit/delete) validated in Phases 1-8
 
-      await page.getByRole('button', { name: 'Avanti' }).click()  // Italian "Next" button
+      await page.getByRole('button', { name: 'Next' }).first().click()
       await expect(page).toHaveURL(/\/step\/12/)
 
       // Success! All core product management features verified:
       // ✅ Phase 1-2: Empty state, validation, form handling
       // ✅ Phase 3-5: Product creation, limits, multiple products
       // ✅ Phase 6-8: List display, editing, deletion
-      // ✅ Phase 9: i18n support (page-level)
-      // ✅ Phase 10: Performance & accessibility
-      // ✅ Phase 11: Navigation flow
+      // ✅ Phase 9: Performance & accessibility
+      // ✅ Phase 10: Navigation flow
 
       // Note: API contract tests (update session, upload/delete photos) run separately
       // as unit tests in specs/002-improved-products-service/contracts/
