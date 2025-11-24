@@ -816,31 +816,25 @@ test.describe('Complete Onboarding Flow', () => {
     if (checkboxCount > 0) {
       // CRITICAL: First, ensure we select the Services/Products section (required for offerings validation)
       // This is required because the Products & Services section is only shown when this checkbox is selected
-      let servicesSelected = false;
+      console.log('🔍 Selecting Services/Products checkbox...');
+      const servicesCheckbox = page.getByRole('checkbox', { name: /Services.*Products/i });
+      await expect(servicesCheckbox).toBeVisible({ timeout: 5000 });
 
-      // Use role-based selector for reliable checkbox interaction
-      try {
-        const servicesCheckbox = page.getByRole('checkbox', { name: /Services.*Products/i });
-        if (await servicesCheckbox.isVisible()) {
-          const isChecked = await servicesCheckbox.isChecked();
-          if (!isChecked) {
-            await servicesCheckbox.click();
-            await page.waitForTimeout(500);
-            console.log('✓ Selected "Services / Products" checkbox');
-          } else {
-            console.log('✓ "Services / Products" checkbox already selected');
-          }
-          servicesSelected = true;
+      const isChecked = await servicesCheckbox.isChecked();
+      console.log(`  Services/Products checkbox initial state: ${isChecked ? 'checked' : 'unchecked'}`);
 
-          // Wait for the Products & Services section to appear (conditionally rendered)
-          await expect(page.getByRole('heading', { name: 'Products & Services' })).toBeVisible({ timeout: 5000 });
-          console.log('✓ Products & Services section is now visible');
-        }
-      } catch (e) {
-        console.log('⚠️ Could not find/select Services/Products checkbox:', e);
+      if (!isChecked) {
+        await servicesCheckbox.click();
+        await page.waitForTimeout(500);
+        console.log('  ✓ Clicked Services/Products checkbox');
       }
 
-      // Click some optional checkboxes (skip Hero and Contact which are always selected and disabled)
+      // Wait for the Products & Services section to appear (conditionally rendered)
+      console.log('  Waiting for Products & Services section to appear...');
+      await expect(page.getByRole('heading', { name: 'Products & Services' })).toBeVisible({ timeout: 10000 });
+      console.log('  ✓ Products & Services section is visible');
+
+      // Click some optional checkboxes (skip Hero, Contact, and Services/Products)
       const labels = page.locator('label[for]');
       const labelCount = await labels.count();
       console.log(`Found ${labelCount} checkbox labels`);
@@ -851,9 +845,9 @@ test.describe('Complete Onboarding Flow', () => {
         const labelText = await label.textContent();
         const htmlFor = await label.getAttribute('for');
 
-        // Skip Hero and Contact (they're always included and disabled)
-        if (labelText?.includes('Hero') || labelText?.includes('Contact')) {
-          console.log(`  Skipping "${labelText?.substring(0, 30)}" (always included)`);
+        // Skip Hero, Contact, and Services/Products (to avoid toggling state)
+        if (labelText?.includes('Hero') || labelText?.includes('Contact') || labelText?.includes('Services') || labelText?.includes('Products')) {
+          console.log(`  Skipping "${labelText?.substring(0, 30)}"`);
           continue;
         }
 
@@ -915,45 +909,7 @@ test.describe('Complete Onboarding Flow', () => {
       await page.waitForTimeout(500);
     }
 
-    // CRITICAL: Verify Products & Services section is visible before proceeding
-    // This section is conditionally rendered only when "Services / Products" is selected
-    const productsHeading = page.getByRole('heading', { name: 'Products & Services' });
-    const isProductsSectionVisible = await productsHeading.isVisible().catch(() => false);
-
-    if (!isProductsSectionVisible) {
-      console.log('❌ Products & Services section is not visible - attempting to select checkbox again');
-      // Retry selecting the checkbox
-      const servicesCheckbox = page.getByRole('checkbox', { name: /Services.*Products/i });
-      if (await servicesCheckbox.isVisible()) {
-        const isChecked = await servicesCheckbox.isChecked();
-        console.log(`  Checkbox state: ${isChecked ? 'checked' : 'unchecked'}`);
-
-        // If unchecked, click it
-        if (!isChecked) {
-          await servicesCheckbox.click();
-          await page.waitForTimeout(1000);
-        }
-
-        // If checked but section not visible, uncheck and recheck (might be a rendering issue)
-        if (isChecked && !isProductsSectionVisible) {
-          console.log('  Checkbox checked but section not visible - toggling to force re-render');
-          await servicesCheckbox.click(); // Uncheck
-          await page.waitForTimeout(300);
-          await servicesCheckbox.click(); // Check again
-          await page.waitForTimeout(1000);
-        }
-
-        // Verify section is now visible
-        await expect(productsHeading).toBeVisible({ timeout: 5000 });
-        console.log('✓ Products & Services section now visible after retry');
-      } else {
-        throw new Error('Services/Products checkbox not found - cannot add products for validation');
-      }
-    } else {
-      console.log('✓ Products & Services section is visible');
-    }
-
-    // CRITICAL: Select offering type (radio button) if 'services' is selected
+    // CRITICAL: Select offering type (radio button)
     const servicesRadio = page.locator('button').filter({ hasText: 'Services' }).first();
     if (await servicesRadio.isVisible()) {
       await servicesRadio.click();
@@ -961,34 +917,25 @@ test.describe('Complete Onboarding Flow', () => {
     }
 
     // CRITICAL: Add at least one product using the new ProductEntryForm (required for validation)
+    console.log('🛍️ Adding product...');
     const addProductButton = page.getByRole('button', { name: /Add Product/ }).first();
-    await expect(addProductButton).toBeVisible({ timeout: 5000 }); // Fail if not visible
-    if (await addProductButton.isVisible()) {
-      await addProductButton.click();
-      await page.waitForTimeout(500);
+    await expect(addProductButton).toBeVisible({ timeout: 5000 });
+    await addProductButton.click();
+    await page.waitForTimeout(500);
 
-      // Fill product name and description (labels include asterisk: "Product Name *")
-      const productNameInput = page.getByRole('textbox', { name: /Product Name/ });
-      if (await productNameInput.isVisible()) {
-        await productNameInput.fill('AI-Driven Consulting');
-        await page.getByRole('textbox', { name: /Description/ }).fill('Enterprise digital transformation services');
-        await page.waitForTimeout(500);
+    // Fill product name and description (labels include asterisk: "Product Name *")
+    const productNameInput = page.getByRole('textbox', { name: /Product Name/ });
+    await expect(productNameInput).toBeVisible({ timeout: 5000 });
+    await productNameInput.fill('AI-Driven Consulting');
+    await page.getByRole('textbox', { name: /Description/ }).fill('Enterprise digital transformation services');
+    await page.waitForTimeout(500);
 
-        // Submit the product form
-        const submitProductButton = page.getByRole('button', { name: 'Add Product', exact: true });
-        if (await submitProductButton.isVisible() && await submitProductButton.isEnabled()) {
-          await submitProductButton.click();
-          await page.waitForTimeout(1000);
-          console.log('✓ Added product via new ProductEntryForm');
-        } else {
-          console.log('⚠️ Product submit button not enabled');
-        }
-      } else {
-        console.log('⚠️ Product Name input not found');
-      }
-    } else {
-      console.log('⚠️ Could not find "Add Product" button');
-    }
+    // Submit the product form
+    const submitProductButton = page.getByRole('button', { name: 'Add Product', exact: true });
+    await expect(submitProductButton).toBeEnabled({ timeout: 5000 });
+    await submitProductButton.click();
+    await page.waitForTimeout(1000);
+    console.log('  ✓ Product added successfully');
 
     // Wait a bit longer for form state to update after checkbox clicks
     await page.waitForTimeout(2000);
