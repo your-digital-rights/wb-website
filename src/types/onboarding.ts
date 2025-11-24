@@ -146,6 +146,8 @@ export interface UploadedFile {
   fileSize: number
   mimeType: string
   url: string
+  /** Storage path for file deletion (e.g., "product-photo/file.jpg") */
+  path?: string
   width?: number
   height?: number
   uploadedAt: string

@@ -524,6 +524,12 @@ export const useOnboardingStore = create<OnboardingStore>()(
                 updatedAt: new Date().toISOString()
               }))
 
+            // Get the product being deleted to access its photos
+            const productToDelete = products.find((p) => p.id === id)
+            const photoPaths = productToDelete?.photos
+              ?.map((photo) => photo.path)
+              .filter((path): path is string => !!path) || []
+
             set({
               formData: {
                 ...formData,
@@ -532,8 +538,16 @@ export const useOnboardingStore = create<OnboardingStore>()(
               isDirty: true
             })
 
-            // TODO: Delete associated photos from Supabase Storage (async)
-            // This will be handled by the deleteProductPhotos service method
+            // Delete associated photos from Supabase Storage (async, fire-and-forget)
+            if (photoPaths.length > 0) {
+              fetch('/api/onboarding/upload', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ paths: photoPaths })
+              }).catch((err) => {
+                console.error('Failed to delete product photos:', err)
+              })
+            }
 
             debouncedSaveProgress()
           },
@@ -624,6 +638,11 @@ export const useOnboardingStore = create<OnboardingStore>()(
             const { formData } = get()
             const products = formData.products || []
 
+            // Find the photo being deleted to get its storage path
+            const product = products.find((p) => p.id === productId)
+            const photoToDelete = product?.photos.find((p) => p.id === photoId)
+            const photoPath = photoToDelete?.path
+
             const updatedProducts = products.map((product) => {
               if (product.id === productId) {
                 const filteredPhotos = product.photos.filter(
@@ -646,8 +665,16 @@ export const useOnboardingStore = create<OnboardingStore>()(
               isDirty: true
             })
 
-            // TODO: Delete photo from Supabase Storage (async)
-            // This will be handled by the deleteProductPhoto service method
+            // Delete photo from Supabase Storage (async, fire-and-forget)
+            if (photoPath) {
+              fetch('/api/onboarding/upload', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ paths: [photoPath] })
+              }).catch((err) => {
+                console.error('Failed to delete product photo:', err)
+              })
+            }
 
             debouncedSaveProgress()
           },

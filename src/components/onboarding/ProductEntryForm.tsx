@@ -292,6 +292,7 @@ export function ProductEntryForm({
                   fileSize: typeof meta?.fileSize === 'number' ? meta.fileSize : f.file.size,
                   mimeType: meta?.mimeType || f.file.type,
                   url: meta?.url || f.url || '',
+                  path: meta?.storagePath, // Storage path for deletion
                   width: undefined,
                   height: undefined,
                   uploadedAt: new Date().toISOString()

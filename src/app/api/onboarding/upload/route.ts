@@ -138,3 +138,60 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+/**
+ * DELETE handler for removing files from Supabase storage
+ * Used when products are deleted to clean up orphaned photos
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { paths } = body as { paths: string[] }
+
+    if (!paths || !Array.isArray(paths) || paths.length === 0) {
+      return NextResponse.json(
+        { error: 'No file paths provided' },
+        { status: 400 }
+      )
+    }
+
+    // Validate paths to prevent path traversal attacks
+    const invalidPaths = paths.filter(path =>
+      path.includes('..') ||
+      path.startsWith('/') ||
+      !path.match(/^(product-photo|logo|business-asset)\//)
+    )
+
+    if (invalidPaths.length > 0) {
+      return NextResponse.json(
+        { error: 'Invalid file paths detected' },
+        { status: 400 }
+      )
+    }
+
+    // Delete files from Supabase storage
+    const { data, error } = await supabaseAdmin.storage
+      .from('onboarding-uploads')
+      .remove(paths)
+
+    if (error) {
+      console.error('Supabase delete error:', error)
+      return NextResponse.json(
+        { error: 'Failed to delete files from storage' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      deleted: data?.length || 0
+    })
+
+  } catch (error) {
+    console.error('Delete API error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error during file deletion' },
+      { status: 500 }
+    )
+  }
+}
