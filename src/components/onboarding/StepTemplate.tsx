@@ -328,7 +328,7 @@ export function StepTemplate({
           {!hideNavigation && (
             <nav
               aria-label={tA11y('stepNavigation')}
-              className="mt-8"
+              className="mt-8 group/nav"
             >
               {/* Keyboard navigation hint for screen readers */}
               <p className="sr-only" id="keyboard-nav-hint">
@@ -417,6 +417,14 @@ export function StepTemplate({
                   </Button>
                 </motion.div>
               </motion.div>
+
+              {/* Visible keyboard hint - shown on focus-within */}
+              <p
+                className="hidden md:block mt-3 text-center text-xs text-muted-foreground/60 opacity-0 group-focus-within/nav:opacity-100 transition-opacity duration-200"
+                aria-hidden="true"
+              >
+                {tA11y('keyboardNavHintShort')}
+              </p>
             </nav>
           )}
         </motion.main>

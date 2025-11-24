@@ -1065,6 +1065,7 @@
       "stepNavigation": "Navigazione tra i passaggi",
       "stepIndicators": "Indicatori di avanzamento che mostrano lo stato di completamento",
       "keyboardNavHint": "Usa Alt più Freccia Sinistra per tornare indietro, Alt più Freccia Destra per andare avanti",
+      "keyboardNavHintShort": "Suggerimento: Alt + Frecce per navigare",
       "goToPreviousStep": "Torna al passaggio {step}",
       "goToNextStep": "Continua al passaggio {step}",
       "completeOnboarding": "Completa l'onboarding",
