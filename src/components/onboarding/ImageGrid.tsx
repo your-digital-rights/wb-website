@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslations } from 'next-intl'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Check, AlertCircle, CheckCircle2, Loader2, Eye } from 'lucide-react'
 import Image from 'next/image'
 
@@ -80,7 +80,6 @@ export function ImageGrid({
 
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set())
-  const [previewImage, setPreviewImage] = useState<ImageOption | null>(null)
   const [announcement, setAnnouncement] = useState('')
 
   // Refs for keyboard navigation
@@ -90,9 +89,50 @@ export function ImageGrid({
   const hasError = !!error
   const hasSuccess = !!success && !hasError
 
+  // Helper functions (defined before useCallback hooks that use them)
+  const isSelected = useCallback((optionId: string) => selectedIds.includes(optionId), [selectedIds])
+  const canSelectMore = !multiple || !maxSelections || selectedIds.length < maxSelections
+
+  // Update selected IDs when external value changes
+  useEffect(() => {
+    if (value !== undefined) {
+      const newSelected = Array.isArray(value) ? value : [value]
+      setSelectedIds(newSelected)
+    }
+  }, [value])
+
+  // Handle selection
+  const handleSelection = useCallback((optionId: string) => {
+    let newSelected: string[]
+
+    if (multiple) {
+      if (selectedIds.includes(optionId)) {
+        // Remove from selection
+        newSelected = selectedIds.filter(id => id !== optionId)
+      } else {
+        // Add to selection (check max limit)
+        if (maxSelections && selectedIds.length >= maxSelections) {
+          // Replace oldest selection if at max
+          newSelected = [...selectedIds.slice(1), optionId]
+        } else {
+          newSelected = [...selectedIds, optionId]
+        }
+      }
+    } else {
+      // Single selection
+      newSelected = selectedIds.includes(optionId) ? [] : [optionId]
+    }
+
+    setSelectedIds(newSelected)
+
+    // Return appropriate format
+    const returnValue = multiple ? newSelected : (newSelected[0] || '')
+    onSelectionChange?.(returnValue)
+  }, [multiple, maxSelections, selectedIds, onSelectionChange])
+
   // Announce selection changes to screen readers
-  const announceSelection = useCallback((option: ImageOption, isSelected: boolean) => {
-    const action = isSelected ? 'selected' : 'deselected'
+  const announceSelection = useCallback((option: ImageOption, selected: boolean) => {
+    const action = selected ? 'selected' : 'deselected'
     setAnnouncement(`${option.title} ${action}`)
     // Clear after announcement
     setTimeout(() => setAnnouncement(''), 1000)
@@ -147,44 +187,7 @@ export function ImageGrid({
       const nextRef = optionRefs.current.get(nextOption.id)
       nextRef?.focus()
     }
-  }, [columns, announceSelection])
-
-  // Update selected IDs when external value changes
-  useEffect(() => {
-    if (value !== undefined) {
-      const newSelected = Array.isArray(value) ? value : [value]
-      setSelectedIds(newSelected)
-    }
-  }, [value])
-
-  // Handle selection
-  const handleSelection = (optionId: string) => {
-    let newSelected: string[]
-
-    if (multiple) {
-      if (selectedIds.includes(optionId)) {
-        // Remove from selection
-        newSelected = selectedIds.filter(id => id !== optionId)
-      } else {
-        // Add to selection (check max limit)
-        if (maxSelections && selectedIds.length >= maxSelections) {
-          // Replace oldest selection if at max
-          newSelected = [...selectedIds.slice(1), optionId]
-        } else {
-          newSelected = [...selectedIds, optionId]
-        }
-      }
-    } else {
-      // Single selection
-      newSelected = selectedIds.includes(optionId) ? [] : [optionId]
-    }
-
-    setSelectedIds(newSelected)
-    
-    // Return appropriate format
-    const returnValue = multiple ? newSelected : (newSelected[0] || '')
-    onSelectionChange?.(returnValue)
-  }
+  }, [columns, announceSelection, canSelectMore, isSelected, handleSelection])
 
   // Handle image loading states
   const handleImageLoadStart = (imageId: string) => {
@@ -241,9 +244,6 @@ export function ImageGrid({
         return groups
       }, {} as Record<string, ImageOption[]>)
     : { [t('all')]: options }
-
-  const isSelected = (optionId: string) => selectedIds.includes(optionId)
-  const canSelectMore = !multiple || !maxSelections || selectedIds.length < maxSelections
 
   return (
     <div className={cn("space-y-4", className)}>
