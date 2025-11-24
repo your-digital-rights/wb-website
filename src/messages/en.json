@@ -1055,6 +1055,27 @@
       "successDescription": "You've been taken back to the beginning.",
       "errorTitle": "Error",
       "errorDescription": "Failed to restart onboarding. Please try again."
+    },
+    "accessibility": {
+      "skipToContent": "Skip to main content",
+      "progressNavigation": "Onboarding progress",
+      "currentStep": "Currently on step {step} of {total}",
+      "stepAnnouncement": "Step {step} of {total}: {title}",
+      "stepContent": "Step {step} form content",
+      "stepNavigation": "Step navigation",
+      "stepIndicators": "Progress indicators showing completion status",
+      "keyboardNavHint": "Use Alt plus Left Arrow to go back, Alt plus Right Arrow to go forward",
+      "goToPreviousStep": "Go back to step {step}",
+      "goToNextStep": "Continue to step {step}",
+      "completeOnboarding": "Complete onboarding",
+      "formFieldRequired": "This field is required",
+      "formFieldOptional": "This field is optional",
+      "autoSaveSaving": "Your progress is being saved",
+      "autoSaveSaved": "Your progress has been saved",
+      "errorOccurred": "An error occurred: {error}",
+      "stepCompleted": "Step {step} is completed",
+      "stepInProgress": "Step {step} is in progress",
+      "stepNotStarted": "Step {step} has not been started yet"
     }
   },
   "forms": {

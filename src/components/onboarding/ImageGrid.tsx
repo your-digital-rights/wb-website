@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslations } from 'next-intl'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Check, AlertCircle, CheckCircle2, Loader2, Eye } from 'lucide-react'
@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
+import { LiveRegion } from './AccessibilityAnnouncer'
 
 interface ImageOption {
   id: string
@@ -80,9 +81,73 @@ export function ImageGrid({
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set())
   const [previewImage, setPreviewImage] = useState<ImageOption | null>(null)
+  const [announcement, setAnnouncement] = useState('')
+
+  // Refs for keyboard navigation
+  const gridRef = useRef<HTMLDivElement>(null)
+  const optionRefs = useRef<Map<string, HTMLButtonElement>>(new Map())
 
   const hasError = !!error
   const hasSuccess = !!success && !hasError
+
+  // Announce selection changes to screen readers
+  const announceSelection = useCallback((option: ImageOption, isSelected: boolean) => {
+    const action = isSelected ? 'selected' : 'deselected'
+    setAnnouncement(`${option.title} ${action}`)
+    // Clear after announcement
+    setTimeout(() => setAnnouncement(''), 1000)
+  }, [])
+
+  // Keyboard navigation handler
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, optionId: string, optionIndex: number, flatOptions: ImageOption[]) => {
+    const currentIndex = optionIndex
+    let nextIndex: number | null = null
+
+    switch (e.key) {
+      case 'ArrowRight':
+        e.preventDefault()
+        nextIndex = currentIndex < flatOptions.length - 1 ? currentIndex + 1 : 0
+        break
+      case 'ArrowLeft':
+        e.preventDefault()
+        nextIndex = currentIndex > 0 ? currentIndex - 1 : flatOptions.length - 1
+        break
+      case 'ArrowDown':
+        e.preventDefault()
+        nextIndex = currentIndex + columns < flatOptions.length ? currentIndex + columns : currentIndex
+        break
+      case 'ArrowUp':
+        e.preventDefault()
+        nextIndex = currentIndex - columns >= 0 ? currentIndex - columns : currentIndex
+        break
+      case 'Home':
+        e.preventDefault()
+        nextIndex = 0
+        break
+      case 'End':
+        e.preventDefault()
+        nextIndex = flatOptions.length - 1
+        break
+      case ' ':
+      case 'Enter':
+        e.preventDefault()
+        const canSelect = canSelectMore || isSelected(optionId)
+        if (canSelect) {
+          handleSelection(optionId)
+          const option = flatOptions.find(o => o.id === optionId)
+          if (option) {
+            announceSelection(option, !isSelected(optionId))
+          }
+        }
+        return
+    }
+
+    if (nextIndex !== null && nextIndex !== currentIndex) {
+      const nextOption = flatOptions[nextIndex]
+      const nextRef = optionRefs.current.get(nextOption.id)
+      nextRef?.focus()
+    }
+  }, [columns, announceSelection])
 
   // Update selected IDs when external value changes
   useEffect(() => {
@@ -210,47 +275,79 @@ export function ImageGrid({
         )}
       </div>
 
+      {/* Screen reader announcement for selection changes */}
+      <LiveRegion message={announcement} priority="polite" />
+
       {/* Image Grid */}
       <div className="space-y-6">
-        {Object.entries(groupedOptions).map(([category, categoryOptions]) => (
-          <div key={category} className="space-y-3">
-            {/* Category Header */}
-            {showCategories && Object.keys(groupedOptions).length > 1 && (
-              <h4 className="text-sm font-medium text-muted-foreground">
-                {category}
-              </h4>
-            )}
+        {Object.entries(groupedOptions).map(([category, categoryOptions]) => {
+          // Get flat list of all options for keyboard navigation
+          const flatOptions = options
 
-            {/* Grid */}
-            <div className={cn(
-              "grid gap-3",
-              getGridColumns()
-            )}>
-              {categoryOptions.map((option, index) => {
-                const selected = isSelected(option.id)
-                const loading = loadingImages.has(option.id)
-                const failed = failedImages.has(option.id)
-                const canSelect = canSelectMore || selected
+          return (
+            <div key={category} className="space-y-3">
+              {/* Category Header */}
+              {showCategories && Object.keys(groupedOptions).length > 1 && (
+                <h4 className="text-sm font-medium text-muted-foreground">
+                  {category}
+                </h4>
+              )}
 
-                return (
-                  <motion.div
-                    key={option.id}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ 
-                      delay: index * 0.05,
-                      duration: 0.2 
-                    }}
-                  >
-                    <Card 
-                      className={cn(
-                        "group cursor-pointer transition-all duration-200",
-                        "hover:shadow-lg hover:scale-[1.02]",
-                        selected && "ring-2 ring-primary shadow-lg",
-                        !canSelect && !selected && "opacity-50 cursor-not-allowed"
-                      )}
-                      onClick={() => canSelect && handleSelection(option.id)}
+              {/* Grid */}
+              <div
+                ref={gridRef}
+                className={cn(
+                  "grid gap-3",
+                  getGridColumns()
+                )}
+                role={multiple ? "group" : "radiogroup"}
+                aria-label={label}
+              >
+                {categoryOptions.map((option, index) => {
+                  const selected = isSelected(option.id)
+                  const loading = loadingImages.has(option.id)
+                  const failed = failedImages.has(option.id)
+                  const canSelect = canSelectMore || selected
+                  const flatIndex = flatOptions.findIndex(o => o.id === option.id)
+
+                  return (
+                    <motion.div
+                      key={option.id}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{
+                        delay: index * 0.05,
+                        duration: 0.2
+                      }}
                     >
+                      <button
+                        ref={(el) => {
+                          if (el) optionRefs.current.set(option.id, el)
+                          else optionRefs.current.delete(option.id)
+                        }}
+                        type="button"
+                        role={multiple ? "checkbox" : "radio"}
+                        aria-checked={selected}
+                        aria-label={`${option.title}${option.description ? `, ${option.description}` : ''}${selected ? ', selected' : ''}`}
+                        aria-disabled={!canSelect && !selected}
+                        tabIndex={flatIndex === 0 || selected ? 0 : -1}
+                        onClick={() => {
+                          if (canSelect) {
+                            handleSelection(option.id)
+                            announceSelection(option, !selected)
+                          }
+                        }}
+                        onKeyDown={(e) => handleKeyDown(e, option.id, flatIndex, flatOptions)}
+                        className="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg"
+                      >
+                        <Card
+                          className={cn(
+                            "group transition-all duration-200",
+                            "hover:shadow-lg hover:scale-[1.02]",
+                            selected && "ring-2 ring-primary shadow-lg",
+                            !canSelect && !selected && "opacity-50"
+                          )}
+                        >
                       <CardContent className="p-0">
                         {/* Image Container */}
                         <div className={cn(
@@ -398,13 +495,15 @@ export function ImageGrid({
                           </div>
                         )}
                       </CardContent>
-                    </Card>
-                  </motion.div>
-                )
-              })}
+                        </Card>
+                      </button>
+                    </motion.div>
+                  )
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       {/* No Selection State */}
