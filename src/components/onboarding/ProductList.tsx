@@ -95,9 +95,10 @@ export function ProductList({
             layout
             className={cn('relative', isDragging && 'opacity-50')}
             draggable={!disabled}
-            onDragStart={(e) => handleDragStart(e as any, product.id)}
+            // Native HTML5 drag events - type assertion needed as motion.div expects different event types
+            onDragStart={(e) => handleDragStart(e as unknown as React.DragEvent, product.id)}
             onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e as any, product.id)}
+            onDrop={(e) => handleDrop(e as unknown as React.DragEvent, product.id)}
             onDragEnd={handleDragEnd}
           >
             <Card className="overflow-hidden group">
@@ -148,9 +149,9 @@ export function ProductList({
                   </p>
 
                   {/* Photo count badge */}
-                  {product.photos.length > 0 && (
+                  {(product.photos?.length ?? 0) > 0 && (
                     <div className="text-xs text-gray-500 mb-2">
-                      {product.photos.length} {product.photos.length === 1 ? 'photo' : 'photos'}
+                      {product.photos?.length} {product.photos?.length === 1 ? 'photo' : 'photos'}
                     </div>
                   )}
 

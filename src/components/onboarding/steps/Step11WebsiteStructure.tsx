@@ -409,7 +409,6 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
                 {showProductForm && (
                   <ProductEntryForm
                     product={editingProductId ? products.find(p => p.id === editingProductId) : undefined}
-                    productId={editingProductId || `temp-${Date.now()}`}
                     onSave={handleProductSave}
                     onCancel={() => {
                       setShowProductForm(false)

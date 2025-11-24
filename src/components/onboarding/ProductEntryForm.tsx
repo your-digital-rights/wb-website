@@ -11,7 +11,7 @@
 
 'use client'
 
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -44,18 +44,18 @@ type ProductInput = z.infer<typeof ProductInputSchema>
 
 interface ProductEntryFormProps {
   product?: Product
-  productId: string
   onSave: (data: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => void
   onCancel: () => void
   disabled?: boolean
+  onUploadingChange?: (isUploading: boolean) => void
 }
 
 export function ProductEntryForm({
   product,
-  productId,
   onSave,
   onCancel,
-  disabled = false
+  disabled = false,
+  onUploadingChange
 }: ProductEntryFormProps) {
   const t = useTranslations('onboarding.steps.11.products')
   const sessionId = useOnboardingStore((state) => state.sessionId)
@@ -132,6 +132,11 @@ export function ProductEntryForm({
 
   // Check if any files are currently uploading
   const isUploading = photosUploadState.some(f => f.status === 'uploading')
+
+  // Notify parent of upload state changes
+  useEffect(() => {
+    onUploadingChange?.(isUploading)
+  }, [isUploading, onUploadingChange])
 
   // Handle price input conversion (string to number)
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
