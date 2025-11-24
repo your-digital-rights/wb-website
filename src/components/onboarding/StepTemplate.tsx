@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useEffect, useRef, useCallback } from 'react'
+import { ReactNode, useEffect, useRef, useCallback, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -62,6 +62,12 @@ export function StepTemplate({
     checkSessionExpired,
     recoverSession
   } = useOnboardingStore()
+
+  // Detect OS for keyboard hint (macOS uses Option key, others use Alt)
+  const [isMac, setIsMac] = useState(false)
+  useEffect(() => {
+    setIsMac(/Mac|iPhone|iPod|iPad/i.test(navigator.platform))
+  }, [])
 
   // Focus management: Move focus to heading when step changes
   useEffect(() => {
@@ -332,7 +338,7 @@ export function StepTemplate({
             >
               {/* Keyboard navigation hint for screen readers */}
               <p className="sr-only" id="keyboard-nav-hint">
-                {tA11y('keyboardNavHint')}
+                Use {isMac ? 'Option' : 'Alt'} plus Left Arrow to go back, {isMac ? 'Option' : 'Alt'} plus Right Arrow to go forward
               </p>
 
               <motion.div
@@ -423,7 +429,7 @@ export function StepTemplate({
                 className="hidden md:block mt-3 text-center text-xs text-muted-foreground/60 opacity-0 group-focus-within/nav:opacity-100 transition-opacity duration-200"
                 aria-hidden="true"
               >
-                {tA11y('keyboardNavHintShort')}
+                Tip: {isMac ? 'Option' : 'Alt'} + Arrow keys to navigate
               </p>
             </nav>
           )}
