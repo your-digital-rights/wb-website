@@ -915,6 +915,44 @@ test.describe('Complete Onboarding Flow', () => {
       await page.waitForTimeout(500);
     }
 
+    // CRITICAL: Verify Products & Services section is visible before proceeding
+    // This section is conditionally rendered only when "Services / Products" is selected
+    const productsHeading = page.getByRole('heading', { name: 'Products & Services' });
+    const isProductsSectionVisible = await productsHeading.isVisible().catch(() => false);
+
+    if (!isProductsSectionVisible) {
+      console.log('❌ Products & Services section is not visible - attempting to select checkbox again');
+      // Retry selecting the checkbox
+      const servicesCheckbox = page.getByRole('checkbox', { name: /Services.*Products/i });
+      if (await servicesCheckbox.isVisible()) {
+        const isChecked = await servicesCheckbox.isChecked();
+        console.log(`  Checkbox state: ${isChecked ? 'checked' : 'unchecked'}`);
+
+        // If unchecked, click it
+        if (!isChecked) {
+          await servicesCheckbox.click();
+          await page.waitForTimeout(1000);
+        }
+
+        // If checked but section not visible, uncheck and recheck (might be a rendering issue)
+        if (isChecked && !isProductsSectionVisible) {
+          console.log('  Checkbox checked but section not visible - toggling to force re-render');
+          await servicesCheckbox.click(); // Uncheck
+          await page.waitForTimeout(300);
+          await servicesCheckbox.click(); // Check again
+          await page.waitForTimeout(1000);
+        }
+
+        // Verify section is now visible
+        await expect(productsHeading).toBeVisible({ timeout: 5000 });
+        console.log('✓ Products & Services section now visible after retry');
+      } else {
+        throw new Error('Services/Products checkbox not found - cannot add products for validation');
+      }
+    } else {
+      console.log('✓ Products & Services section is visible');
+    }
+
     // CRITICAL: Select offering type (radio button) if 'services' is selected
     const servicesRadio = page.locator('button').filter({ hasText: 'Services' }).first();
     if (await servicesRadio.isVisible()) {
@@ -924,6 +962,7 @@ test.describe('Complete Onboarding Flow', () => {
 
     // CRITICAL: Add at least one product using the new ProductEntryForm (required for validation)
     const addProductButton = page.getByRole('button', { name: /Add Product/ }).first();
+    await expect(addProductButton).toBeVisible({ timeout: 5000 }); // Fail if not visible
     if (await addProductButton.isVisible()) {
       await addProductButton.click();
       await page.waitForTimeout(500);
