@@ -20,12 +20,28 @@ import { ProductList } from '../ProductList'
 import { ProductEntryForm } from '../ProductEntryForm'
 import { generateUUID } from '@/lib/utils'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { StepComponentProps } from './index'
 
 type ViewMode = 'list' | 'add' | 'edit'
 
 interface EditState {
   mode: ViewMode
+  productId?: string
+}
+
+interface ConfirmDialog {
+  open: boolean
+  type: 'delete' | 'cancel-upload' | null
   productId?: string
 }
 
@@ -38,6 +54,7 @@ export function Step11ProductsServices(_props: StepComponentProps) {
 
   const [editState, setEditState] = useState<EditState>({ mode: 'list' })
   const [isUploading, setIsUploading] = useState(false)
+  const [confirmDialog, setConfirmDialog] = useState<ConfirmDialog>({ open: false, type: null })
 
   // Navigation lock during uploads
   const navigationLocked = isUploading
@@ -61,21 +78,33 @@ export function Step11ProductsServices(_props: StepComponentProps) {
     }
   }
 
-  // Handle delete product
+  // Handle delete product - show confirmation dialog
   const handleDeleteProduct = (productId: string) => {
-    if (confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
-      deleteProduct(productId)
-    }
+    setConfirmDialog({ open: true, type: 'delete', productId })
   }
 
-  // Handle cancel form
+  // Handle cancel form - show confirmation if uploading
   const handleCancelForm = () => {
     if (isUploading) {
-      if (!confirm('Photo uploads are in progress. Are you sure you want to cancel?')) {
-        return
-      }
+      setConfirmDialog({ open: true, type: 'cancel-upload' })
+      return
     }
     setEditState({ mode: 'list' })
+  }
+
+  // Handle dialog confirmation
+  const handleDialogConfirm = () => {
+    if (confirmDialog.type === 'delete' && confirmDialog.productId) {
+      deleteProduct(confirmDialog.productId)
+    } else if (confirmDialog.type === 'cancel-upload') {
+      setEditState({ mode: 'list' })
+    }
+    setConfirmDialog({ open: false, type: null })
+  }
+
+  // Handle dialog cancel
+  const handleDialogCancel = () => {
+    setConfirmDialog({ open: false, type: null })
   }
 
   // Render content based on mode
@@ -163,5 +192,34 @@ export function Step11ProductsServices(_props: StepComponentProps) {
     )
   }
 
-  return renderContent()
+  return (
+    <>
+      {renderContent()}
+
+      {/* Confirmation Dialog */}
+      <AlertDialog open={confirmDialog.open} onOpenChange={(open) => !open && handleDialogCancel()}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {confirmDialog.type === 'delete' ? 'Delete Product?' : 'Cancel Upload?'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {confirmDialog.type === 'delete'
+                ? 'Are you sure you want to delete this product? This action cannot be undone.'
+                : 'Photo uploads are in progress. Are you sure you want to cancel?'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleDialogCancel}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDialogConfirm}
+              className={confirmDialog.type === 'delete' ? 'bg-red-600 hover:bg-red-700' : ''}
+            >
+              {confirmDialog.type === 'delete' ? 'Delete' : 'Yes, Cancel'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  )
 }

@@ -146,11 +146,8 @@ export function ProductEntryForm({
 
   // Handle form submission
   const onSubmit = (data: ProductInput) => {
-    if (isUploading) {
-      alert('Please wait for photo uploads to complete')
-      return
-    }
-
+    // Note: Submit button is already disabled during uploads via canSave check
+    // The UI also shows "Uploading photos... Please wait before saving." message
     onSave({
       name: data.name,
       description: data.description,
