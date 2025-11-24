@@ -12,6 +12,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { motion } from 'framer-motion'
 import { Edit2, Trash2, GripVertical, Euro } from 'lucide-react'
 import Image from 'next/image'
@@ -36,6 +37,7 @@ export function ProductList({
   onReorder,
   disabled = false
 }: ProductListProps) {
+  const t = useTranslations('onboarding.steps.11.products')
   const [draggedItem, setDraggedItem] = useState<string | null>(null)
 
   // Handle drag-and-drop reordering
@@ -72,10 +74,10 @@ export function ProductList({
     return (
       <div className="text-center py-12 px-4">
         <p className="text-gray-600 dark:text-gray-400 mb-2">
-          No products added yet
+          {t('emptyState')}
         </p>
         <p className="text-sm text-gray-500">
-          Click "Add Product" to get started
+          {t('emptyStateHint')}
         </p>
       </div>
     )

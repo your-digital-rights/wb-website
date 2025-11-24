@@ -12,6 +12,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { Plus } from 'lucide-react'
 import { useOnboardingStore } from '@/stores/onboarding'
 import { Product } from '@/types/onboarding'
@@ -46,6 +47,7 @@ interface ConfirmDialog {
 }
 
 export function Step11ProductsServices(_props: StepComponentProps) {
+  const t = useTranslations('onboarding.steps.11.products')
   const { formData, addProduct, updateProduct, deleteProduct, reorderProducts } =
     useOnboardingStore()
 
@@ -157,7 +159,7 @@ export function Step11ProductsServices(_props: StepComponentProps) {
               className="flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
-              Add Product
+              {t('addProduct')}
             </Button>
           )}
         </div>
@@ -201,21 +203,23 @@ export function Step11ProductsServices(_props: StepComponentProps) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {confirmDialog.type === 'delete' ? 'Delete Product?' : 'Cancel Upload?'}
+              {confirmDialog.type === 'delete'
+                ? t('deleteConfirm.title')
+                : t('cancelUploadConfirm.title')}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {confirmDialog.type === 'delete'
-                ? 'Are you sure you want to delete this product? This action cannot be undone.'
-                : 'Photo uploads are in progress. Are you sure you want to cancel?'}
+                ? t('deleteConfirm.description')
+                : t('cancelUploadConfirm.description')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleDialogCancel}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel onClick={handleDialogCancel}>{t('cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDialogConfirm}
               className={confirmDialog.type === 'delete' ? 'bg-red-600 hover:bg-red-700' : ''}
             >
-              {confirmDialog.type === 'delete' ? 'Delete' : 'Yes, Cancel'}
+              {t('confirm')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

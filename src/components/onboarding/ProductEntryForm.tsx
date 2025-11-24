@@ -12,6 +12,7 @@
 'use client'
 
 import React, { useState, useCallback, useMemo } from 'react'
+import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -56,6 +57,7 @@ export function ProductEntryForm({
   onCancel,
   disabled = false
 }: ProductEntryFormProps) {
+  const t = useTranslations('onboarding.steps.11.products')
   const sessionId = useOnboardingStore((state) => state.sessionId)
   const [photos, setPhotos] = useState<UploadedFile[]>(product?.photos || [])
   const [photosUploadState, setPhotosUploadState] = useState<FileUploadProgress[]>([])
@@ -254,7 +256,7 @@ export function ProductEntryForm({
           </p>
         )}
         <p className="text-xs text-gray-500 mt-1">
-          Leave blank to display "Contact for pricing"
+          {t('priceHint')}
         </p>
       </div>
 
@@ -312,7 +314,7 @@ export function ProductEntryForm({
           disabled={!canSave}
           className="flex-1"
         >
-          {product ? 'Update Product' : 'Add Product'}
+          {product ? t('updateProduct') : t('addProduct')}
         </Button>
         <Button
           type="button"

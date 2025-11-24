@@ -831,6 +831,24 @@
           "essential": "Includi sezioni essenziali",
           "goal": "Allinea con il tuo obiettivo principale",
           "simple": "Mantieni la navigazione semplice"
+        },
+        "products": {
+          "emptyState": "Nessun prodotto aggiunto ancora",
+          "emptyStateHint": "Clicca \"Aggiungi Prodotto\" per iniziare",
+          "addProduct": "Aggiungi Prodotto",
+          "updateProduct": "Aggiorna Prodotto",
+          "contactForPricing": "Contattaci per il prezzo",
+          "priceHint": "Lascia vuoto per mostrare \"Contattaci per il prezzo\"",
+          "deleteConfirm": {
+            "title": "Eliminare il prodotto?",
+            "description": "Sei sicuro di voler eliminare questo prodotto? Questa azione non può essere annullata."
+          },
+          "cancelUploadConfirm": {
+            "title": "Annullare il caricamento?",
+            "description": "Il caricamento delle foto è in corso. Sei sicuro di voler annullare?"
+          },
+          "confirm": "Conferma",
+          "cancel": "Annulla"
         }
       },
       "12": {

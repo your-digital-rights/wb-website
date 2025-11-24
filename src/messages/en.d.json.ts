@@ -834,6 +834,24 @@ declare const messages: {
           "essential": "Include essential sections",
           "goal": "Align with your main goal",
           "simple": "Keep navigation simple"
+        },
+        "products": {
+          "emptyState": "No products added yet",
+          "emptyStateHint": "Click \"Add Product\" to get started",
+          "addProduct": "Add Product",
+          "updateProduct": "Update Product",
+          "contactForPricing": "Contact for pricing",
+          "priceHint": "Leave blank to display \"Contact for pricing\"",
+          "deleteConfirm": {
+            "title": "Delete Product?",
+            "description": "Are you sure you want to delete this product? This action cannot be undone."
+          },
+          "cancelUploadConfirm": {
+            "title": "Cancel Upload?",
+            "description": "Photo uploads are in progress. Are you sure you want to cancel?"
+          },
+          "confirm": "Confirm",
+          "cancel": "Cancel"
         }
       },
       "12": {

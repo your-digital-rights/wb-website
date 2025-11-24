@@ -390,7 +390,7 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
                   className="w-full"
                 >
                   <ShoppingBag className="w-4 h-4 mr-2" />
-                  Add Product ({products.length}/6)
+                  {t('products.addProduct')} ({products.length}/6)
                 </Button>
 
                 {/* Product List */}
