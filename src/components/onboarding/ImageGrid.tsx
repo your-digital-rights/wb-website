@@ -86,6 +86,13 @@ export function ImageGrid({
   // Refs for keyboard navigation
   const gridRef = useRef<HTMLDivElement>(null)
   const optionRefs = useRef<Map<string, HTMLButtonElement>>(new Map())
+  // Track last selection to prevent duplicate announcements from keyboard+click
+  const lastSelectionRef = useRef<{ id: string; timestamp: number } | null>(null)
+
+  // Clear optionRefs when options change to prevent memory leaks
+  useEffect(() => {
+    optionRefs.current.clear()
+  }, [options])
 
   const hasError = !!error
   const hasSuccess = !!success && !hasError
@@ -131,8 +138,17 @@ export function ImageGrid({
     onSelectionChange?.(returnValue)
   }, [multiple, maxSelections, selectedIds, onSelectionChange])
 
-  // Announce selection changes to screen readers
+  // Announce selection changes to screen readers (with debounce to prevent duplicates)
   const announceSelection = useCallback((option: ImageOption, selected: boolean) => {
+    const now = Date.now()
+    const last = lastSelectionRef.current
+
+    // Prevent duplicate announcement if same option was just handled (within 100ms)
+    if (last && last.id === option.id && now - last.timestamp < 100) {
+      return
+    }
+
+    lastSelectionRef.current = { id: option.id, timestamp: now }
     const action = selected ? 'selected' : 'deselected'
     setAnnouncement(`${option.title} ${action}`)
     // Clear after announcement
@@ -172,12 +188,15 @@ export function ImageGrid({
       case ' ':
       case 'Enter':
         e.preventDefault()
-        const canSelect = canSelectMore || isSelected(optionId)
+        // Capture selection state BEFORE handleSelection to avoid stale closure
+        const wasSelected = isSelected(optionId)
+        const canSelect = canSelectMore || wasSelected
         if (canSelect) {
           handleSelection(optionId)
           const option = flatOptions.find(o => o.id === optionId)
           if (option) {
-            announceSelection(option, !isSelected(optionId))
+            // Use captured state, not isSelected (which would return stale value)
+            announceSelection(option, !wasSelected)
           }
         }
         return

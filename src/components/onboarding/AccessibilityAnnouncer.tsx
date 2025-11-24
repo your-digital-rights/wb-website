@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useCallback, useRef, useEffect, Re
 
 interface AnnouncerContextType {
   announce: (message: string, priority?: 'polite' | 'assertive') => void
-  announceStepChange: (stepNumber: number, stepTitle: string) => void
+  announceStepChange: (stepNumber: number, stepTitle: string, totalSteps?: number) => void
   announceError: (error: string) => void
   announceSuccess: (message: string) => void
   announceProgress: (current: number, total: number) => void
@@ -69,9 +69,9 @@ export function AccessibilityAnnouncerProvider({ children }: AccessibilityAnnoun
     }
   }, [clearPoliteMessage, clearAssertiveMessage])
 
-  const announceStepChange = useCallback((stepNumber: number, stepTitle: string) => {
+  const announceStepChange = useCallback((stepNumber: number, stepTitle: string, totalSteps: number = 14) => {
     // Announce step change with assertive priority for immediate attention
-    announce(`Step ${stepNumber} of 14: ${stepTitle}`, 'assertive')
+    announce(`Step ${stepNumber} of ${totalSteps}: ${stepTitle}`, 'assertive')
   }, [announce])
 
   const announceError = useCallback((error: string) => {

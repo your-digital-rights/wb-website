@@ -141,7 +141,8 @@ export function StepTemplate({
           aria-live="polite"
         >
           <Save className="h-4 w-4 animate-pulse" aria-hidden="true" />
-          <span>{t('saving')}</span>
+          {/* Visual text hidden from SR, more descriptive text for SR */}
+          <span aria-hidden="true">{t('saving')}</span>
           <span className="sr-only">{tA11y('autoSaveSaving')}</span>
         </div>
       )
@@ -155,7 +156,8 @@ export function StepTemplate({
           aria-live="polite"
         >
           <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
-          <span>{t('saved')}</span>
+          {/* Visual text hidden from SR, more descriptive text for SR */}
+          <span aria-hidden="true">{t('saved')}</span>
           <span className="sr-only">{tA11y('autoSaveSaved')}</span>
         </div>
       )
