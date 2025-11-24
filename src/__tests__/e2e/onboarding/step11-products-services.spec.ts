@@ -116,8 +116,8 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       // Verify empty state message
       await expect(page.getByText('No products added yet')).toBeVisible()
 
-      // Verify "Add Product" button enabled
-      const addButton = page.getByRole('button', { name: /Add Product/ })
+      // Verify "Add Product" button enabled (use .first() to get the main button, not form submit)
+      const addButton = page.getByRole('button', { name: /Add Product/ }).first()
       await expect(addButton).toBeEnabled()
 
       // Verify "Next" button enabled (not disabled for skipping)
