@@ -815,25 +815,29 @@ test.describe('Complete Onboarding Flow', () => {
 
     if (checkboxCount > 0) {
       // CRITICAL: First, ensure we select the Services/Products section (required for offerings validation)
+      // This is required because the Products & Services section is only shown when this checkbox is selected
       let servicesSelected = false;
 
-      // Try to find and click Services/Products checkbox by label
+      // Use role-based selector for reliable checkbox interaction
       try {
-        const servicesLabel = page.locator('label').filter({ hasText: /Services.*Products|Services/ }).first();
-        if (await servicesLabel.isVisible()) {
-          const htmlFor = await servicesLabel.getAttribute('for');
-          const checkbox = page.locator(`#${htmlFor}`);
-          const isDisabled = await checkbox.getAttribute('disabled').catch(() => null);
-
-          // Only click if not disabled (Hero and Contact are disabled)
-          if (!isDisabled) {
-            await servicesLabel.click();
-            await page.waitForTimeout(300);
-            servicesSelected = true;
+        const servicesCheckbox = page.getByRole('checkbox', { name: /Services.*Products/i });
+        if (await servicesCheckbox.isVisible()) {
+          const isChecked = await servicesCheckbox.isChecked();
+          if (!isChecked) {
+            await servicesCheckbox.click();
+            await page.waitForTimeout(500);
+            console.log('✓ Selected "Services / Products" checkbox');
+          } else {
+            console.log('✓ "Services / Products" checkbox already selected');
           }
+          servicesSelected = true;
+
+          // Wait for the Products & Services section to appear (conditionally rendered)
+          await expect(page.getByRole('heading', { name: 'Products & Services' })).toBeVisible({ timeout: 5000 });
+          console.log('✓ Products & Services section is now visible');
         }
       } catch (e) {
-        console.log('⚠️ Could not find Services/Products via label');
+        console.log('⚠️ Could not find/select Services/Products checkbox:', e);
       }
 
       // Click some optional checkboxes (skip Hero and Contact which are always selected and disabled)
