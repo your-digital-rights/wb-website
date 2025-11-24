@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Upload, X, CheckCircle, AlertCircle, FileImage, Loader2 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, generateUUID } from '@/lib/utils'
 import { retry } from '@/lib/retry'
 
 export interface FileUploadProgress {
@@ -81,7 +81,7 @@ export function FileUploadWithProgress({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
   }
 
-  const generateFileId = () => crypto.randomUUID()
+  const generateFileId = () => generateUUID()
 
   const createFilePreview = (file: File): Promise<string> => {
     return new Promise((resolve) => {

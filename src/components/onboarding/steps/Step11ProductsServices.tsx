@@ -18,6 +18,7 @@ import { Product } from '@/types/onboarding'
 import { Button } from '@/components/ui/button'
 import { ProductList } from '../ProductList'
 import { ProductEntryForm } from '../ProductEntryForm'
+import { generateUUID } from '@/lib/utils'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { StepComponentProps } from './index'
 
@@ -85,7 +86,7 @@ export function Step11ProductsServices(_props: StepComponentProps) {
         <div className="max-w-2xl mx-auto">
           <h3 className="text-lg font-semibold mb-4">Add New Product</h3>
           <ProductEntryForm
-            productId={crypto.randomUUID()}
+            productId={generateUUID()}
             onSave={handleAddProduct}
             onCancel={handleCancelForm}
             disabled={false}

@@ -10,6 +10,7 @@ import {
   OnboardingSession,
   TOTAL_STEPS
 } from '@/types/onboarding'
+import { generateUUID } from '@/lib/utils'
 
 /**
  * ONBOARDING SESSION MANAGEMENT ARCHITECTURE
@@ -468,7 +469,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
             // Generate new product with metadata
             const newProduct = {
               ...product,
-              id: crypto.randomUUID(),
+              id: generateUUID(),
               photos: product.photos || [],
               displayOrder: products.length,
               createdAt: new Date().toISOString(),

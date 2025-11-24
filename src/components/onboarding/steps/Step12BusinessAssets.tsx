@@ -13,6 +13,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { StepComponentProps } from './index'
 import { useOnboardingStore } from '@/stores/onboarding'
+import { generateUUID } from '@/lib/utils'
 
 /**
  * Error types for upload failures
@@ -117,7 +118,7 @@ export function Step12BusinessAssets({ form, errors, isLoading }: StepComponentP
       }
 
       return {
-        id: savedFile.id || crypto.randomUUID(),
+        id: savedFile.id || generateUUID(),
         file: mockFile,
         progress: 100,
         status: 'completed',

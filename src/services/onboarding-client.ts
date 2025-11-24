@@ -6,6 +6,7 @@ import {
   OnboardingFormData,
   UploadedFile
 } from '@/types/onboarding'
+import { generateUUID } from '@/lib/utils'
 
 // Transform database response to client interface
 function transformSessionFromDB(dbSession: any): OnboardingSession {
@@ -45,25 +46,7 @@ export class OnboardingClientService {
         expiresAt.setDate(expiresAt.getDate() + 60) // 60 days from now
 
         // Generate a unique temporary email as placeholder (required by schema)
-        // Use crypto.randomUUID() if available, fallback for Firefox in non-HTTPS contexts
-        let sessionId: string
-        try {
-          sessionId = crypto.randomUUID()
-        } catch (e) {
-          // Fallback for browsers that don't support crypto.randomUUID in insecure contexts
-          // Use crypto.getRandomValues to securely generate a UUID-like string
-          const array = new Uint8Array(16);
-          crypto.getRandomValues(array);
-          // Format the random bytes as a UUID v4: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
-          sessionId = [...array].map((b, i) => {
-            // Set the UUID version (4) and the variant bits properly
-            if (i === 6) return ((b & 0x0f) | 0x40).toString(16); // version 4
-            if (i === 8) return ((b & 0x3f) | 0x80).toString(16); // variant 10
-            return b.toString(16).padStart(2, '0');
-          })
-          .join('')
-          .replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, '$1-$2-$3-$4-$5') + '-' + Date.now().toString(36);
-        }
+        const sessionId = generateUUID()
         const tempEmail = `temp-${sessionId}@whiteboar.onboarding`
 
         const { data, error } = await supabase
