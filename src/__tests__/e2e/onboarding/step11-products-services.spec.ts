@@ -133,7 +133,8 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       await expect(addButton).toBeEnabled()
 
       // Verify "Next" button enabled (not disabled for skipping)
-      const nextButton = page.getByRole('button', { name: 'Next', exact: true }).first()
+      // Note: Button accessible name is now "Continue to step 12" due to aria-label
+      const nextButton = page.getByRole('button', { name: /Continue to step 12|Next/i })
       await expect(nextButton).toBeEnabled()
 
       // Test skip flow: navigate to Step 12
