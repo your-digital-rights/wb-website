@@ -240,7 +240,8 @@ test.describe('Complete Onboarding Flow', () => {
     // STEP 1: Personal Information
     // =============================================================================
 
-    await expect(page.locator('text=Step 1 of 14')).toBeVisible();
+    // Use a more specific selector to avoid conflicts with screen reader announcements
+    await expect(page.locator('span:has-text("Step 1 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Welcome|Personal Information/i);
 
     // Fill personal details (Step 1: Welcome page)
@@ -290,7 +291,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/2/);
-    await expect(page.locator('text=Step 2 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 2 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Email Verification/i);
 
     // Fill 6-digit verification code (test code "123456" triggers auto-progression)
@@ -306,7 +307,7 @@ test.describe('Complete Onboarding Flow', () => {
     // STEP 3: Business Details
     // =============================================================================
 
-    await expect(page.locator('text=Step 3 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 3 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Business Details/i);
 
     // Debug: Log all available input fields
@@ -482,7 +483,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/4/, { timeout: 10000 });
-    await expect(page.locator('text=Step 4 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 4 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Brand Definition|Brand/i);
 
     // Fill business description
@@ -512,7 +513,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/5/, { timeout: 10000 });
-    await expect(page.locator('text=Step 5 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 5 of 14"):visible').first()).toBeVisible();
 
     // Set slider values - just click Next as sliders have defaults
     await page.waitForTimeout(1000);
@@ -527,7 +528,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/6/, { timeout: 10000 });
-    await expect(page.locator('text=Step 6 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 6 of 14"):visible').first()).toBeVisible();
 
     // Fill customer needs textareas using more specific selectors
     const customerProblemsTextarea = page.locator('textarea[name="customerProblems"]');
@@ -605,7 +606,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
     // STEP 7: Visual Inspiration
     // =============================================================================
-    await expect(page.locator('text=Step 7 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 7 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Visual Inspiration|Inspiration/i);
 
     // CRITICAL TEST: Step 7 websiteReferences should be optional
@@ -652,7 +653,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/8/);
-    await expect(page.locator('text=Step 8 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 8 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Design Style|Style/i);
 
     // Select a design style from ImageGrid
@@ -731,7 +732,7 @@ test.describe('Complete Onboarding Flow', () => {
       }
     }
 
-    await expect(page.locator('text=Step 9 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 9 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Image Style/i);
 
     // Select an image style from ImageGrid
@@ -766,7 +767,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/10/);
-    await expect(page.locator('text=Step 10 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 10 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Color Palette|Colors/i);
 
     // Select a color palette from ImageGrid
@@ -801,7 +802,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/11/);
-    await expect(page.locator('text=Step 11 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 11 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Website Structure|Structure/i);
 
     // Wait for page to fully load
@@ -980,7 +981,7 @@ test.describe('Complete Onboarding Flow', () => {
       console.log(`Error message on page: ${errorMsg}`);
       throw e;
     }
-    await expect(page.locator('text=Step 12 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 12 of 14"):visible').first()).toBeVisible();
 
     // Test file upload functionality
 
