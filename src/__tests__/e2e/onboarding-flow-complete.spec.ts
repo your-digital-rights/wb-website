@@ -656,40 +656,27 @@ test.describe('Complete Onboarding Flow', () => {
     await expect(page.locator('span:has-text("Step 8 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Design Style|Style/i);
 
-    // Select a design style from ImageGrid
-    // ImageGrid uses clickable Card components with .group class, not direct image clicks
-    const designCards = page.locator('.grid .group.cursor-pointer');
-    const designCardCount = await designCards.count();
-    console.log(`  Found ${designCardCount} design style cards`);
+    // Select a design style - Step 8 uses radio buttons in a radiogroup
+    const radioButtons = page.locator('input[type="radio"], button[role="radio"]');
+    const radioButtonCount = await radioButtons.count();
+    console.log(`  Found ${radioButtonCount} design style options`);
 
-    let styleSelected = false;
+    // Verify that a design style is already selected (default is usually "Minimalist")
+    const checkedRadio = page.locator('input[type="radio"]:checked, button[role="radio"][aria-checked="true"]');
+    const checkedCount = await checkedRadio.count();
+    console.log(`  Found ${checkedCount} selected design style(s)`);
 
-    if (designCardCount > 0) {
-      // Click the first available design style card (Minimalist)
-      try {
-        const firstCard = designCards.first();
-        if (await firstCard.isVisible()) {
-          await firstCard.click();
-          styleSelected = true;
-        }
-      } catch (e) {
-        console.log(`  ⚠️ Could not click design style card: ${e}`);
-      }
-    }
-
-    if (!styleSelected) {
-      // Fallback: Try clicking any clickable card
-      const fallbackCards = page.locator('.cursor-pointer').first();
-      if (await fallbackCards.isVisible()) {
-        await fallbackCards.click();
-        styleSelected = true;
-      } else {
-        console.log('  ❌ No design style cards found');
-      }
+    if (checkedCount === 0 && radioButtonCount > 0) {
+      // If no option is selected, click the first radio button
+      const firstRadio = radioButtons.first();
+      await firstRadio.click();
+      console.log('  ✓ Selected first design style option');
+    } else if (checkedCount > 0) {
+      console.log('  ✓ Design style already selected by default');
     }
 
     // Wait for the selection to register
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(1000);
 
     // Check for console errors before continuing
     page.on('console', msg => {
@@ -735,24 +722,23 @@ test.describe('Complete Onboarding Flow', () => {
     await expect(page.locator('span:has-text("Step 9 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Image Style/i);
 
-    // Select an image style from ImageGrid
-    // ImageGrid uses clickable Card components with .group class, not direct image clicks
-    const imageCards = page.locator('.grid .group.cursor-pointer');
-    const imageCount = await imageCards.count();
-    console.log(`  Found ${imageCount} image style cards`);
+    // Select an image style - Step 9 uses radio buttons in a radiogroup
+    const imageRadioButtons = page.locator('input[type="radio"], button[role="radio"]');
+    const imageRadioCount = await imageRadioButtons.count();
+    console.log(`  Found ${imageRadioCount} image style options`);
 
-    if (imageCount > 0) {
-      // Click the first available image style card (Photorealistic)
-      try {
-        const firstCard = imageCards.first();
-        if (await firstCard.isVisible()) {
-          await firstCard.click();
-        }
-      } catch (e) {
-        console.log(`  ⚠️ Could not click image style card: ${e}`);
-      }
-    } else {
-      console.log('  ❌ No image style cards found');
+    // Verify that an image style is already selected (default is usually "Photorealistic")
+    const checkedImageRadio = page.locator('input[type="radio"]:checked, button[role="radio"][aria-checked="true"]');
+    const checkedImageCount = await checkedImageRadio.count();
+    console.log(`  Found ${checkedImageCount} selected image style(s)`);
+
+    if (checkedImageCount === 0 && imageRadioCount > 0) {
+      // If no option is selected, click the first radio button
+      const firstImageRadio = imageRadioButtons.first();
+      await firstImageRadio.click();
+      console.log('  ✓ Selected first image style option');
+    } else if (checkedImageCount > 0) {
+      console.log('  ✓ Image style already selected by default');
     }
     await page.waitForTimeout(1000);
 
@@ -770,8 +756,7 @@ test.describe('Complete Onboarding Flow', () => {
     await expect(page.locator('span:has-text("Step 10 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Color Palette|Colors/i);
 
-    // Select a color palette from ImageGrid
-    // ImageGrid uses clickable Card components with .group class, not direct image clicks
+    // Select a color palette - Step 10 uses clickable cards (different from Steps 8-9)
     const colorCards = page.locator('.grid .group.cursor-pointer');
     const colorCount = await colorCards.count();
     console.log(`  Found ${colorCount} color palette cards`);
@@ -782,6 +767,7 @@ test.describe('Complete Onboarding Flow', () => {
         const firstCard = colorCards.first();
         if (await firstCard.isVisible()) {
           await firstCard.click();
+          console.log('  ✓ Selected first color palette card');
         }
       } catch (e) {
         console.log(`  ⚠️ Could not click color palette card: ${e}`);
@@ -1041,7 +1027,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/13/, { timeout: 10000 });
-    await expect(page.locator('text=Step 13 of')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 13 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Language.*Add/i);
 
     // Step 13 is optional - can proceed without selecting languages

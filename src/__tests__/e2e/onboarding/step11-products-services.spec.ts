@@ -2,7 +2,7 @@
  * Comprehensive E2E Test: Enhanced Products & Services Entry (Step 11)
  * Feature: 002-improved-products-service
  *
- * This single test covers all 11 phases of functionality:
+ * This single test covers all 10 phases of functionality:
  * 1. Empty state & skip flow
  * 2. Validation testing
  * 3. Photo validation
@@ -11,9 +11,8 @@
  * 6. Reordering
  * 7. Edit product
  * 8. Delete product
- * 9. Internationalization
- * 10. Performance & accessibility
- * 11. Final persistence & API contracts
+ * 9. Performance & accessibility
+ * 10. Final persistence & API contracts
  */
 
 import { test, expect, Page } from '@playwright/test'
@@ -350,13 +349,18 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
     // ========================================================================
 
     await test.step('Phase 8: Delete product', async () => {
-      // Set up dialog handler for browser's confirm() dialog
-      page.on('dialog', dialog => dialog.accept())
-
       // Find all Delete buttons and click the one for Content Writing
       // Content Writing is 3rd product (after Website Design Service, SEO Service)
       const deleteButtons = page.getByRole('button', { name: 'Delete' })
       await deleteButtons.nth(2).click()  // 0-indexed, so nth(2) is third button
+
+      // Wait for AlertDialog to appear and click the Delete button in the dialog
+      await expect(page.getByRole('alertdialog')).toBeVisible()
+      await expect(page.getByRole('alertdialog')).toContainText('Delete Product')
+      await expect(page.getByRole('alertdialog')).toContainText('Are you sure you want to delete this product?')
+
+      // Click the Delete button in the confirmation dialog
+      await page.getByRole('alertdialog').getByRole('button', { name: 'Delete' }).click()
 
       // Wait for product to be removed from list
       await expect(page.getByText('Content Writing')).not.toBeVisible()
