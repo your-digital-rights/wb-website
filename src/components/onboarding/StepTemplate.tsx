@@ -338,7 +338,7 @@ export function StepTemplate({
             >
               {/* Keyboard navigation hint for screen readers */}
               <p className="sr-only" id="keyboard-nav-hint">
-                Use {isMac ? 'Option' : 'Alt'} plus Left Arrow to go back, {isMac ? 'Option' : 'Alt'} plus Right Arrow to go forward
+                {tA11y('keyboardNavHint').replace('Alt', isMac ? 'Option' : 'Alt')}
               </p>
 
               <motion.div
@@ -429,7 +429,7 @@ export function StepTemplate({
                 className="hidden md:block mt-3 text-center text-xs text-muted-foreground/60 opacity-0 group-focus-within/nav:opacity-100 transition-opacity duration-200"
                 aria-hidden="true"
               >
-                Tip: {isMac ? 'Option' : 'Alt'} + Arrow keys to navigate
+                {tA11y('keyboardNavHintShort').replace('Alt', isMac ? 'Option' : 'Alt')}
               </p>
             </nav>
           )}
