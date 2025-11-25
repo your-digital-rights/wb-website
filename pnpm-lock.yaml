@@ -2178,8 +2178,8 @@ packages:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
 
-  body-parser@2.2.0:
-    resolution: {integrity: sha512-02qvAaxv8tp7fBa/mw1ga98OGm+eCbqzJOKoRt70sLmfEEi+jyBYVTDGfCL/k06/4EMk/z01gCe7HoCH/f2LTg==}
+  body-parser@2.2.1:
+    resolution: {integrity: sha512-nfDwkulwiZYQIGwxdy0RUmowMhKcFVcYXUU7m4QlKYim1rUtg83xm2yjZ40QjDuc291AJjjeSc9b++AWHSgSHw==}
     engines: {node: '>=18'}
 
   brace-expansion@1.1.12:
@@ -7548,13 +7548,13 @@ snapshots:
 
   binary-extensions@2.3.0: {}
 
-  body-parser@2.2.0:
+  body-parser@2.2.1:
     dependencies:
       bytes: 3.1.2
       content-type: 1.0.5
       debug: 4.4.3
       http-errors: 2.0.0
-      iconv-lite: 0.6.3
+      iconv-lite: 0.7.0
       on-finished: 2.4.1
       qs: 6.14.0
       raw-body: 3.0.1
@@ -8323,7 +8323,7 @@ snapshots:
   express@5.1.0:
     dependencies:
       accepts: 2.0.0
-      body-parser: 2.2.0
+      body-parser: 2.2.1
       content-disposition: 1.0.0
       content-type: 1.0.5
       cookie: 0.7.2
