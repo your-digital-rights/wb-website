@@ -391,6 +391,8 @@ test.describe('Complete Onboarding Flow', () => {
     for (let i = 0; i < provinceDropdowns.length; i++) {
       const dropdownText = await provinceDropdowns[i].textContent();
       if (dropdownText && (dropdownText.includes('province') || dropdownText.includes('region') || dropdownText.includes('Enter province'))) {
+        await provinceDropdowns[i].scrollIntoViewIfNeeded();
+        await page.waitForTimeout(300);
         await provinceDropdowns[i].click();
         await page.waitForTimeout(500);
 
