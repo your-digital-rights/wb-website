@@ -99,7 +99,7 @@ test.describe('Step 12 - File Upload Persistence Bug', () => {
     await page.waitForTimeout(3000)
 
     // Verify logo appears in UI
-    const logoFileName = page.getByText('test-logo.png')
+    const logoFileName = page.getByText('test-logo.png').first()
     await expect(logoFileName).toBeVisible({ timeout: 5000 })
     console.log('✅ Logo uploaded and visible in UI')
 
@@ -123,7 +123,7 @@ test.describe('Step 12 - File Upload Persistence Bug', () => {
       await page.waitForTimeout(3000)
 
       // Verify photo appears in UI
-      const photoFileName = page.getByText('test-photo.jpg')
+      const photoFileName = page.getByText('test-photo.jpg').first()
       await expect(photoFileName).toBeVisible({ timeout: 5000 })
       console.log('✅ Business photo uploaded and visible in UI')
     } else {
