@@ -226,7 +226,7 @@ test.describe('Step 12 - File Upload Persistence Bug', () => {
 
     // Verify logo is visible
     try {
-      await expect(page.getByText('test-logo.png')).toBeVisible({ timeout: 5000 })
+      await expect(page.getByText('test-logo.png').first()).toBeVisible({ timeout: 5000 })
       console.log('   ✅ Logo file visible: test-logo.png')
     } catch (error) {
       console.log('   ❌ Logo file NOT visible: test-logo.png')
@@ -241,7 +241,7 @@ test.describe('Step 12 - File Upload Persistence Bug', () => {
     // Verify business photo is visible
     if (fileInputCount >= 2) {
       try {
-        await expect(page.getByText('test-photo.jpg')).toBeVisible({ timeout: 5000 })
+        await expect(page.getByText('test-photo.jpg').first()).toBeVisible({ timeout: 5000 })
         console.log('   ✅ Business photo visible: test-photo.jpg')
       } catch (error) {
         console.log('   ❌ Business photo NOT visible: test-photo.jpg')

@@ -1049,7 +1049,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/14/, { timeout: 10000 });
-    await expect(page.locator('text=Step 14 of')).toBeVisible();
+    await expect(page.locator('text=Step 14 of').first()).toBeVisible();
 
     // Wait for checkout to initialize
     await page.waitForTimeout(3000);
