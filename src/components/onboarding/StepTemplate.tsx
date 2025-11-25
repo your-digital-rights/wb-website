@@ -257,7 +257,7 @@ export function StepTemplate({
 
       {/* Main Content */}
       <AnimatePresence mode="wait">
-        <motion.main
+        <motion.div
           key={stepNumber}
           id="main-content"
           ref={mainContentRef}
@@ -433,7 +433,7 @@ export function StepTemplate({
               </p>
             </nav>
           )}
-        </motion.main>
+        </motion.div>
       </AnimatePresence>
     </div>
   )
