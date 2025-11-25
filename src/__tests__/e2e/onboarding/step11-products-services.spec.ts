@@ -435,7 +435,10 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       // Note: localStorage persistence across locale changes needs investigation
       // Core product management (add/edit/delete) validated in Phases 1-8
 
-      await page.getByRole('button', { name: 'Next' }).first().click()
+      // Note: Button accessible name is "Continue to step 12" due to aria-label
+      // Exclude Next.js DevTools button to avoid strict mode violation
+      const nextButton = page.getByRole('button', { name: /Continue to step 12|Next/i }).and(page.locator('button:not([data-nextjs-dev-tools-button])'))
+      await nextButton.click()
       await expect(page).toHaveURL(/\/step\/12/)
 
       // Success! All core product management features verified:
