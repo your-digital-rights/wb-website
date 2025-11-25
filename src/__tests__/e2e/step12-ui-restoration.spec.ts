@@ -169,7 +169,8 @@ test.describe('Step 12 - File Upload Persistence Bug', () => {
     console.log('\n➡️  STEP 7: Navigating to Step 13 (clicking Next)...')
 
     // Note: Button accessible name is now "Continue to step 13" due to aria-label
-    const nextButton = page.getByRole('button', { name: /Continue to step 13|Next/i })
+    // Exclude Next.js DevTools button to avoid strict mode violation
+    const nextButton = page.getByRole('button', { name: /Continue to step 13|Next/i }).and(page.locator('button:not([data-nextjs-dev-tools-button])'))
     await expect(nextButton).toBeEnabled({ timeout: 5000 })
     await nextButton.click()
 
