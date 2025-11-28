@@ -111,10 +111,10 @@ export async function POST(request: NextRequest) {
       colorPalette: 'professional-blue',
 
       // Step 11
-      websiteSections: ['about', 'services', 'contact'],
-      primaryGoal: 'generate-leads',
+      websiteSections: ['hero', 'about', 'services', 'contact'],
+      primaryGoal: 'purchase',
       offeringType: 'services',
-      offerings: ['Consulting Services', 'Technical Support'],
+      products: [],
 
       // Step 12
       logoUpload: {

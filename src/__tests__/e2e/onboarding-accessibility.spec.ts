@@ -14,17 +14,17 @@ test.describe('Onboarding Accessibility', () => {
     await expect(startButton).toBeVisible();
     await startButton.click();
 
-    // Wait for navigation to step 1
-    await page.waitForURL(/\/onboarding\/step\/1/);
+    // Wait for navigation to step 1 (increased timeout for Firefox)
+    await page.waitForURL(/\/onboarding\/step\/1/, { timeout: 45000 });
     if (isMobile) {
       await page.waitForTimeout(2000);
     } else {
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('networkidle', { timeout: 20000 });
       await page.waitForTimeout(1000);
     }
 
     // Verify we're on step 1 by checking for first name input
-    await expect(page.getByRole('textbox', { name: /First Name.*required/i })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /First Name.*required/i })).toBeVisible({ timeout: 10000 });
   });
 
   test('should not have accessibility violations on Step 1', async ({ page }) => {

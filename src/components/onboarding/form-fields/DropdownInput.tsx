@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, useState, useMemo } from 'react'
+import { forwardRef, useState, useMemo, useId } from 'react'
 import { useTranslations } from 'next-intl'
 import { motion } from 'framer-motion'
 import {
@@ -87,8 +87,9 @@ export const DropdownInput = forwardRef<HTMLButtonElement, DropdownInputProps>(
     const t = useTranslations('forms.dropdown')
     const [open, setOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
-    
-    const inputId = `dropdown-${Math.random().toString(36).substr(2, 9)}`
+    const generatedId = useId()
+
+    const inputId = `dropdown-${generatedId}`
     const hasError = !!error
     const hasSuccess = !!success && !hasError
     
@@ -101,12 +102,13 @@ export const DropdownInput = forwardRef<HTMLButtonElement, DropdownInputProps>(
         : Array.isArray(currentValue) ? currentValue : [currentValue].filter(Boolean)
     }, [value, defaultValue, multiple])
 
-    // Filter options based on search
+    // Filter options based on search - searches value (code), label (full name), and description
     const filteredOptions = useMemo(() => {
       if (!searchQuery) return options
-      
+
       const query = searchQuery.toLowerCase()
-      return options.filter(option => 
+      return options.filter(option =>
+        option.value.toLowerCase().includes(query) ||
         option.label.toLowerCase().includes(query) ||
         option.description?.toLowerCase().includes(query)
       )
@@ -286,7 +288,7 @@ export const DropdownInput = forwardRef<HTMLButtonElement, DropdownInputProps>(
           </PopoverTrigger>
           
           <PopoverContent className="w-[calc(100vw-2rem)] sm:w-full p-1" align="start">
-            <Command>
+            <Command shouldFilter={false}>
               {searchable && (
                 <CommandInput
                   placeholder={searchPlaceholder || t('search')}

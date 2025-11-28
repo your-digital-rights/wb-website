@@ -75,11 +75,11 @@ test.describe('Custom Software Page', () => {
     // Click submit without filling form
     await page.getByRole('button', { name: /Send/i }).click();
 
-    // Check for validation errors
-    await expect(page.getByText(/Name is required/i)).toBeVisible();
-    await expect(page.getByText(/Email is required/i)).toBeVisible();
-    await expect(page.getByText(/Phone is required/i)).toBeVisible();
-    await expect(page.getByText(/Project description is required/i)).toBeVisible();
+    // Check for validation errors (with timeout for Firefox)
+    await expect(page.getByText(/Name is required/i)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/Email is required/i)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/Phone is required/i)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/Project description is required/i)).toBeVisible({ timeout: 10000 });
   });
 
   test('form validation shows error for invalid email', async ({ page }) => {

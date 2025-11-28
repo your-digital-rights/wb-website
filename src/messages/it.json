@@ -45,10 +45,13 @@
       "price": "€35 / mese",
       "feature1": "Branding personalizzato",
       "feature2": "Consegnato in 5 giorni lavorativi",
-      "feature3": "Multilingue: inglese e italiano inclusi (altre lingue su richiesta)",
+      "feature3": "Multilingue: inglese e italiano inclusi",
+      "feature3Tooltip": "Lingue aggiuntive possono essere aggiunte a pagamento.",
       "feature4": "Visibilità sui motori di ricerca",
       "feature5": "Pacchetto di modifiche incluso",
-      "feature6": "Hosting incluso (10k visite al mese)"
+      "feature5Tooltip": "Una volta pronto il tuo sito, hai una settimana per richiedere modifiche. Dopo tale finestra, ulteriori aggiornamenti sono disponibili a pagamento.",
+      "feature6": "Hosting incluso",
+      "feature6Tooltip": "Questo pacchetto include fino a diecimila visite mensili. Limiti di traffico più elevati possono essere aggiunti a pagamento."
     },
     "custom": {
       "name": "Su Misura",
@@ -635,7 +638,7 @@
         "description": "Scegli lo stile visivo che meglio rappresenta il tuo brand",
         "intro": {
           "title": "Scegli il Tuo Stile di Design",
-          "description": "Seleziona l'approccio di design che meglio riflette la personalità del tuo brand e piace al tuo pubblico target. Questo guiderà la direzione visiva generale del tuo sito web."
+          "description": "Scegli lo stile di design che riflette il tuo brand e parla al tuo pubblico. Questo imposta la direzione visiva del tuo sito web ma non influisce sulle sezioni mostrate o sui contenuti scritti."
         },
         "selection": {
           "title": "Selezione Stile di Design",
@@ -714,9 +717,24 @@
           "title": "Selezione Palette di Colori",
           "description": "I colori giocano un ruolo cruciale nella percezione del tuo brand da parte dei clienti. Scegli una palette che rifletta la personalità della tua attività e attragga il tuo pubblico target."
         },
+        "customColors": {
+          "title": "Avanzato: Colori Personalizzati",
+          "description": "Perfeziona i colori del tuo brand selezionando prima una palette qui sopra, poi modifica i singoli colori qui se necessario. La maggior parte degli utenti non avrà bisogno di questa sezione.",
+          "labels": {
+            "primary": "Primario",
+            "secondary": "Secondario",
+            "accent": "Accento",
+            "background": "Sfondo"
+          },
+          "empty": "Seleziona Colore",
+          "clear": "Cancella",
+          "done": "Fatto",
+          "hint": "Opzionale: Scegli una palette qui sopra per iniziare, poi personalizza i singoli colori qui. Clicca su una casella colore per scegliere visivamente, oppure inserisci un codice esadecimale."
+        },
         "selection": {
           "title": "Scegli la Tua Palette di Colori",
-          "required": "Richiesto"
+          "required": "Richiesto",
+          "optional": "Opzionale"
         },
         "psychology": {
           "title": "Psicologia dei Colori",
@@ -733,33 +751,6 @@
             "branding": "Colori coerenti migliorano il riconoscimento del brand dell'80%",
             "accessibility": "Il contrasto appropriato garantisce accessibilità per tutti gli utenti",
             "recognition": "Colori distintivi rendono il tuo brand memorabile"
-          }
-        },
-        "trends": {
-          "title": "Tendenze Colori per Settore",
-          "finance": {
-            "title": "Finanza e Banking",
-            "description": "Blu, verdi e grigi per fiducia e stabilità"
-          },
-          "health": {
-            "title": "Salute e Benessere",
-            "description": "Verdi, blu e azzurri per guarigione e crescita"
-          },
-          "food": {
-            "title": "Cibo e Ristorazione",
-            "description": "Arancioni, rossi e gialli caldi per stimolare l'appetito"
-          },
-          "tech": {
-            "title": "Tecnologia",
-            "description": "Viola, blu e toni scuri per innovazione"
-          },
-          "fashion": {
-            "title": "Moda e Bellezza",
-            "description": "Rosa audaci, neri e viola per stile"
-          },
-          "education": {
-            "title": "Educazione",
-            "description": "Blu, verdi e arancioni per apprendimento e crescita"
           }
         },
         "accessibility": {
@@ -840,6 +831,24 @@
           "essential": "Includi sezioni essenziali",
           "goal": "Allinea con il tuo obiettivo principale",
           "simple": "Mantieni la navigazione semplice"
+        },
+        "products": {
+          "emptyState": "Nessun prodotto aggiunto ancora",
+          "emptyStateHint": "Clicca \"Aggiungi Prodotto\" per iniziare",
+          "addProduct": "Aggiungi Prodotto",
+          "updateProduct": "Aggiorna Prodotto",
+          "contactForPricing": "Contattaci per il prezzo",
+          "priceHint": "Lascia vuoto per mostrare \"Contattaci per il prezzo\"",
+          "deleteConfirm": {
+            "title": "Eliminare il prodotto?",
+            "description": "Sei sicuro di voler eliminare questo prodotto? Questa azione non può essere annullata."
+          },
+          "cancelUploadConfirm": {
+            "title": "Annullare il caricamento?",
+            "description": "Il caricamento delle foto è in corso. Sei sicuro di voler annullare?"
+          },
+          "confirm": "Conferma",
+          "cancel": "Annulla"
         }
       },
       "12": {
@@ -852,14 +861,14 @@
         "logo": {
           "title": "Logo Aziendale",
           "optional": "Facoltativo",
-          "guidelines": "Carica un logo di alta qualità in formato PNG, JPG o SVG. Dimensione massima del file: 2MB.",
+          "guidelines": "Carica un logo di alta qualità in formato PNG o JPG. Dimensione massima del file: 2MB.",
           "upload": {
             "label": "Carica Logo",
             "hint": "Trascina e rilascia il tuo logo qui o clicca per sfogliare i file"
           },
           "requirements": {
             "title": "Requisiti del Logo",
-            "format": "Formato PNG, JPG o SVG",
+            "format": "Formato PNG o JPG",
             "size": "Dimensione massima del file 2MB",
             "resolution": "Larghezza minima 300px",
             "background": "Sfondo trasparente preferito",
@@ -1046,6 +1055,28 @@
       "successDescription": "Sei stato riportato all'inizio.",
       "errorTitle": "Errore",
       "errorDescription": "Impossibile riavviare l'onboarding. Riprova."
+    },
+    "accessibility": {
+      "skipToContent": "Vai al contenuto principale",
+      "progressNavigation": "Avanzamento onboarding",
+      "currentStep": "Attualmente al passaggio {step} di {total}",
+      "stepAnnouncement": "Passaggio {step} di {total}: {title}",
+      "stepContent": "Contenuto del modulo passaggio {step}",
+      "stepNavigation": "Navigazione tra i passaggi",
+      "stepIndicators": "Indicatori di avanzamento che mostrano lo stato di completamento",
+      "keyboardNavHint": "Usa Alt più Freccia Sinistra per tornare indietro, Alt più Freccia Destra per andare avanti",
+      "keyboardNavHintShort": "Suggerimento: Alt + Frecce per navigare",
+      "goToPreviousStep": "Torna al passaggio {step}",
+      "goToNextStep": "Continua al passaggio {step}",
+      "completeOnboarding": "Completa l'onboarding",
+      "formFieldRequired": "Questo campo è obbligatorio",
+      "formFieldOptional": "Questo campo è facoltativo",
+      "autoSaveSaving": "I tuoi progressi vengono salvati",
+      "autoSaveSaved": "I tuoi progressi sono stati salvati",
+      "errorOccurred": "Si è verificato un errore: {error}",
+      "stepCompleted": "Il passaggio {step} è completato",
+      "stepInProgress": "Il passaggio {step} è in corso",
+      "stepNotStarted": "Il passaggio {step} non è ancora iniziato"
     }
   },
   "forms": {

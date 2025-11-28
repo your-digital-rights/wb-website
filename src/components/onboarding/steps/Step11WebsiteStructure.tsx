@@ -1,18 +1,31 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import { Layout, Target, ShoppingBag, Users, FileText } from 'lucide-react'
 
 import { DropdownInput } from '@/components/onboarding/form-fields/DropdownInput'
-import { DynamicList } from '@/components/onboarding/DynamicList'
+import { ProductList } from '@/components/onboarding/ProductList'
+import { ProductEntryForm } from '@/components/onboarding/ProductEntryForm'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { StepComponentProps } from './index'
+import { useOnboardingStore } from '@/stores/onboarding'
 
 // Website section type definition
 type WebsiteSectionOption = {
@@ -71,7 +84,14 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
   const selectedSections = watch('websiteSections') || []
   const primaryGoal = watch('primaryGoal')
   const offeringType = watch('offeringType')
-  const offerings = watch('offerings') || []
+
+  // Product management state
+  const [showProductForm, setShowProductForm] = useState(false)
+  const [editingProductId, setEditingProductId] = useState<string | null>(null)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+  const [productToDelete, setProductToDelete] = useState<string | null>(null)
+  const { formData, addProduct, updateProduct, deleteProduct, reorderProducts } = useOnboardingStore()
+  const products = formData.products || []
 
   const handleSectionChange = (sectionId: string, checked: boolean) => {
     // Prevent unchecking hero and contact (they're always included)
@@ -87,9 +107,32 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
     setValue('websiteSections', updated as any, { shouldValidate: true, shouldDirty: true })
   }
 
-  const handleOfferingsChange = (items: any[]) => {
-    const offeringsList = items.map(item => item.value)
-    setValue('offerings', offeringsList, { shouldValidate: true, shouldDirty: true })
+  const handleProductSave = (productData: any) => {
+    if (editingProductId) {
+      updateProduct(editingProductId, productData)
+    } else {
+      addProduct(productData)
+    }
+    setShowProductForm(false)
+    setEditingProductId(null)
+  }
+
+  const handleDeleteClick = (productId: string) => {
+    setProductToDelete(productId)
+    setDeleteConfirmOpen(true)
+  }
+
+  const handleDeleteConfirm = () => {
+    if (productToDelete) {
+      deleteProduct(productToDelete)
+      setProductToDelete(null)
+    }
+    setDeleteConfirmOpen(false)
+  }
+
+  const handleDeleteCancel = () => {
+    setProductToDelete(null)
+    setDeleteConfirmOpen(false)
   }
 
   const getRecommendedSections = (goal: string) => {
@@ -273,121 +316,142 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
         </Card>
       </motion.div>
 
-      {/* Products/Services Offerings */}
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-      >
-        <Card>
-          <CardContent className="pt-6 space-y-6">
-            <div className="flex items-center gap-2">
-              <ShoppingBag className="w-5 h-5 text-primary" />
-              <h2 className="text-lg font-semibold text-foreground">{t('offerings.title')}</h2>
-              <Badge variant="outline" className="ml-auto">
-                {t('offerings.optional')}
-              </Badge>
-            </div>
-
-            <div className="space-y-4">
-              {/* Offering Type Selection */}
-              <Controller
-                name="offeringType"
-                control={control}
-                render={({ field }) => {
-                  // Use both field.value and offeringType watch to ensure re-renders
-                  const currentValue = field.value || offeringType
-
-                  return (
-                    <div className="space-y-3">
-                      <Label className="text-sm font-medium">What do you offer?</Label>
-                      <div className="grid grid-cols-3 gap-3">
-                        {[
-                          { value: 'products', label: 'Products', description: 'Physical or digital goods' },
-                          { value: 'services', label: 'Services', description: 'Consulting, support, maintenance' },
-                          { value: 'both', label: 'Both', description: 'Products and services' }
-                        ].map((option) => {
-                          const isSelected = currentValue === option.value
-
-                          return (
-                            <button
-                              key={option.value}
-                              type="button"
-                              disabled={isLoading}
-                              onClick={(e) => {
-                                e.preventDefault()
-                                e.stopPropagation()
-                                field.onChange(option.value)
-                              }}
-                              className={`flex flex-col items-center space-y-2 border rounded-lg p-3 transition-colors ${
-                                isLoading
-                                  ? 'cursor-not-allowed opacity-50'
-                                  : 'cursor-pointer hover:bg-muted/50'
-                              } ${
-                                isSelected
-                                  ? 'border-primary bg-primary/5'
-                                  : 'border-muted'
-                              }`}
-                            >
-                              <div className={`w-4 h-4 rounded-full border-2 ${
-                                isSelected
-                                  ? 'border-primary bg-primary'
-                                  : 'border-muted-foreground'
-                              }`}>
-                                {isSelected && (
-                                  <div className="w-full h-full rounded-full bg-white scale-50" />
-                                )}
-                              </div>
-                              <span className="font-medium pointer-events-none">{option.label}</span>
-                              <span className="text-xs text-muted-foreground text-center pointer-events-none">{option.description}</span>
-                            </button>
-                          )
-                        })}
-                      </div>
-                    </div>
-                  )
-                }}
-              />
-
-              <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-                <h4 className="font-medium text-sm text-muted-foreground">{t('offerings.examples.title')}</h4>
-                <div className="grid md:grid-cols-2 gap-2 text-xs text-muted-foreground">
-                  <ul className="space-y-1">
-                    <li>• {t('offerings.examples.consulting')}</li>
-                    <li>• {t('offerings.examples.design')}</li>
-                    <li>• {t('offerings.examples.development')}</li>
-                  </ul>
-                  <ul className="space-y-1">
-                    <li>• {t('offerings.examples.photography')}</li>
-                    <li>• {t('offerings.examples.marketing')}</li>
-                    <li>• {t('offerings.examples.training')}</li>
-                  </ul>
-                </div>
+      {/* Products/Services Offerings - Only shown when 'Services / Products' section is selected */}
+      {selectedSections.includes('services') && (
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          <Card>
+            <CardContent className="pt-6 space-y-6">
+              <div className="flex items-center gap-2">
+                <ShoppingBag className="w-5 h-5 text-primary" />
+                <h2 className="text-lg font-semibold text-foreground">{t('offerings.title')}</h2>
+                <Badge variant="outline" className="ml-auto">
+                  {t('offerings.optional')}
+                </Badge>
               </div>
 
-              <DynamicList
-                label={t('offerings.list.label')}
-                items={offerings.map((offering: string, index: number) => ({
-                  id: `offering-${index}`,
-                  value: offering,
-                  order: index
-                }))}
-                placeholder={t('offerings.list.placeholder')}
-                addButtonText={t('offerings.list.addButton')}
-                hint={t('offerings.list.hint')}
-                error={(errors as any).offerings?.message}
-                maxItems={15}
-                minItems={0}
-                itemPrefix="🛍️"
-                showCounter
-                allowReorder
-                allowEdit
-                onItemsChange={handleOfferingsChange}
-              />
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+              <div className="space-y-4">
+                {/* Offering Type Selection */}
+                <Controller
+                  name="offeringType"
+                  control={control}
+                  render={({ field }) => {
+                    // Use both field.value and offeringType watch to ensure re-renders
+                    const currentValue = field.value || offeringType
+
+                    return (
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium">What do you offer?</Label>
+                        <div className="grid grid-cols-3 gap-3">
+                          {[
+                            { value: 'products', label: 'Products', description: 'Physical or digital goods' },
+                            { value: 'services', label: 'Services', description: 'Consulting, support, maintenance' },
+                            { value: 'both', label: 'Both', description: 'Products and services' }
+                          ].map((option) => {
+                            const isSelected = currentValue === option.value
+
+                            return (
+                              <button
+                                key={option.value}
+                                type="button"
+                                disabled={isLoading}
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                  field.onChange(option.value)
+                                }}
+                                className={`flex flex-col items-center space-y-2 border rounded-lg p-3 transition-colors ${
+                                  isLoading
+                                    ? 'cursor-not-allowed opacity-50'
+                                    : 'cursor-pointer hover:bg-muted/50'
+                                } ${
+                                  isSelected
+                                    ? 'border-primary bg-primary/5'
+                                    : 'border-muted'
+                                }`}
+                              >
+                                <div className={`w-4 h-4 rounded-full border-2 ${
+                                  isSelected
+                                    ? 'border-primary bg-primary'
+                                    : 'border-muted-foreground'
+                                }`}>
+                                  {isSelected && (
+                                    <div className="w-full h-full rounded-full bg-white scale-50" />
+                                  )}
+                                </div>
+                                <span className="font-medium pointer-events-none">{option.label}</span>
+                                <span className="text-xs text-muted-foreground text-center pointer-events-none">{option.description}</span>
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )
+                  }}
+                />
+
+                <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+                  <h4 className="font-medium text-sm text-muted-foreground">{t('offerings.examples.title')}</h4>
+                  <div className="grid md:grid-cols-2 gap-2 text-xs text-muted-foreground">
+                    <ul className="space-y-1">
+                      <li>• {t('offerings.examples.consulting')}</li>
+                      <li>• {t('offerings.examples.design')}</li>
+                      <li>• {t('offerings.examples.development')}</li>
+                    </ul>
+                    <ul className="space-y-1">
+                      <li>• {t('offerings.examples.photography')}</li>
+                      <li>• {t('offerings.examples.marketing')}</li>
+                      <li>• {t('offerings.examples.training')}</li>
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Enhanced Product Entry */}
+                <div className="space-y-4">
+                  {/* Add Product Button */}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowProductForm(true)}
+                    disabled={isLoading || products.length >= 6 || showProductForm}
+                    className="w-full"
+                  >
+                    <ShoppingBag className="w-4 h-4 mr-2" />
+                    {t('products.addProduct')} ({products.length}/6)
+                  </Button>
+
+                  {/* Product List */}
+                  <ProductList
+                    products={products}
+                    onEdit={(id) => {
+                      setEditingProductId(id)
+                      setShowProductForm(true)
+                    }}
+                    onDelete={handleDeleteClick}
+                    onReorder={(fromIndex, toIndex) => reorderProducts(fromIndex, toIndex)}
+                    disabled={isLoading || showProductForm}
+                  />
+
+                  {/* Product Entry Form */}
+                  {showProductForm && (
+                    <ProductEntryForm
+                      product={editingProductId ? products.find(p => p.id === editingProductId) : undefined}
+                      onSave={handleProductSave}
+                      onCancel={() => {
+                        setShowProductForm(false)
+                        setEditingProductId(null)
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Structure Insights */}
       <motion.div
@@ -459,6 +523,22 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
           <span>{t('tips.simple')}</span>
         </div>
       </motion.div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Product</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this product? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleDeleteCancel}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

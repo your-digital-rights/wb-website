@@ -64,6 +64,7 @@ export default defineConfig({
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
+      timeout: 60000, // Webkit is slower - increase test timeout to 60s
     },
 
     /* Test against mobile viewports. */

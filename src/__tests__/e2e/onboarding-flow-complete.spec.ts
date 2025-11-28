@@ -240,7 +240,8 @@ test.describe('Complete Onboarding Flow', () => {
     // STEP 1: Personal Information
     // =============================================================================
 
-    await expect(page.locator('text=Step 1 of 14')).toBeVisible();
+    // Use a more specific selector to avoid conflicts with screen reader announcements
+    await expect(page.locator('span:has-text("Step 1 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Welcome|Personal Information/i);
 
     // Fill personal details (Step 1: Welcome page)
@@ -290,7 +291,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/2/);
-    await expect(page.locator('text=Step 2 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 2 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Email Verification/i);
 
     // Fill 6-digit verification code (test code "123456" triggers auto-progression)
@@ -306,7 +307,7 @@ test.describe('Complete Onboarding Flow', () => {
     // STEP 3: Business Details
     // =============================================================================
 
-    await expect(page.locator('text=Step 3 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 3 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Business Details/i);
 
     // Debug: Log all available input fields
@@ -390,6 +391,8 @@ test.describe('Complete Onboarding Flow', () => {
     for (let i = 0; i < provinceDropdowns.length; i++) {
       const dropdownText = await provinceDropdowns[i].textContent();
       if (dropdownText && (dropdownText.includes('province') || dropdownText.includes('region') || dropdownText.includes('Enter province'))) {
+        await provinceDropdowns[i].scrollIntoViewIfNeeded();
+        await page.waitForTimeout(300);
         await provinceDropdowns[i].click();
         await page.waitForTimeout(500);
 
@@ -482,7 +485,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/4/, { timeout: 10000 });
-    await expect(page.locator('text=Step 4 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 4 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Brand Definition|Brand/i);
 
     // Fill business description
@@ -512,7 +515,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/5/, { timeout: 10000 });
-    await expect(page.locator('text=Step 5 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 5 of 14"):visible').first()).toBeVisible();
 
     // Set slider values - just click Next as sliders have defaults
     await page.waitForTimeout(1000);
@@ -527,7 +530,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/6/, { timeout: 10000 });
-    await expect(page.locator('text=Step 6 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 6 of 14"):visible').first()).toBeVisible();
 
     // Fill customer needs textareas using more specific selectors
     const customerProblemsTextarea = page.locator('textarea[name="customerProblems"]');
@@ -605,7 +608,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
     // STEP 7: Visual Inspiration
     // =============================================================================
-    await expect(page.locator('text=Step 7 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 7 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Visual Inspiration|Inspiration/i);
 
     // CRITICAL TEST: Step 7 websiteReferences should be optional
@@ -652,43 +655,30 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/8/);
-    await expect(page.locator('text=Step 8 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 8 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Design Style|Style/i);
 
-    // Select a design style from ImageGrid
-    // ImageGrid uses clickable Card components with .group class, not direct image clicks
-    const designCards = page.locator('.grid .group.cursor-pointer');
-    const designCardCount = await designCards.count();
-    console.log(`  Found ${designCardCount} design style cards`);
+    // Select a design style - Step 8 uses radio buttons in a radiogroup
+    const radioButtons = page.locator('input[type="radio"], button[role="radio"]');
+    const radioButtonCount = await radioButtons.count();
+    console.log(`  Found ${radioButtonCount} design style options`);
 
-    let styleSelected = false;
+    // Verify that a design style is already selected (default is usually "Minimalist")
+    const checkedRadio = page.locator('input[type="radio"]:checked, button[role="radio"][aria-checked="true"]');
+    const checkedCount = await checkedRadio.count();
+    console.log(`  Found ${checkedCount} selected design style(s)`);
 
-    if (designCardCount > 0) {
-      // Click the first available design style card (Minimalist)
-      try {
-        const firstCard = designCards.first();
-        if (await firstCard.isVisible()) {
-          await firstCard.click();
-          styleSelected = true;
-        }
-      } catch (e) {
-        console.log(`  ⚠️ Could not click design style card: ${e}`);
-      }
-    }
-
-    if (!styleSelected) {
-      // Fallback: Try clicking any clickable card
-      const fallbackCards = page.locator('.cursor-pointer').first();
-      if (await fallbackCards.isVisible()) {
-        await fallbackCards.click();
-        styleSelected = true;
-      } else {
-        console.log('  ❌ No design style cards found');
-      }
+    if (checkedCount === 0 && radioButtonCount > 0) {
+      // If no option is selected, click the first radio button
+      const firstRadio = radioButtons.first();
+      await firstRadio.click();
+      console.log('  ✓ Selected first design style option');
+    } else if (checkedCount > 0) {
+      console.log('  ✓ Design style already selected by default');
     }
 
     // Wait for the selection to register
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(1000);
 
     // Check for console errors before continuing
     page.on('console', msg => {
@@ -731,27 +721,26 @@ test.describe('Complete Onboarding Flow', () => {
       }
     }
 
-    await expect(page.locator('text=Step 9 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 9 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Image Style/i);
 
-    // Select an image style from ImageGrid
-    // ImageGrid uses clickable Card components with .group class, not direct image clicks
-    const imageCards = page.locator('.grid .group.cursor-pointer');
-    const imageCount = await imageCards.count();
-    console.log(`  Found ${imageCount} image style cards`);
+    // Select an image style - Step 9 uses radio buttons in a radiogroup
+    const imageRadioButtons = page.locator('input[type="radio"], button[role="radio"]');
+    const imageRadioCount = await imageRadioButtons.count();
+    console.log(`  Found ${imageRadioCount} image style options`);
 
-    if (imageCount > 0) {
-      // Click the first available image style card (Photorealistic)
-      try {
-        const firstCard = imageCards.first();
-        if (await firstCard.isVisible()) {
-          await firstCard.click();
-        }
-      } catch (e) {
-        console.log(`  ⚠️ Could not click image style card: ${e}`);
-      }
-    } else {
-      console.log('  ❌ No image style cards found');
+    // Verify that an image style is already selected (default is usually "Photorealistic")
+    const checkedImageRadio = page.locator('input[type="radio"]:checked, button[role="radio"][aria-checked="true"]');
+    const checkedImageCount = await checkedImageRadio.count();
+    console.log(`  Found ${checkedImageCount} selected image style(s)`);
+
+    if (checkedImageCount === 0 && imageRadioCount > 0) {
+      // If no option is selected, click the first radio button
+      const firstImageRadio = imageRadioButtons.first();
+      await firstImageRadio.click();
+      console.log('  ✓ Selected first image style option');
+    } else if (checkedImageCount > 0) {
+      console.log('  ✓ Image style already selected by default');
     }
     await page.waitForTimeout(1000);
 
@@ -766,11 +755,10 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/10/);
-    await expect(page.locator('text=Step 10 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 10 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Color Palette|Colors/i);
 
-    // Select a color palette from ImageGrid
-    // ImageGrid uses clickable Card components with .group class, not direct image clicks
+    // Select a color palette - Step 10 uses clickable cards (different from Steps 8-9)
     const colorCards = page.locator('.grid .group.cursor-pointer');
     const colorCount = await colorCards.count();
     console.log(`  Found ${colorCount} color palette cards`);
@@ -781,6 +769,7 @@ test.describe('Complete Onboarding Flow', () => {
         const firstCard = colorCards.first();
         if (await firstCard.isVisible()) {
           await firstCard.click();
+          console.log('  ✓ Selected first color palette card');
         }
       } catch (e) {
         console.log(`  ⚠️ Could not click color palette card: ${e}`);
@@ -801,7 +790,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/11/);
-    await expect(page.locator('text=Step 11 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 11 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Website Structure|Structure/i);
 
     // Wait for page to fully load
@@ -815,28 +804,26 @@ test.describe('Complete Onboarding Flow', () => {
 
     if (checkboxCount > 0) {
       // CRITICAL: First, ensure we select the Services/Products section (required for offerings validation)
-      let servicesSelected = false;
+      // This is required because the Products & Services section is only shown when this checkbox is selected
+      console.log('🔍 Selecting Services/Products checkbox...');
+      const servicesCheckbox = page.getByRole('checkbox', { name: /Services.*Products/i });
+      await expect(servicesCheckbox).toBeVisible({ timeout: 5000 });
 
-      // Try to find and click Services/Products checkbox by label
-      try {
-        const servicesLabel = page.locator('label').filter({ hasText: /Services.*Products|Services/ }).first();
-        if (await servicesLabel.isVisible()) {
-          const htmlFor = await servicesLabel.getAttribute('for');
-          const checkbox = page.locator(`#${htmlFor}`);
-          const isDisabled = await checkbox.getAttribute('disabled').catch(() => null);
+      const isChecked = await servicesCheckbox.isChecked();
+      console.log(`  Services/Products checkbox initial state: ${isChecked ? 'checked' : 'unchecked'}`);
 
-          // Only click if not disabled (Hero and Contact are disabled)
-          if (!isDisabled) {
-            await servicesLabel.click();
-            await page.waitForTimeout(300);
-            servicesSelected = true;
-          }
-        }
-      } catch (e) {
-        console.log('⚠️ Could not find Services/Products via label');
+      if (!isChecked) {
+        await servicesCheckbox.click();
+        await page.waitForTimeout(500);
+        console.log('  ✓ Clicked Services/Products checkbox');
       }
 
-      // Click some optional checkboxes (skip Hero and Contact which are always selected and disabled)
+      // Wait for the Products & Services section to appear (conditionally rendered)
+      console.log('  Waiting for Products & Services section to appear...');
+      await expect(page.getByRole('heading', { name: 'Products & Services' })).toBeVisible({ timeout: 10000 });
+      console.log('  ✓ Products & Services section is visible');
+
+      // Click some optional checkboxes (skip Hero, Contact, and Services/Products)
       const labels = page.locator('label[for]');
       const labelCount = await labels.count();
       console.log(`Found ${labelCount} checkbox labels`);
@@ -847,9 +834,9 @@ test.describe('Complete Onboarding Flow', () => {
         const labelText = await label.textContent();
         const htmlFor = await label.getAttribute('for');
 
-        // Skip Hero and Contact (they're always included and disabled)
-        if (labelText?.includes('Hero') || labelText?.includes('Contact')) {
-          console.log(`  Skipping "${labelText?.substring(0, 30)}" (always included)`);
+        // Skip Hero, Contact, and Services/Products (to avoid toggling state)
+        if (labelText?.includes('Hero') || labelText?.includes('Contact') || labelText?.includes('Services') || labelText?.includes('Products')) {
+          console.log(`  Skipping "${labelText?.substring(0, 30)}"`);
           continue;
         }
 
@@ -911,32 +898,33 @@ test.describe('Complete Onboarding Flow', () => {
       await page.waitForTimeout(500);
     }
 
-    // CRITICAL: Select offering type (radio button) if 'services' is selected
+    // CRITICAL: Select offering type (radio button)
     const servicesRadio = page.locator('button').filter({ hasText: 'Services' }).first();
     if (await servicesRadio.isVisible()) {
       await servicesRadio.click();
       await page.waitForTimeout(1000);
     }
 
-    // CRITICAL: Add at least one offering (required for validation)
+    // CRITICAL: Add at least one product using the new ProductEntryForm (required for validation)
+    console.log('🛍️ Adding product...');
+    const addProductButton = page.getByRole('button', { name: /Add Product/ }).first();
+    await expect(addProductButton).toBeVisible({ timeout: 5000 });
+    await addProductButton.click();
+    await page.waitForTimeout(500);
 
-    // First, fill the offering input field (this enables the Add button)
-    const offeringInput = page.locator('input[placeholder="Enter a product or service"]').last();
-    if (await offeringInput.isVisible()) {
-      await offeringInput.fill('AI-Driven Digital Transformation Consulting');
-      await page.waitForTimeout(500);
+    // Fill product name and description (labels include asterisk: "Product Name *")
+    const productNameInput = page.getByRole('textbox', { name: /Product Name/ });
+    await expect(productNameInput).toBeVisible({ timeout: 5000 });
+    await productNameInput.fill('AI-Driven Consulting');
+    await page.getByRole('textbox', { name: /Description/ }).fill('Enterprise digital transformation services');
+    await page.waitForTimeout(500);
 
-      // Now click the Add button (should be enabled after filling input)
-      const addOfferingButton = page.locator('button').filter({ hasText: 'Add Item' }).first();
-      if (await addOfferingButton.isVisible()) {
-        await addOfferingButton.click();
-        await page.waitForTimeout(1000);
-      } else {
-        console.log('⚠️ Could not find "Add Item" button after filling input');
-      }
-    } else {
-      console.log('⚠️ Could not find offering input field with correct placeholder');
-    }
+    // Submit the product form
+    const submitProductButton = page.getByRole('button', { name: 'Add Product', exact: true });
+    await expect(submitProductButton).toBeEnabled({ timeout: 5000 });
+    await submitProductButton.click();
+    await page.waitForTimeout(1000);
+    console.log('  ✓ Product added successfully');
 
     // Wait a bit longer for form state to update after checkbox clicks
     await page.waitForTimeout(2000);
@@ -981,7 +969,7 @@ test.describe('Complete Onboarding Flow', () => {
       console.log(`Error message on page: ${errorMsg}`);
       throw e;
     }
-    await expect(page.locator('text=Step 12 of 14')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 12 of 14"):visible').first()).toBeVisible();
 
     // Test file upload functionality
 
@@ -1041,7 +1029,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/13/, { timeout: 10000 });
-    await expect(page.locator('text=Step 13 of')).toBeVisible();
+    await expect(page.locator('span:has-text("Step 13 of 14"):visible').first()).toBeVisible();
     await expect(page.locator('h1')).toContainText(/Language.*Add/i);
 
     // Step 13 is optional - can proceed without selecting languages
@@ -1063,7 +1051,7 @@ test.describe('Complete Onboarding Flow', () => {
     // =============================================================================
 
     await page.waitForURL(/\/onboarding\/step\/14/, { timeout: 10000 });
-    await expect(page.locator('text=Step 14 of')).toBeVisible();
+    await expect(page.locator('text=Step 14 of').first()).toBeVisible();
 
     // Wait for checkout to initialize
     await page.waitForTimeout(3000);
@@ -1202,9 +1190,10 @@ test.describe('Complete Onboarding Flow', () => {
     expect(formData?.websiteSections).toBeTruthy();
     expect(Array.isArray(formData?.websiteSections)).toBe(true);
     expect(formData?.primaryGoal).toBeTruthy();
-    expect(formData?.offerings).toBeTruthy();
-    expect(Array.isArray(formData?.offerings)).toBe(true);
-    expect(formData?.offerings?.length).toBeGreaterThan(0); // Must have at least one offering
+    // Check for products (new enhanced product entry) instead of offerings (old text list)
+    expect(formData?.products).toBeTruthy();
+    expect(Array.isArray(formData?.products)).toBe(true);
+    expect(formData?.products?.length).toBeGreaterThan(0); // Must have at least one product
     console.log('✓ Website structure validation passed');
 
     // 14. Verify business assets uploads (Step 12)

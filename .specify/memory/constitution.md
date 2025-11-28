@@ -90,7 +90,7 @@ Schema changes (database, API, client state) MUST include:
 ## Development Standards
 
 ### Technology Stack Requirements
-- **Framework**: Next.js 15+ with app directory and TypeScript
+- **Framework**: Next.js 16+ with app directory and TypeScript
 - **Internationalization**: next-intl with server-side translations
 - **UI Components**: shadcn/ui with Radix UI primitives
 - **Styling**: Tailwind CSS consuming design tokens via `--wb-*` variables

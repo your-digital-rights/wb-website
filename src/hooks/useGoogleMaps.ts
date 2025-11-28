@@ -28,10 +28,8 @@ export function useGoogleMaps(options: UseGoogleMapsOptions = {}): UseGoogleMaps
   useEffect(() => {
     if (!enabled) return
 
-    // If already loaded, update state
+    // If already loaded, no need to load again
     if (isGoogleMapsLoaded()) {
-      setIsLoaded(true)
-      setIsLoading(false)
       return
     }
 

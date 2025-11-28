@@ -10,6 +10,7 @@ import {
   OnboardingSession,
   TOTAL_STEPS
 } from '@/types/onboarding'
+import { generateUUID } from '@/lib/utils'
 
 /**
  * ONBOARDING SESSION MANAGEMENT ARCHITECTURE
@@ -74,6 +75,7 @@ const initialFormData: Partial<OnboardingFormData> = {
   primaryGoal: undefined,
   offeringType: undefined,
   offerings: [],
+  products: [], // Step 11 Enhanced: Products & Services Entry (Feature: 002-improved-products-service)
   logoUpload: undefined,
   businessPhotos: []
 }
@@ -457,6 +459,255 @@ export const useOnboardingStore = create<OnboardingStore>()(
             set((state) => ({
               currentStep: Math.max(state.currentStep, stepNumber)
             }))
+          },
+
+          // Product Management Actions (Feature: 002-improved-products-service)
+          addProduct: (product) => {
+            const { formData } = get()
+            const products = formData.products || []
+
+            // Generate new product with metadata
+            const newProduct = {
+              ...product,
+              id: generateUUID(),
+              photos: product.photos || [],
+              displayOrder: products.length,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            }
+
+            set({
+              formData: {
+                ...formData,
+                products: [...products, newProduct]
+              },
+              isDirty: true
+            })
+
+            debouncedSaveProgress()
+          },
+
+          updateProduct: (id, updates) => {
+            const { formData } = get()
+            const products = formData.products || []
+
+            const updatedProducts = products.map((product) =>
+              product.id === id
+                ? {
+                    ...product,
+                    ...updates,
+                    updatedAt: new Date().toISOString()
+                  }
+                : product
+            )
+
+            set({
+              formData: {
+                ...formData,
+                products: updatedProducts
+              },
+              isDirty: true
+            })
+
+            debouncedSaveProgress()
+          },
+
+          deleteProduct: (id) => {
+            const { formData } = get()
+            const products = formData.products || []
+
+            // Remove product and recalculate display order
+            const filteredProducts = products
+              .filter((product) => product.id !== id)
+              .map((product, index) => ({
+                ...product,
+                displayOrder: index,
+                updatedAt: new Date().toISOString()
+              }))
+
+            // Get the product being deleted to access its photos
+            const productToDelete = products.find((p) => p.id === id)
+            const photoPaths = productToDelete?.photos
+              ?.map((photo) => photo.path)
+              .filter((path): path is string => !!path) || []
+
+            set({
+              formData: {
+                ...formData,
+                products: filteredProducts
+              },
+              isDirty: true
+            })
+
+            // Delete associated photos from Supabase Storage (async, fire-and-forget)
+            if (photoPaths.length > 0) {
+              fetch('/api/onboarding/upload', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ paths: photoPaths })
+              }).catch((err) => {
+                console.error('Failed to delete product photos:', err)
+              })
+            }
+
+            debouncedSaveProgress()
+          },
+
+          reorderProducts: (fromIndex, toIndex) => {
+            const { formData } = get()
+            const products = formData.products || []
+
+            // Create copy and perform reorder
+            const reorderedProducts = [...products]
+            const [movedProduct] = reorderedProducts.splice(fromIndex, 1)
+            reorderedProducts.splice(toIndex, 0, movedProduct)
+
+            // Update display order for all products
+            const updatedProducts = reorderedProducts.map((product, index) => ({
+              ...product,
+              displayOrder: index,
+              updatedAt: new Date().toISOString()
+            }))
+
+            set({
+              formData: {
+                ...formData,
+                products: updatedProducts
+              },
+              isDirty: true
+            })
+
+            debouncedSaveProgress()
+          },
+
+          addProductPhoto: (productId, photo) => {
+            const { formData } = get()
+            const products = formData.products || []
+
+            const updatedProducts = products.map((product) => {
+              if (product.id === productId) {
+                return {
+                  ...product,
+                  photos: [...product.photos, photo],
+                  updatedAt: new Date().toISOString()
+                }
+              }
+              return product
+            })
+
+            set({
+              formData: {
+                ...formData,
+                products: updatedProducts
+              },
+              isDirty: true
+            })
+
+            debouncedSaveProgress()
+          },
+
+          updateProductPhoto: (productId, photoId, updates) => {
+            const { formData } = get()
+            const products = formData.products || []
+
+            const updatedProducts = products.map((product) => {
+              if (product.id === productId) {
+                const updatedPhotos = product.photos.map((photo) =>
+                  photo.id === photoId ? { ...photo, ...updates } : photo
+                )
+                return {
+                  ...product,
+                  photos: updatedPhotos,
+                  updatedAt: new Date().toISOString()
+                }
+              }
+              return product
+            })
+
+            set({
+              formData: {
+                ...formData,
+                products: updatedProducts
+              },
+              isDirty: true
+            })
+
+            debouncedSaveProgress()
+          },
+
+          deleteProductPhoto: (productId, photoId) => {
+            const { formData } = get()
+            const products = formData.products || []
+
+            // Find the photo being deleted to get its storage path
+            const product = products.find((p) => p.id === productId)
+            const photoToDelete = product?.photos.find((p) => p.id === photoId)
+            const photoPath = photoToDelete?.path
+
+            const updatedProducts = products.map((product) => {
+              if (product.id === productId) {
+                const filteredPhotos = product.photos.filter(
+                  (photo) => photo.id !== photoId
+                )
+                return {
+                  ...product,
+                  photos: filteredPhotos,
+                  updatedAt: new Date().toISOString()
+                }
+              }
+              return product
+            })
+
+            set({
+              formData: {
+                ...formData,
+                products: updatedProducts
+              },
+              isDirty: true
+            })
+
+            // Delete photo from Supabase Storage (async, fire-and-forget)
+            if (photoPath) {
+              fetch('/api/onboarding/upload', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ paths: [photoPath] })
+              }).catch((err) => {
+                console.error('Failed to delete product photo:', err)
+              })
+            }
+
+            debouncedSaveProgress()
+          },
+
+          reorderProductPhotos: (productId, fromIndex, toIndex) => {
+            const { formData } = get()
+            const products = formData.products || []
+
+            const updatedProducts = products.map((product) => {
+              if (product.id === productId) {
+                const photos = [...product.photos]
+                const [movedPhoto] = photos.splice(fromIndex, 1)
+                photos.splice(toIndex, 0, movedPhoto)
+
+                return {
+                  ...product,
+                  photos,
+                  updatedAt: new Date().toISOString()
+                }
+              }
+              return product
+            })
+
+            set({
+              formData: {
+                ...formData,
+                products: updatedProducts
+              },
+              isDirty: true
+            })
+
+            debouncedSaveProgress()
           },
 
           // Email Verification Methods

@@ -1,6 +1,6 @@
 'use client'
 
-import { forwardRef, useState } from 'react'
+import { forwardRef, useState, useId } from 'react'
 import { useTranslations } from 'next-intl'
 import { Phone, AlertCircle, CheckCircle2, Globe } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -111,9 +111,10 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
     const [phoneNumber, setPhoneNumber] = useState(value || '')
     const [internalError, setInternalError] = useState<string>('')
     const [internalSuccess, setInternalSuccess] = useState<string>('')
+    const generatedId = useId()
 
     const currentCountryData = countries.find(c => c.code === selectedCountry) || countries[0]
-    const inputId = props.id || `phone-input-${Math.random().toString(36).substr(2, 9)}`
+    const inputId = props.id || `phone-input-${generatedId}`
 
     const validatePhone = (number: string, countryData: typeof currentCountryData): boolean => {
       if (!number) return false

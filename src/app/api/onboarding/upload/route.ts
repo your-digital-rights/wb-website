@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
+// Configure route segment to handle larger file uploads
+export const runtime = 'nodejs'
+export const maxDuration = 30 // 30 seconds max for file upload
+
 // Create service role client for admin operations
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -9,7 +13,18 @@ const supabaseAdmin = createClient(
 
 export async function POST(request: NextRequest) {
   try {
-    const formData = await request.formData()
+    // Parse formData with better error handling for incomplete multipart data
+    let formData: FormData
+    try {
+      formData = await request.formData()
+    } catch (parseError) {
+      console.error('Failed to parse multipart form data:', parseError)
+      return NextResponse.json(
+        { error: 'Invalid or incomplete multipart form data' },
+        { status: 400 }
+      )
+    }
+
     const file = formData.get('file') as File
     const type = formData.get('type') as string
     const sessionId = formData.get('sessionId') as string
@@ -44,17 +59,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate file type
+    // Validate file type (SVG excluded due to XSS risks from embedded scripts)
     const allowedTypes = [
       'image/png',
-      'image/jpg',
       'image/jpeg',
-      'image/svg+xml'
+      'image/webp'
     ]
 
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
-        { error: 'File type not allowed. Only PNG, JPG, JPEG, and SVG files are supported.' },
+        { error: 'File type not allowed. Only PNG, JPEG, and WebP files are supported.' },
         { status: 400 }
       )
     }
@@ -86,15 +100,23 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get public URL
-    const { data: publicUrlData } = supabaseAdmin.storage
+    // Create signed URL for private bucket (expires in 7 days)
+    const { data: signedUrlData, error: signedUrlError } = await supabaseAdmin.storage
       .from('onboarding-uploads')
-      .getPublicUrl(data.path)
+      .createSignedUrl(data.path, 604800) // 7 days in seconds
+
+    if (signedUrlError) {
+      console.error('Failed to create signed URL:', signedUrlError)
+      return NextResponse.json(
+        { error: 'Failed to generate access URL for uploaded file' },
+        { status: 500 }
+      )
+    }
 
     const uploadResponse = {
       id: data.id,
       path: data.path,
-      url: publicUrlData.publicUrl,
+      url: signedUrlData.signedUrl,
       fileName: file.name,
       fileSize: file.size,
       mimeType: file.type,
@@ -107,7 +129,7 @@ export async function POST(request: NextRequest) {
       await OnboardingServerService.recordFileUpload(
         sessionId,
         type === 'business-asset' ? 'photo' : 'logo', // Map type to file_type
-        publicUrlData.publicUrl,
+        signedUrlData.signedUrl,
         file.name,
         file.size,
         file.type
@@ -127,6 +149,63 @@ export async function POST(request: NextRequest) {
     console.error('Upload API error:', error)
     return NextResponse.json(
       { error: 'Internal server error during file upload' },
+      { status: 500 }
+    )
+  }
+}
+
+/**
+ * DELETE handler for removing files from Supabase storage
+ * Used when products are deleted to clean up orphaned photos
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { paths } = body as { paths: string[] }
+
+    if (!paths || !Array.isArray(paths) || paths.length === 0) {
+      return NextResponse.json(
+        { error: 'No file paths provided' },
+        { status: 400 }
+      )
+    }
+
+    // Validate paths to prevent path traversal attacks
+    const invalidPaths = paths.filter(path =>
+      path.includes('..') ||
+      path.startsWith('/') ||
+      !path.match(/^(product-photo|logo|business-asset)\//)
+    )
+
+    if (invalidPaths.length > 0) {
+      return NextResponse.json(
+        { error: 'Invalid file paths detected' },
+        { status: 400 }
+      )
+    }
+
+    // Delete files from Supabase storage
+    const { data, error } = await supabaseAdmin.storage
+      .from('onboarding-uploads')
+      .remove(paths)
+
+    if (error) {
+      console.error('Supabase delete error:', error)
+      return NextResponse.json(
+        { error: 'Failed to delete files from storage' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      deleted: data?.length || 0
+    })
+
+  } catch (error) {
+    console.error('Delete API error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error during file deletion' },
       { status: 500 }
     )
   }

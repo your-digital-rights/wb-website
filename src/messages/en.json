@@ -45,10 +45,13 @@
       "price": "€35 / month",
       "feature1": "Personalized branding",
       "feature2": "Delivered in 5 business days",
-      "feature3": "Multilingual: English and Italian included (more on request)",
+      "feature3": "Multilingual: English and Italian included",
+      "feature3Tooltip": "Additional languages can be added for an extra fee.",
       "feature4": "Search engine visibility",
       "feature5": "Adjustment package included",
-      "feature6": "Hosting included (10k visits per month)"
+      "feature5Tooltip": "Once your site is ready, you have one week to request changes. After that window, further updates are available for a fee.",
+      "feature6": "Hosting included",
+      "feature6Tooltip": "This package includes up to ten thousand monthly visits. Higher traffic limits can be added for an extra fee."
     },
     "custom": {
       "name": "Custom Made",
@@ -635,7 +638,7 @@
         "description": "Choose the visual style that best represents your brand",
         "intro": {
           "title": "Choose Your Design Style",
-          "description": "Select the design approach that best reflects your brand personality and appeals to your target audience. This will guide the overall visual direction of your website."
+          "description": "Choose the design style that reflects your brand and speaks to your audience. This sets the visual direction of your website but does not affect the sections shown or the written content."
         },
         "selection": {
           "title": "Design Style Selection",
@@ -714,9 +717,24 @@
           "title": "Color Palette Selection",
           "description": "Colors play a crucial role in how customers perceive your brand. Choose a palette that reflects your business personality and appeals to your target audience."
         },
+        "customColors": {
+          "title": "Advanced: Custom Colors",
+          "description": "Fine-tune your brand colors by selecting a palette above first, then override individual colors here if needed. Most users won't need this section.",
+          "labels": {
+            "primary": "Primary",
+            "secondary": "Secondary",
+            "accent": "Accent",
+            "background": "Background"
+          },
+          "empty": "Select Color",
+          "clear": "Clear",
+          "done": "Done",
+          "hint": "Optional: Choose a palette above to start, then customize individual colors here. Click a color box to pick a color visually, or enter a hex code."
+        },
         "selection": {
           "title": "Choose Your Color Palette",
-          "required": "Required"
+          "required": "Required",
+          "optional": "Optional"
         },
         "psychology": {
           "title": "Color Psychology",
@@ -733,33 +751,6 @@
             "branding": "Consistent colors improve brand recognition by 80%",
             "accessibility": "Proper contrast ensures accessibility for all users",
             "recognition": "Signature colors make your brand memorable"
-          }
-        },
-        "trends": {
-          "title": "Industry Color Trends",
-          "finance": {
-            "title": "Finance & Banking",
-            "description": "Blues, greens, and grays for trust and stability"
-          },
-          "health": {
-            "title": "Health & Wellness",
-            "description": "Greens, blues, and teals for healing and growth"
-          },
-          "food": {
-            "title": "Food & Restaurant",
-            "description": "Warm oranges, reds, and yellows to stimulate appetite"
-          },
-          "tech": {
-            "title": "Technology",
-            "description": "Purples, blues, and dark tones for innovation"
-          },
-          "fashion": {
-            "title": "Fashion & Beauty",
-            "description": "Bold pinks, blacks, and purples for style"
-          },
-          "education": {
-            "title": "Education",
-            "description": "Blues, greens, and oranges for learning and growth"
           }
         },
         "accessibility": {
@@ -840,6 +831,24 @@
           "essential": "Include essential sections",
           "goal": "Align with your main goal",
           "simple": "Keep navigation simple"
+        },
+        "products": {
+          "emptyState": "No products added yet",
+          "emptyStateHint": "Click \"Add Product\" to get started",
+          "addProduct": "Add Product",
+          "updateProduct": "Update Product",
+          "contactForPricing": "Contact for pricing",
+          "priceHint": "Leave blank to display \"Contact for pricing\"",
+          "deleteConfirm": {
+            "title": "Delete Product?",
+            "description": "Are you sure you want to delete this product? This action cannot be undone."
+          },
+          "cancelUploadConfirm": {
+            "title": "Cancel Upload?",
+            "description": "Photo uploads are in progress. Are you sure you want to cancel?"
+          },
+          "confirm": "Confirm",
+          "cancel": "Cancel"
         }
       },
       "12": {
@@ -852,14 +861,14 @@
         "logo": {
           "title": "Business Logo",
           "optional": "Optional",
-          "guidelines": "Upload a high-quality logo in PNG, JPG, or SVG format. Maximum file size: 2MB.",
+          "guidelines": "Upload a high-quality logo in PNG or JPG format. Maximum file size: 2MB.",
           "upload": {
             "label": "Upload Logo",
             "hint": "Drag and drop your logo here or click to browse files"
           },
           "requirements": {
             "title": "Logo Requirements",
-            "format": "PNG, JPG, or SVG format",
+            "format": "PNG or JPG format",
             "size": "Maximum 2MB file size",
             "resolution": "Minimum 300px width",
             "background": "Transparent background preferred",
@@ -1046,6 +1055,28 @@
       "successDescription": "You've been taken back to the beginning.",
       "errorTitle": "Error",
       "errorDescription": "Failed to restart onboarding. Please try again."
+    },
+    "accessibility": {
+      "skipToContent": "Skip to main content",
+      "progressNavigation": "Onboarding progress",
+      "currentStep": "Currently on step {step} of {total}",
+      "stepAnnouncement": "Step {step} of {total}: {title}",
+      "stepContent": "Step {step} form content",
+      "stepNavigation": "Step navigation",
+      "stepIndicators": "Progress indicators showing completion status",
+      "keyboardNavHint": "Use Alt plus Left Arrow to go back, Alt plus Right Arrow to go forward",
+      "keyboardNavHintShort": "Tip: Alt + Arrow keys to navigate",
+      "goToPreviousStep": "Go back to step {step}",
+      "goToNextStep": "Continue to step {step}",
+      "completeOnboarding": "Complete onboarding",
+      "formFieldRequired": "This field is required",
+      "formFieldOptional": "This field is optional",
+      "autoSaveSaving": "Your progress is being saved",
+      "autoSaveSaved": "Your progress has been saved",
+      "errorOccurred": "An error occurred: {error}",
+      "stepCompleted": "Step {step} is completed",
+      "stepInProgress": "Step {step} is in progress",
+      "stepNotStarted": "Step {step} has not been started yet"
     }
   },
   "forms": {

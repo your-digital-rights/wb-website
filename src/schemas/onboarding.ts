@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { ProductsArraySchema } from '@/lib/validation/product-schema'
 
 // =============================================================================
 // VALIDATION SCHEMAS FOR ALL 12 ONBOARDING STEPS
@@ -185,8 +186,19 @@ export const step9Schema = z.object({
 // =============================================================================
 // STEP 10: COLOR PALETTE
 // =============================================================================
+// Helper: Validate hex color format (#RRGGBB or #RGB)
+const hexColorSchema = z.string().regex(
+  /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/,
+  'Invalid hex color format (expected #RRGGBB or #RGB)'
+)
+
 export const step10Schema = z.object({
-  colorPalette: z.string('Please select a color palette').min(1, 'Please select a color palette')
+  // Color palette is now an optional array of hex color values
+  // Order: [primary, secondary, accent, background, ...additional]
+  colorPalette: z.array(hexColorSchema)
+    .max(10, 'Maximum 10 colors allowed')
+    .optional()
+    .default([])
 })
 
 // =============================================================================
@@ -217,7 +229,8 @@ export const step11Schema = z.object({
   offeringType: z.enum(['products', 'services', 'both']).optional(),
   offerings: z.array(z.string().min(1, 'Offering cannot be empty'))
     .max(6, 'Please provide no more than 6 offerings')
-    .optional()
+    .optional(),
+  products: ProductsArraySchema.optional().default([])
 })
 
 // =============================================================================
@@ -228,8 +241,8 @@ const uploadedFileSchema = z.object({
   fileName: z.string(),
   fileSize: z.number().max(10 * 1024 * 1024, 'Logo file size cannot exceed 10MB'),
   mimeType: z.string().regex(
-    /^image\/(png|jpg|jpeg|svg\+xml)$/,
-    'Logo must be PNG, JPG, or SVG format'
+    /^image\/(png|jpg|jpeg)$/,
+    'Logo must be PNG or JPG format'
   ),
   url: z.string().url(),
   width: z.number().optional(),
@@ -500,6 +513,7 @@ export const completeFormSchema = z.object({
   primaryGoal: step11Schema.shape.primaryGoal,
   offeringType: step11Schema.shape.offeringType,
   offerings: step11Schema.shape.offerings,
+  products: step11Schema.shape.products,
 
   // Step 12
   logoUpload: step12Schema.shape.logoUpload,

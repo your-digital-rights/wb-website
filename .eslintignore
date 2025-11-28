@@ -1,0 +1,25 @@
+# Build output
+.next/
+out/
+dist/
+build/
+
+# Dependencies
+node_modules/
+
+# Config files that use CommonJS require()
+tailwind.config.js
+context/design-system/tailwind.config.js
+jest.config.js
+
+# Test/debug files
+debug-test.js
+test-dark-theme.js
+test-restart-fix.ts
+
+# Environment files
+.env*
+
+# Other
+*.log
+.DS_Store
