@@ -95,11 +95,11 @@ test.describe('Step 12 - File Upload Persistence Bug', () => {
     console.log(`   Logo file path: ${logoPath}`)
     await logoInput.setInputFiles(logoPath)
 
-    // Wait for upload to complete
-    await page.waitForTimeout(3000)
+    // Wait for upload to complete by checking the status text
+    await expect(page.getByText(/Completed: 1/)).toBeVisible({ timeout: 15000 })
 
     // Verify logo appears in UI
-    const logoFileName = page.getByText('test-logo.png')
+    const logoFileName = page.getByText('test-logo.png').first()
     await expect(logoFileName).toBeVisible({ timeout: 5000 })
     console.log('✅ Logo uploaded and visible in UI')
 
@@ -119,12 +119,10 @@ test.describe('Step 12 - File Upload Persistence Bug', () => {
 
       await photoInput.setInputFiles(photoPath)
 
-      // Wait for upload to complete
-      await page.waitForTimeout(3000)
-
-      // Verify photo appears in UI
-      const photoFileName = page.getByText('test-photo.jpg')
-      await expect(photoFileName).toBeVisible({ timeout: 5000 })
+      // Wait for upload to complete by checking the filename appears
+      // (upload takes 6-7 seconds, so use 15 second timeout)
+      const photoFileName = page.getByText('test-photo.jpg').first()
+      await expect(photoFileName).toBeVisible({ timeout: 15000 })
       console.log('✅ Business photo uploaded and visible in UI')
     } else {
       console.log('⚠️  Only one file input found, skipping business photo upload')
@@ -168,7 +166,9 @@ test.describe('Step 12 - File Upload Persistence Bug', () => {
     // ========== NAVIGATE TO STEP 13 ==========
     console.log('\n➡️  STEP 7: Navigating to Step 13 (clicking Next)...')
 
-    const nextButton = page.getByRole('button', { name: 'Next', exact: true })
+    // Note: Button accessible name is now "Continue to step 13" due to aria-label
+    // Exclude Next.js DevTools button to avoid strict mode violation
+    const nextButton = page.getByRole('button', { name: /Continue to step 13|Next/i }).and(page.locator('button:not([data-nextjs-dev-tools-button])'))
     await expect(nextButton).toBeEnabled({ timeout: 5000 })
     await nextButton.click()
 
@@ -181,7 +181,8 @@ test.describe('Step 12 - File Upload Persistence Bug', () => {
     console.log('\n⬅️  STEP 8: Navigating back to Step 12 (clicking Previous)...')
     console.log('   🔍 THIS IS THE CRITICAL TEST - Will the UI show the uploaded files?')
 
-    const prevButton = page.getByRole('button', { name: 'Previous' })
+    // Note: Button accessible name is now "Go back to step 12" due to aria-label
+    const prevButton = page.getByRole('button', { name: /Go back to step 12|Previous/i })
     await prevButton.click()
 
     await page.waitForURL(/\/onboarding\/step\/12/)
@@ -224,7 +225,7 @@ test.describe('Step 12 - File Upload Persistence Bug', () => {
 
     // Verify logo is visible
     try {
-      await expect(page.getByText('test-logo.png')).toBeVisible({ timeout: 5000 })
+      await expect(page.getByText('test-logo.png').first()).toBeVisible({ timeout: 5000 })
       console.log('   ✅ Logo file visible: test-logo.png')
     } catch (error) {
       console.log('   ❌ Logo file NOT visible: test-logo.png')
@@ -239,7 +240,7 @@ test.describe('Step 12 - File Upload Persistence Bug', () => {
     // Verify business photo is visible
     if (fileInputCount >= 2) {
       try {
-        await expect(page.getByText('test-photo.jpg')).toBeVisible({ timeout: 5000 })
+        await expect(page.getByText('test-photo.jpg').first()).toBeVisible({ timeout: 5000 })
         console.log('   ✅ Business photo visible: test-photo.jpg')
       } catch (error) {
         console.log('   ❌ Business photo NOT visible: test-photo.jpg')

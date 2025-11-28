@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
+// Configure route segment to handle larger file uploads
+export const runtime = 'nodejs'
+export const maxDuration = 30 // 30 seconds max for file upload
+
 // Create service role client for admin operations
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -9,7 +13,18 @@ const supabaseAdmin = createClient(
 
 export async function POST(request: NextRequest) {
   try {
-    const formData = await request.formData()
+    // Parse formData with better error handling for incomplete multipart data
+    let formData: FormData
+    try {
+      formData = await request.formData()
+    } catch (parseError) {
+      console.error('Failed to parse multipart form data:', parseError)
+      return NextResponse.json(
+        { error: 'Invalid or incomplete multipart form data' },
+        { status: 400 }
+      )
+    }
+
     const file = formData.get('file') as File
     const type = formData.get('type') as string
     const sessionId = formData.get('sessionId') as string

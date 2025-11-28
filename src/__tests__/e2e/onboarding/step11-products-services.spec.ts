@@ -2,7 +2,7 @@
  * Comprehensive E2E Test: Enhanced Products & Services Entry (Step 11)
  * Feature: 002-improved-products-service
  *
- * This single test covers all 11 phases of functionality:
+ * This single test covers all 10 phases of functionality:
  * 1. Empty state & skip flow
  * 2. Validation testing
  * 3. Photo validation
@@ -11,9 +11,8 @@
  * 6. Reordering
  * 7. Edit product
  * 8. Delete product
- * 9. Internationalization
- * 10. Performance & accessibility
- * 11. Final persistence & API contracts
+ * 9. Performance & accessibility
+ * 10. Final persistence & API contracts
  */
 
 import { test, expect, Page } from '@playwright/test'
@@ -133,7 +132,9 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       await expect(addButton).toBeEnabled()
 
       // Verify "Next" button enabled (not disabled for skipping)
-      const nextButton = page.getByRole('button', { name: 'Next', exact: true }).first()
+      // Note: Button accessible name is now "Continue to step 12" due to aria-label
+      // Exclude Next.js DevTools button to avoid strict mode violation
+      const nextButton = page.getByRole('button', { name: /Continue to step 12|Next/i }).and(page.locator('button:not([data-nextjs-dev-tools-button])'))
       await expect(nextButton).toBeEnabled()
 
       // Test skip flow: navigate to Step 12
@@ -348,13 +349,18 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
     // ========================================================================
 
     await test.step('Phase 8: Delete product', async () => {
-      // Set up dialog handler for browser's confirm() dialog
-      page.on('dialog', dialog => dialog.accept())
-
       // Find all Delete buttons and click the one for Content Writing
       // Content Writing is 3rd product (after Website Design Service, SEO Service)
       const deleteButtons = page.getByRole('button', { name: 'Delete' })
       await deleteButtons.nth(2).click()  // 0-indexed, so nth(2) is third button
+
+      // Wait for AlertDialog to appear and click the Delete button in the dialog
+      await expect(page.getByRole('alertdialog')).toBeVisible()
+      await expect(page.getByRole('alertdialog')).toContainText('Delete Product')
+      await expect(page.getByRole('alertdialog')).toContainText('Are you sure you want to delete this product?')
+
+      // Click the Delete button in the confirmation dialog
+      await page.getByRole('alertdialog').getByRole('button', { name: 'Delete' }).click()
 
       // Wait for product to be removed from list
       await expect(page.getByText('Content Writing')).not.toBeVisible()
@@ -429,7 +435,10 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       // Note: localStorage persistence across locale changes needs investigation
       // Core product management (add/edit/delete) validated in Phases 1-8
 
-      await page.getByRole('button', { name: 'Next' }).first().click()
+      // Note: Button accessible name is "Continue to step 12" due to aria-label
+      // Exclude Next.js DevTools button to avoid strict mode violation
+      const nextButton = page.getByRole('button', { name: /Continue to step 12|Next/i }).and(page.locator('button:not([data-nextjs-dev-tools-button])'))
+      await nextButton.click()
       await expect(page).toHaveURL(/\/step\/12/)
 
       // Success! All core product management features verified:

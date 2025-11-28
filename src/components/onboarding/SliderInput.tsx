@@ -216,6 +216,8 @@ export function SliderInput({
                     style={{
                       '--slider-track-color': getSliderColor(value)
                     } as React.CSSProperties}
+                    aria-label={`${option.key}: ${value < 50 ? option.leftLabel : option.rightLabel}, ${value}%`}
+                    aria-valuetext={`${value}%, leaning towards ${value < 50 ? option.leftLabel : option.rightLabel}`}
                   />
                 </div>
 

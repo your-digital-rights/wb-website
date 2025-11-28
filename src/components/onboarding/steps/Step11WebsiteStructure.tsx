@@ -14,6 +14,16 @@ import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { StepComponentProps } from './index'
 import { useOnboardingStore } from '@/stores/onboarding'
 
@@ -74,11 +84,12 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
   const selectedSections = watch('websiteSections') || []
   const primaryGoal = watch('primaryGoal')
   const offeringType = watch('offeringType')
-  const offerings = watch('offerings') || []
 
   // Product management state
   const [showProductForm, setShowProductForm] = useState(false)
   const [editingProductId, setEditingProductId] = useState<string | null>(null)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+  const [productToDelete, setProductToDelete] = useState<string | null>(null)
   const { formData, addProduct, updateProduct, deleteProduct, reorderProducts } = useOnboardingStore()
   const products = formData.products || []
 
@@ -104,6 +115,24 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
     }
     setShowProductForm(false)
     setEditingProductId(null)
+  }
+
+  const handleDeleteClick = (productId: string) => {
+    setProductToDelete(productId)
+    setDeleteConfirmOpen(true)
+  }
+
+  const handleDeleteConfirm = () => {
+    if (productToDelete) {
+      deleteProduct(productToDelete)
+      setProductToDelete(null)
+    }
+    setDeleteConfirmOpen(false)
+  }
+
+  const handleDeleteCancel = () => {
+    setProductToDelete(null)
+    setDeleteConfirmOpen(false)
   }
 
   const getRecommendedSections = (goal: string) => {
@@ -401,7 +430,7 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
                       setEditingProductId(id)
                       setShowProductForm(true)
                     }}
-                    onDelete={(id) => deleteProduct(id)}
+                    onDelete={handleDeleteClick}
                     onReorder={(fromIndex, toIndex) => reorderProducts(fromIndex, toIndex)}
                     disabled={isLoading || showProductForm}
                   />
@@ -494,6 +523,22 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
           <span>{t('tips.simple')}</span>
         </div>
       </motion.div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Product</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this product? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleDeleteCancel}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

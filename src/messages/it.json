@@ -1055,6 +1055,28 @@
       "successDescription": "Sei stato riportato all'inizio.",
       "errorTitle": "Errore",
       "errorDescription": "Impossibile riavviare l'onboarding. Riprova."
+    },
+    "accessibility": {
+      "skipToContent": "Vai al contenuto principale",
+      "progressNavigation": "Avanzamento onboarding",
+      "currentStep": "Attualmente al passaggio {step} di {total}",
+      "stepAnnouncement": "Passaggio {step} di {total}: {title}",
+      "stepContent": "Contenuto del modulo passaggio {step}",
+      "stepNavigation": "Navigazione tra i passaggi",
+      "stepIndicators": "Indicatori di avanzamento che mostrano lo stato di completamento",
+      "keyboardNavHint": "Usa Alt più Freccia Sinistra per tornare indietro, Alt più Freccia Destra per andare avanti",
+      "keyboardNavHintShort": "Suggerimento: Alt + Frecce per navigare",
+      "goToPreviousStep": "Torna al passaggio {step}",
+      "goToNextStep": "Continua al passaggio {step}",
+      "completeOnboarding": "Completa l'onboarding",
+      "formFieldRequired": "Questo campo è obbligatorio",
+      "formFieldOptional": "Questo campo è facoltativo",
+      "autoSaveSaving": "I tuoi progressi vengono salvati",
+      "autoSaveSaved": "I tuoi progressi sono stati salvati",
+      "errorOccurred": "Si è verificato un errore: {error}",
+      "stepCompleted": "Il passaggio {step} è completato",
+      "stepInProgress": "Il passaggio {step} è in corso",
+      "stepNotStarted": "Il passaggio {step} non è ancora iniziato"
     }
   },
   "forms": {

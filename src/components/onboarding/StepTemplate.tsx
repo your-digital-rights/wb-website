@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useRef, useCallback, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { useOnboardingStore } from '@/stores/onboarding'
 import { cn } from '@/lib/utils'
+import { LiveRegion } from './AccessibilityAnnouncer'
 
 interface StepTemplateProps {
   stepNumber: number
@@ -46,20 +47,70 @@ export function StepTemplate({
   hideNavigation = false
 }: StepTemplateProps) {
   const t = useTranslations('onboarding')
+  const tA11y = useTranslations('onboarding.accessibility')
   const router = useRouter()
   const shouldReduceMotion = useReducedMotion()
-  
-  const { 
-    autoSaveStatus, 
+
+  // Refs for focus management
+  const mainHeadingRef = useRef<HTMLHeadingElement>(null)
+  const mainContentRef = useRef<HTMLDivElement>(null)
+  const previousStepRef = useRef<number | null>(null)
+
+  const {
+    autoSaveStatus,
     isSessionExpired,
     checkSessionExpired,
     recoverSession
   } = useOnboardingStore()
 
+  // Detect OS for keyboard hint (macOS uses Option key, others use Alt)
+  const [isMac, setIsMac] = useState(false)
+  useEffect(() => {
+    setIsMac(/Mac|iPhone|iPod|iPad/i.test(navigator.platform))
+  }, [])
+
+  // Focus management: Move focus to heading when step changes
+  useEffect(() => {
+    // Only focus if we're transitioning between steps (not on initial load)
+    if (previousStepRef.current !== null && previousStepRef.current !== stepNumber) {
+      // Small delay to ensure DOM is updated after animation starts
+      const focusTimeout = setTimeout(() => {
+        mainHeadingRef.current?.focus()
+      }, shouldReduceMotion ? 50 : 350)
+
+      return () => clearTimeout(focusTimeout)
+    }
+    previousStepRef.current = stepNumber
+  }, [stepNumber, shouldReduceMotion])
+
   // Check for session expiration
   useEffect(() => {
     checkSessionExpired()
   }, [checkSessionExpired])
+
+  // Handle keyboard shortcut for navigation
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    // Alt + Arrow keys for step navigation (with modifier to avoid conflicts)
+    if (event.altKey && !event.ctrlKey && !event.metaKey) {
+      if (event.key === 'ArrowRight' && canGoNext && !isLoading && onNext) {
+        event.preventDefault()
+        onNext()
+      } else if (event.key === 'ArrowLeft' && canGoPrevious && onPrevious) {
+        event.preventDefault()
+        onPrevious()
+      }
+    }
+  }, [canGoNext, canGoPrevious, isLoading, onNext, onPrevious])
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [handleKeyDown])
+
+  // Skip to main content handler
+  const handleSkipToContent = () => {
+    mainContentRef.current?.focus()
+  }
 
   // Handle session recovery
   const handleRecoverSession = async () => {
@@ -86,26 +137,38 @@ export function StepTemplate({
   // Progress calculation
   const progressPercentage = (stepNumber / 14) * 100
 
-  // Auto-save indicator
+  // Auto-save indicator with screen reader announcements
   const renderAutoSaveIndicator = () => {
     if (autoSaveStatus === 'saving') {
       return (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Save className="h-4 w-4 animate-pulse" />
-          {t('saving')}
+        <div
+          className="flex items-center gap-2 text-sm text-muted-foreground"
+          role="status"
+          aria-live="polite"
+        >
+          <Save className="h-4 w-4 animate-pulse" aria-hidden="true" />
+          {/* Visual text hidden from SR, more descriptive text for SR */}
+          <span aria-hidden="true">{t('saving')}</span>
+          <span className="sr-only">{tA11y('autoSaveSaving')}</span>
         </div>
       )
     }
-    
+
     if (autoSaveStatus === 'saved') {
       return (
-        <div className="flex items-center gap-2 text-sm text-green-600">
-          <CheckCircle2 className="h-4 w-4" />
-          {t('saved')}
+        <div
+          className="flex items-center gap-2 text-sm text-green-600"
+          role="status"
+          aria-live="polite"
+        >
+          <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+          {/* Visual text hidden from SR, more descriptive text for SR */}
+          <span aria-hidden="true">{t('saved')}</span>
+          <span className="sr-only">{tA11y('autoSaveSaved')}</span>
         </div>
       )
     }
-    
+
     return null
   }
 
@@ -140,19 +203,44 @@ export function StepTemplate({
     )
   }
 
+  // Screen reader announcement for step changes
+  const stepAnnouncement = `${tA11y('stepAnnouncement', { step: stepNumber, total: 14, title })}`
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      {/* Screen reader announcement for step changes */}
+      <LiveRegion message={stepAnnouncement} priority="assertive" clearAfter={2000} />
+
+      {/* Skip to main content link - visible on focus for keyboard users */}
+      <a
+        href="#main-content"
+        onClick={(e) => {
+          e.preventDefault()
+          handleSkipToContent()
+        }}
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-background focus:text-foreground focus:px-4 focus:py-2 focus:rounded-md focus:border focus:border-border focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary"
+      >
+        {tA11y('skipToContent')}
+      </a>
+
       {/* Progress Bar */}
-      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b">
+      <nav
+        aria-label={tA11y('progressNavigation')}
+        className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b"
+      >
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-muted-foreground">
+              <span className="text-sm font-medium text-muted-foreground" aria-hidden="true">
                 {t('step')} {stepNumber} {t('of')} 14
+              </span>
+              {/* Accessible step indicator for screen readers */}
+              <span className="sr-only">
+                {tA11y('currentStep', { step: stepNumber, total: 14 })}
               </span>
               {renderAutoSaveIndicator()}
             </div>
-            <div className="text-sm font-medium">
+            <div className="text-sm font-medium" aria-hidden="true">
               {Math.round(progressPercentage)}%
             </div>
           </div>
@@ -160,19 +248,24 @@ export function StepTemplate({
             value={progressPercentage}
             className="h-2"
             aria-label={t('progressLabel', { step: stepNumber, total: 14 })}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(progressPercentage)}
           />
         </div>
-      </div>
+      </nav>
 
       {/* Main Content */}
       <AnimatePresence mode="wait">
         <motion.div
           key={stepNumber}
+          id="main-content"
+          ref={mainContentRef}
           variants={containerVariants}
           initial="initial"
           animate="animate"
           exit="exit"
-          transition={{ 
+          transition={{
             duration: shouldReduceMotion ? 0.1 : 0.3,
             ease: "easeInOut"
           }}
@@ -180,18 +273,23 @@ export function StepTemplate({
           style={{
             paddingBottom: 'calc(var(--cookie-consent-height, 0px) + var(--wb-space-8, 2rem) + env(safe-area-inset-bottom))'
           }}
+          tabIndex={-1}
+          aria-labelledby="step-heading"
         >
           {/* Step Header */}
-          <div className="text-center mb-8">
+          <header className="text-center mb-8">
             <motion.h1
-              className="text-3xl md:text-4xl font-bold mb-4 text-foreground"
+              id="step-heading"
+              ref={mainHeadingRef}
+              className="text-3xl md:text-4xl font-bold mb-4 text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
               initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
+              tabIndex={-1}
             >
               {title}
             </motion.h1>
-            <motion.p 
+            <motion.p
               className="text-lg text-muted-foreground max-w-2xl mx-auto"
               initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -199,20 +297,24 @@ export function StepTemplate({
             >
               {description}
             </motion.p>
-          </div>
+          </header>
 
           {/* Step Content */}
-          <motion.div
-            className={cn(
-              "bg-card border rounded-xl shadow-sm p-6 md:p-8",
-              className
-            )}
-            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+          <section
+            aria-label={tA11y('stepContent', { step: stepNumber })}
           >
-            {children}
-          </motion.div>
+            <motion.div
+              className={cn(
+                "bg-card border rounded-xl shadow-sm p-6 md:p-8",
+                className
+              )}
+              initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              {children}
+            </motion.div>
+          </section>
 
           {/* Error Message */}
           {error && (
@@ -230,83 +332,106 @@ export function StepTemplate({
 
           {/* Navigation */}
           {!hideNavigation && (
-            <motion.div
-              className="flex flex-col md:flex-row items-stretch md:items-center justify-between mt-8 gap-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
+            <nav
+              aria-label={tA11y('stepNavigation')}
+              className="mt-8 group/nav"
             >
-              {/* Previous Button */}
-              <motion.div
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-                className="w-full md:w-auto order-2 md:order-1"
-              >
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={onPrevious}
-                  disabled={!canGoPrevious || isLoading}
-                  className="gap-2 w-full md:w-auto"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  {previousLabel || t('previous')}
-                </Button>
-              </motion.div>
+              {/* Keyboard navigation hint for screen readers */}
+              <p className="sr-only" id="keyboard-nav-hint">
+                {tA11y('keyboardNavHint').replace('Alt', isMac ? 'Option' : 'Alt')}
+              </p>
 
-              {/* Step Indicators */}
-              <div className="hidden md:flex items-center gap-2 order-2">
-                {Array.from({ length: 14 }, (_, i) => (
-                  <div
-                    key={i}
-                    role="img"
-                    className={cn(
-                      "w-2 h-2 rounded-full transition-colors",
-                      i < stepNumber
-                        ? "bg-primary"
-                        : i === stepNumber - 1
-                          ? "bg-primary/60"
-                          : "bg-muted-foreground/20"
+              <motion.div
+                className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                aria-describedby="keyboard-nav-hint"
+              >
+                {/* Previous Button */}
+                <motion.div
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                  className="w-full md:w-auto order-2 md:order-1"
+                >
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={onPrevious}
+                    disabled={!canGoPrevious || isLoading}
+                    className="gap-2 w-full md:w-auto"
+                    aria-label={tA11y('goToPreviousStep', { step: stepNumber - 1 })}
+                  >
+                    <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                    {previousLabel || t('previous')}
+                  </Button>
+                </motion.div>
+
+                {/* Step Indicators */}
+                <div
+                  className="hidden md:flex items-center gap-2 order-2"
+                  role="group"
+                  aria-label={tA11y('stepIndicators')}
+                >
+                  {Array.from({ length: 14 }, (_, i) => (
+                    <div
+                      key={i}
+                      role="presentation"
+                      className={cn(
+                        "w-2 h-2 rounded-full transition-colors",
+                        i < stepNumber
+                          ? "bg-primary"
+                          : i === stepNumber - 1
+                            ? "bg-primary/60"
+                            : "bg-muted-foreground/20"
+                      )}
+                      aria-hidden="true"
+                    />
+                  ))}
+                </div>
+
+                {/* Next Button */}
+                <motion.div
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                  className="w-full md:w-auto order-1 md:order-3"
+                >
+                  <Button
+                    size="lg"
+                    onClick={onNext}
+                    disabled={!canGoNext || isLoading}
+                    className="gap-2 w-full md:w-auto"
+                    aria-label={stepNumber < 14 ? tA11y('goToNextStep', { step: stepNumber + 1 }) : tA11y('completeOnboarding')}
+                    aria-busy={isLoading}
+                  >
+                    {isLoading ? (
+                      <>
+                        <div
+                          className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"
+                          aria-hidden="true"
+                        />
+                        <span aria-live="polite">{t('loading')}</span>
+                      </>
+                    ) : (
+                      <>
+                        {nextLabel || t('next')}
+                        {stepNumber < 14 && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
+                      </>
                     )}
-                    aria-label={
-                      i < stepNumber
-                        ? t('stepCompleted', { step: i + 1 })
-                        : i === stepNumber - 1
-                          ? t('stepCurrent', { step: i + 1 })
-                          : t('stepUpcoming', { step: i + 1 })
-                    }
-                  />
-                ))}
-              </div>
-
-              {/* Next Button */}
-              <motion.div
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-                className="w-full md:w-auto order-1 md:order-3"
-              >
-                <Button
-                  size="lg"
-                  onClick={onNext}
-                  disabled={!canGoNext || isLoading}
-                  className="gap-2 w-full md:w-auto"
-                >
-                  {isLoading ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                      {t('loading')}
-                    </>
-                  ) : (
-                    <>
-                      {nextLabel || t('next')}
-                      {stepNumber < 14 && <ArrowRight className="h-4 w-4" />}
-                    </>
-                  )}
-                </Button>
+                  </Button>
+                </motion.div>
               </motion.div>
-            </motion.div>
+
+              {/* Visible keyboard hint - shown on focus-within */}
+              <p
+                className="hidden md:block mt-3 text-center text-xs text-muted-foreground/60 opacity-0 group-focus-within/nav:opacity-100 transition-opacity duration-200"
+                aria-hidden="true"
+              >
+                {tA11y('keyboardNavHintShort').replace('Alt', isMac ? 'Option' : 'Alt')}
+              </p>
+            </nav>
           )}
         </motion.div>
       </AnimatePresence>
