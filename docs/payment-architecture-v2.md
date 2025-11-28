@@ -39,10 +39,11 @@ This document outlines the upcoming migration plan for Step 14 (Stripe checkout)
   - Collects card details via Stripe Elements and confirms using the returned client secret.
 
 ### Non-Functional / Technical
-- **Idempotency**: Controller must be callable multiple times with same submission; use `stripe-idempotency-key` derived from submission/session.
-- **Security**: All privileged Stripe calls remain server-side; client sees only publishable key + client secret.
-- **Logging/Monitoring**: Structured logs for each controller invocation (submission ID, Stripe IDs, timing). Emit metrics for success/failure to alerting system.
-- **Cleanup**: Maintain ability to cancel pending schedules/subscriptions on retries or when user restarts Step 14.
+- **Idempotency**: Controller must be callable multiple times with same submission; use `stripe-idempotency-key` derived from submission/session. Apply idempotency keys per Stripe mutation (customer, schedule, subscription, invoice items, coupons, PaymentIntent/SetupIntent) so retries on 429/5xx are safe.
+- **Security**: All privileged Stripe calls remain server-side; client sees only publishable key + client secret. Webhooks must verify `Stripe-Signature`, reject expired signatures, and dedupe by `event.id`.
+- **Logging/Monitoring**: Structured logs for each controller invocation (submission ID, Stripe IDs, Stripe Request-Ids, timing). Emit metrics for success/failure to alerting system and surface request IDs for Stripe support.
+- **Rate Limiting/Resiliency**: Use exponential backoff with jitter on 429/409/5xx, honor `Retry-After`, and coalesce duplicate in-flight requests per submission/session. Cache static reads (e.g., Prices) and avoid polling.
+- **Cleanup**: Maintain ability to cancel pending schedules/subscriptions on retries or when user restarts Step 14. Also expire/cancel incomplete PaymentIntents/SetupIntents and void draft invoices created during retries to avoid surprise captures.
 
 ### Testing Requirements
 - **Integration (Jest + Supabase)**
@@ -52,6 +53,9 @@ This document outlines the upcoming migration plan for Step 14 (Stripe checkout)
   - Few full-stack tests hitting real Stripe (smoke coverage).
   - Majority of scenarios stub `/api/stripe/checkout` to validate UI-only flows (error states, form validation, translations).
   - All specs use fixtures to set cookie consent and seed sessions to avoid state leakage.
+- **Stripe Tooling**
+  - Use Stripe CLI to replay webhooks locally and validate signature handling.
+  - Use Stripe Test Clocks for subscription/schedule time-travel (renewals, proration) without long waits.
 - **Mock Data**
   - Provide JSON fixtures for pricing summaries so designers/devs can iterate quickly without Stripe.
 
@@ -59,8 +63,10 @@ This document outlines the upcoming migration plan for Step 14 (Stripe checkout)
 - Document new environment variables (controller secret, feature flags).
 - Provide runbooks for:
   - Rotating Stripe keys / env configuration.
+    - Use restricted keys for CI/test where possible; isolate keys per environment.
   - Inspecting controller logs, Stripe dashboards, and Supabase rows.
   - Rolling back to legacy flow if necessary (feature flag/ENV switch).
+  - Capturing `Stripe-Request-Id` and `event.id` for support/debug and replaying via Stripe CLI.
 - Update CI to run new integration suite plus reduced set of Playwright specs (with Stripe mocked by default).
 
 ### Migration Requirements
@@ -87,7 +93,7 @@ This document outlines the upcoming migration plan for Step 14 (Stripe checkout)
    - Responsibilities:
      - Validate submission/session state.
      - Create/update Stripe customer, schedule, subscription, invoice items.
-     - Attach coupons/metadata, finalize invoice, derive PaymentIntent/SetupIntent.
+     - Attach coupons/metadata, finalize invoice, derive PaymentIntent/SetupIntent with `payment_behavior=default_incomplete` and `save_default_payment_method`/`setup_future_usage` set so off-session renewals succeed.
      - Persist Stripe IDs + payment metadata to Supabase in the same request.
      - Return `{ clientSecret, pricingSummary, submissionId, debugIds }` to the client.
    - Server handles idempotency, retries, and structured logging.
@@ -99,6 +105,7 @@ This document outlines the upcoming migration plan for Step 14 (Stripe checkout)
 
 3. **Webhook Simplification**
    - Webhooks only need to update status to `paid`, record timestamps, send emails/analytics.
+   - Verify signatures, dedupe by `event.id`, respond with 2xx quickly, and offload heavier work to a queue/async worker.
    - Metadata lookup remains but is simpler because the controller already saved all IDs.
 
 4. **Testing Strategy**
