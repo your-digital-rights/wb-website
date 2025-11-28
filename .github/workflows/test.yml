@@ -83,8 +83,10 @@ jobs:
   wait-for-vercel:
     runs-on: ubuntu-latest
     needs:
+      - pre_job
       - lint
       - unit-tests
+    if: needs.pre_job.outputs.should_skip != 'true'
 
     outputs:
       deployment-url: ${{ steps.wait-for-deployment.outputs.url }}
@@ -115,8 +117,10 @@ jobs:
 
   e2e-tests:
     runs-on: ubuntu-latest
-    needs: wait-for-vercel
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production'
+    needs:
+      - pre_job
+      - wait-for-vercel
+    if: needs.pre_job.outputs.should_skip != 'true' && (github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production')
 
     steps:
     - name: Checkout repository
