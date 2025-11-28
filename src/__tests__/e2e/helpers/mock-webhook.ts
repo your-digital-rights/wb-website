@@ -148,7 +148,32 @@ export async function triggerMockWebhookForPayment(submissionId: string, expecte
     // Wait a bit to simulate event timing
     await new Promise(resolve => setTimeout(resolve, 500))
 
-    const invoiceId = `in_mock_${Date.now()}`
+    // Fetch the real invoice ID from Stripe instead of using a mock ID
+    // This ensures validation tests can retrieve the invoice later
+    let invoiceId = `in_mock_${Date.now()}`
+    try {
+      const Stripe = (await import('stripe')).default
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+        apiVersion: '2025-09-30.clover'
+      })
+
+      // Get the latest invoice for this subscription
+      const invoices = await stripe.invoices.list({
+        subscription: subscriptionId,
+        limit: 1
+      })
+
+      if (invoices.data.length > 0) {
+        invoiceId = invoices.data[0].id
+        console.log(`📊 Using real Stripe invoice ID: ${invoiceId}`)
+      } else {
+        console.warn(`⚠️  No invoice found for subscription ${subscriptionId}, using mock ID`)
+      }
+    } catch (error) {
+      console.error(`Failed to fetch invoice for subscription ${subscriptionId}:`, error)
+      console.log(`Using mock invoice ID as fallback`)
+    }
+
     const invoiceEvent = createMockInvoicePaidEvent(
       invoiceId,
       subscriptionId,
