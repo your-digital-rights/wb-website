@@ -227,9 +227,6 @@ export const step11Schema = z.object({
     .min(1, 'Please select at least one website section'),
   primaryGoal: primaryGoalSchema,
   offeringType: z.enum(['products', 'services', 'both']).optional(),
-  offerings: z.array(z.string().min(1, 'Offering cannot be empty'))
-    .max(6, 'Please provide no more than 6 offerings')
-    .optional(),
   products: ProductsArraySchema.optional().default([])
 })
 
@@ -512,7 +509,6 @@ export const completeFormSchema = z.object({
   websiteSections: step11Schema.shape.websiteSections,
   primaryGoal: step11Schema.shape.primaryGoal,
   offeringType: step11Schema.shape.offeringType,
-  offerings: step11Schema.shape.offerings,
   products: step11Schema.shape.products,
 
   // Step 12

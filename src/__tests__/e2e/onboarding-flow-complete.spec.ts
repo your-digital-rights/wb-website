@@ -60,7 +60,6 @@ interface OnboardingSubmission {
     colorPalette: string;
     websiteSections: string[];
     primaryGoal: string;
-    offerings: string[];
     logoUpload?: any;
     businessPhotos?: any[];
   };

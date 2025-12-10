@@ -72,7 +72,6 @@ export interface OnboardingFormData {
   websiteSections: WebsiteSection[]
   primaryGoal: PrimaryGoal
   offeringType?: 'products' | 'services' | 'both' // Conditional on sections
-  offerings?: string[] // Dynamic list (1-6 items)
 
   // Step 11 (Enhanced): Products & Services Entry
   products?: Product[] // Array of 0-6 products with photos (Feature: 002-improved-products-service)
@@ -450,7 +449,7 @@ export type FormDataAtStep<T extends StepNumber> =
   T extends 8 ? Pick<OnboardingFormData, 'designStyle'> :
   T extends 9 ? Pick<OnboardingFormData, 'imageStyle'> :
   T extends 10 ? Pick<OnboardingFormData, 'colorPalette'> :
-  T extends 11 ? Pick<OnboardingFormData, 'websiteSections' | 'primaryGoal' | 'offeringType' | 'offerings'> :
+  T extends 11 ? Pick<OnboardingFormData, 'websiteSections' | 'primaryGoal' | 'offeringType' | 'products'> :
   T extends 12 ? Pick<OnboardingFormData, 'logoUpload' | 'businessPhotos'> :
   T extends 13 ? { additionalLanguages: string[] } :
   T extends 14 ? { discountCode?: string; acceptTerms: boolean } :
