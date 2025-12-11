@@ -89,20 +89,6 @@
       "description": "Italian VAT number (Partita IVA) - format: IT followed by 11 digits (Step 3: Business Basics)",
       "pattern": "^(IT\\d{11})?$"
     },
-    "physicalAddress": {
-      "type": "object",
-      "description": "Legacy nested address object - will be transformed to flat businessStreet/City/etc fields",
-      "deprecated": true,
-      "properties": {
-        "street": { "type": "string", "minLength": 1 },
-        "city": { "type": "string", "minLength": 1 },
-        "province": { "type": "string", "minLength": 1 },
-        "postalCode": { "type": "string", "pattern": "^\\d{5}$" },
-        "country": { "type": "string", "minLength": 1 },
-        "placeId": { "type": "string" }
-      },
-      "required": ["street", "city", "province", "postalCode", "country"]
-    },
     "businessDescription": {
       "type": "string",
       "description": "Description of what the business offers, its unique value proposition (Step 4: Brand Definition)",

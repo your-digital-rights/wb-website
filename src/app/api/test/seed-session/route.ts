@@ -107,8 +107,8 @@ export async function POST(request: NextRequest) {
       // Step 9
       imageStyle: 'photorealistic',
 
-      // Step 10
-      colorPalette: 'professional-blue',
+      // Step 10 - Array of hex colors: [background, primary, secondary, accent]
+      colorPalette: ['#FFFFFF', '#1F2937', '#3B82F6', '#F59E0B'],
 
       // Step 11
       websiteSections: ['hero', 'about', 'services', 'contact'],

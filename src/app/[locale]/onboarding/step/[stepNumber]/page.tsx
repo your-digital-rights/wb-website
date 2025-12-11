@@ -119,12 +119,12 @@ export default function OnboardingStep() {
           businessName: formData?.businessName ?? '',
           businessEmail: formData?.businessEmail ?? '',
           businessPhone: formData?.businessPhone ?? '',
-          businessStreet: formData?.businessStreet ?? formData?.physicalAddress?.street ?? '',
-          businessCity: formData?.businessCity ?? formData?.physicalAddress?.city ?? '',
-          businessProvince: formData?.businessProvince ?? formData?.physicalAddress?.province ?? '',
-          businessPostalCode: formData?.businessPostalCode ?? formData?.physicalAddress?.postalCode ?? '',
-          businessCountry: formData?.businessCountry ?? formData?.physicalAddress?.country ?? 'Italy',
-          businessPlaceId: formData?.businessPlaceId ?? formData?.physicalAddress?.placeId ?? '',
+          businessStreet: formData?.businessStreet ?? '',
+          businessCity: formData?.businessCity ?? '',
+          businessProvince: formData?.businessProvince ?? '',
+          businessPostalCode: formData?.businessPostalCode ?? '',
+          businessCountry: formData?.businessCountry ?? 'Italy',
+          businessPlaceId: formData?.businessPlaceId ?? '',
           industry: formData?.industry ?? '',
           vatNumber: formData?.vatNumber ?? ''
         }

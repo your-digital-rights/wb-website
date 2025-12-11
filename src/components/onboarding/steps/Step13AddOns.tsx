@@ -14,8 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { StepComponentProps } from './index'
 import {
   EUROPEAN_LANGUAGES,
-  getLanguageName,
-  calculateAddOnsTotal
+  getLanguageName
 } from '@/data/european-languages'
 
 export function Step13AddOns({ form, errors, isLoading }: StepComponentProps) {
