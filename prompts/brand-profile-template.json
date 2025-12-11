@@ -1,23 +1,48 @@
 {
-  "brand_name": "",
-  "tagline": "",
-  "mission_statement": "",
-  "industry": "",
-  "positioning": "",
-  "target_audience": {
-    "demographics": "",
-    "psychographics": ""
+  "brand_profile_en": {
+    "brand_name": "",
+    "tagline": "",
+    "mission_statement": "",
+    "industry": "",
+    "positioning": "",
+    "target_audience": {
+      "demographics": "",
+      "psychographics": ""
+    },
+    "tone_of_voice": "",
+    "core_values": [],
+    "visual_style": "",
+    "color_palette": [],
+    "typography": {
+      "font_families": [],
+      "style": ""
+    },
+    "logo_guidelines": "",
+    "offer": "",
+    "differentiator": "",
+    "customer_profile": ""
   },
-  "tone_of_voice": "",
-  "core_values": [],
-  "visual_style": "",
-  "color_palette": [],
-  "typography": {
-    "font_families": [],
-    "style": ""
-  },
-  "logo_guidelines": "",
-  "offer": "",
-  "differentiator": "",
-  "customer_profile:": ""
+  "brand_profile_it": {
+    "nome_marchio": "",
+    "slogan": "",
+    "dichiarazione_missione": "",
+    "settore": "",
+    "posizionamento": "",
+    "pubblico_di_riferimento": {
+      "demografia": "",
+      "psicografia": ""
+    },
+    "tono_di_voce": "",
+    "valori_fondanti": [],
+    "stile_visivo": "",
+    "palette_colori": [],
+    "tipografia": {
+      "famiglie_font": [],
+      "stile": ""
+    },
+    "linee_guida_logo": "",
+    "offerta": "",
+    "elemento_differenziante": "",
+    "profilo_cliente": ""
+  }
 }
