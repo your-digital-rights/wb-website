@@ -30,6 +30,11 @@ const vercelBypassStorageState = (() => {
     return undefined;
   }
 })();
+const vercelBypassHeaders = process.env.VERCEL_AUTOMATION_BYPASS_SECRET
+  ? {
+      'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET,
+    }
+  : undefined;
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -58,6 +63,9 @@ export default defineConfig({
 
     /* Clear local storage and other browser state */
     storageState: vercelBypassStorageState ?? undefined,
+
+    /* Ensure protected previews are bypassed */
+    extraHTTPHeaders: vercelBypassHeaders,
   },
 
   /* Configure projects for major browsers */
@@ -67,6 +75,7 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        extraHTTPHeaders: vercelBypassHeaders,
       },
     },
   ] : [
