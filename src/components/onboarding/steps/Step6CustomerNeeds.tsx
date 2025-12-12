@@ -154,13 +154,29 @@ export function Step6CustomerNeeds({ form, errors, isLoading }: StepComponentPro
         className="text-center text-sm text-muted-foreground space-y-2"
       >
         <p>{t('tips.title')}</p>
-        <div className="flex flex-wrap justify-center gap-4">
+        {/* Desktop: inline with bullet separators */}
+        <div className="hidden sm:flex flex-wrap justify-center gap-4">
           <span>{t('tips.specific')}</span>
           <span>•</span>
           <span>{t('tips.customer')}</span>
           <span>•</span>
           <span>{t('tips.emotional')}</span>
         </div>
+        {/* Mobile: vertical list with bullets on the left */}
+        <ul className="sm:hidden space-y-1 text-left max-w-xs mx-auto">
+          <li className="flex items-start gap-2">
+            <span className="mt-1.5">•</span>
+            <span>{t('tips.specific')}</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-1.5">•</span>
+            <span>{t('tips.customer')}</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-1.5">•</span>
+            <span>{t('tips.emotional')}</span>
+          </li>
+        </ul>
       </motion.div>
     </div>
   )
