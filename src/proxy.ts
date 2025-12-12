@@ -28,6 +28,7 @@ export default function proxy(request: NextRequest) {
     `.replace(/\s{2,}/g, ' ').trim();
 
     response.headers.set('Content-Security-Policy', cspHeader);
+    response.headers.set('x-csp-version', 'relaxed-v2');
   }
 
   return response;
