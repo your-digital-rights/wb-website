@@ -1177,11 +1177,16 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
         throw new Error(data.error?.message || 'Failed to create checkout session')
       }
 
-      if (typeof window !== 'undefined' && data.data?.debugInvoice) {
-        ;(window as any).__wb_lastCheckoutDebug = data.data.debugInvoice
+      const sessionPayload = {
+        ...data.data,
+        requestedDiscountCode: discountCode ?? null
+      }
+
+      if (typeof window !== 'undefined' && sessionPayload.debugInvoice) {
+        ;(window as any).__wb_lastCheckoutDebug = sessionPayload.debugInvoice
       }
       if (typeof window !== 'undefined') {
-        ;(window as any).__wb_lastCheckoutSession = data.data
+        ;(window as any).__wb_lastCheckoutSession = sessionPayload
       }
 
       const requiresPayment = data.data.paymentRequired !== false

@@ -77,31 +77,180 @@ export async function triggerMockWebhookForPayment(submissionId: string, expecte
 
   const rawIntentId = submission.stripe_payment_id as string | null
   const isSetupIntent = !!rawIntentId && rawIntentId.startsWith('seti_')
-  const paymentIntentId = !isSetupIntent ? rawIntentId : null
+  let paymentIntentId = !isSetupIntent ? rawIntentId : null
   const setupIntentId = isSetupIntent ? rawIntentId : null
   const customerId = submission.stripe_customer_id
-  const subscriptionId = submission.stripe_subscription_id
+  let subscriptionId = submission.stripe_subscription_id
+  let invoiceId: string | null = null
 
   // Determine payment amount:
   // 1. Use expectedAmount if provided by test (explicit validation)
   // 2. Otherwise fetch from Stripe API (payment_amount is NULL until webhook processes)
-  let paymentAmount = 0
-  if (expectedAmount !== undefined) {
-    paymentAmount = expectedAmount
-    console.log(`📊 Using test-provided amount: ${paymentAmount}`)
-  } else if (paymentIntentId) {
-    try {
-      const Stripe = (await import('stripe')).default
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  const hasExplicitAmount = expectedAmount !== undefined
+  let paymentAmount = hasExplicitAmount ? expectedAmount! : 0
+  let stripeClient: Stripe | null = null
+
+  const getStripeClient = () => {
+    if (!stripeClient) {
+      stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!, {
         apiVersion: '2025-09-30.clover'
       })
-      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
-      paymentAmount = paymentIntent.amount
-      console.log(`📊 Fetched amount from Stripe: ${paymentAmount}`)
+    }
+    return stripeClient
+  }
+
+  const hydrateFromPaymentIntent = async () => {
+    if (!paymentIntentId) {
+      return
+    }
+
+    try {
+      const stripe = getStripeClient()
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId, {
+        expand: ['invoice']
+      })
+
+      if (!hasExplicitAmount) {
+        paymentAmount = paymentIntent.amount
+      }
+
+      // Prefer metadata first to keep tests deterministic
+      if (!subscriptionId && paymentIntent.metadata?.subscription_id) {
+        subscriptionId = paymentIntent.metadata.subscription_id
+      }
+
+      const invoiceFromIntent = paymentIntent.invoice
+      if (invoiceFromIntent) {
+        if (typeof invoiceFromIntent === 'string') {
+          invoiceId = invoiceId || invoiceFromIntent
+          try {
+            const invoice = await stripe.invoices.retrieve(invoiceFromIntent)
+            const invoiceSubscriptionRaw = (invoice as Stripe.Invoice & { subscription?: string | Stripe.Subscription | null }).subscription ?? null
+            if (!subscriptionId && invoiceSubscriptionRaw) {
+              subscriptionId = typeof invoiceSubscriptionRaw === 'string'
+                ? invoiceSubscriptionRaw
+                : invoiceSubscriptionRaw.id
+            }
+            if (!hasExplicitAmount && typeof invoice.total === 'number') {
+              paymentAmount = invoice.total
+            }
+          } catch (invoiceError) {
+            console.error(`Failed to retrieve invoice ${invoiceFromIntent} for mock webhook:`, invoiceError)
+          }
+        } else {
+          invoiceId = invoiceId || invoiceFromIntent.id
+          const invoiceSubscriptionRaw = (invoiceFromIntent as any).subscription ?? null
+          if (!subscriptionId && invoiceSubscriptionRaw) {
+            subscriptionId = typeof invoiceSubscriptionRaw === 'string'
+              ? invoiceSubscriptionRaw
+              : invoiceSubscriptionRaw.id
+          }
+          if (!hasExplicitAmount && typeof invoiceFromIntent.total === 'number') {
+            paymentAmount = invoiceFromIntent.total
+          }
+        }
+      }
+
+      // Last resort: derive subscription from customer if still missing
+      if (!subscriptionId && typeof paymentIntent.customer === 'string') {
+        const customerSubs = await stripe.subscriptions.list({
+          customer: paymentIntent.customer,
+          limit: 1
+        })
+        if (customerSubs.data.length > 0) {
+          subscriptionId = customerSubs.data[0].id
+          if (!invoiceId) {
+            const latestInvoice = customerSubs.data[0].latest_invoice
+            if (typeof latestInvoice === 'string') {
+              invoiceId = latestInvoice
+            } else if (latestInvoice?.id) {
+              invoiceId = latestInvoice.id
+            }
+          }
+        }
+      }
+
+      console.log(`📊 Hydrated payment_intent ${paymentIntentId}`, {
+        subscriptionId,
+        invoiceId,
+        paymentAmount
+      })
     } catch (error) {
       console.error(`Failed to retrieve payment intent ${paymentIntentId}:`, error)
-      paymentAmount = submission.payment_amount || 0
+      if (!hasExplicitAmount) {
+        paymentAmount = submission.payment_amount || 0
+      }
     }
+  }
+
+  if (paymentIntentId) {
+    await hydrateFromPaymentIntent()
+  }
+
+  // Derive missing Stripe IDs from customer/subscription if needed
+  if (!subscriptionId && customerId) {
+    try {
+      const stripe = getStripeClient()
+      const subs = await stripe.subscriptions.list({ customer: customerId, limit: 1 })
+      if (subs.data.length > 0) {
+        subscriptionId = subs.data[0].id
+        if (!invoiceId) {
+          const latestInvoice = subs.data[0].latest_invoice
+          if (typeof latestInvoice === 'string') {
+            invoiceId = latestInvoice
+          } else if (latestInvoice?.id) {
+            invoiceId = latestInvoice.id
+          }
+        }
+        if (!paymentIntentId && subs.data[0].latest_invoice) {
+          const latestInvoice = subs.data[0].latest_invoice
+          if (typeof latestInvoice === 'string') {
+            const invoice = await stripe.invoices.retrieve(latestInvoice)
+            const invoicePaymentIntentRaw = (invoice as Stripe.Invoice & { payment_intent?: string | Stripe.PaymentIntent | null }).payment_intent ?? null
+            paymentIntentId = typeof invoicePaymentIntentRaw === 'string'
+              ? invoicePaymentIntentRaw
+              : invoicePaymentIntentRaw?.id || null
+            if (!hasExplicitAmount && typeof invoice.total === 'number') {
+              paymentAmount = invoice.total
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error(`Failed to derive subscription for customer ${customerId}:`, error)
+    }
+  }
+
+  // If we still don't have an invoice ID but have a subscription, fetch the latest invoice
+  if (subscriptionId && !invoiceId) {
+    try {
+      const stripe = getStripeClient()
+      const invoices = await stripe.invoices.list({
+        subscription: subscriptionId,
+        limit: 1
+      })
+
+      if (invoices.data.length > 0) {
+        invoiceId = invoices.data[0].id
+        if (!paymentIntentId) {
+          const invoicePaymentIntentRaw = (invoices.data[0] as Stripe.Invoice & { payment_intent?: string | Stripe.PaymentIntent | null }).payment_intent ?? null
+          paymentIntentId = typeof invoicePaymentIntentRaw === 'string'
+            ? invoicePaymentIntentRaw
+            : invoicePaymentIntentRaw?.id || null
+        }
+        if (!hasExplicitAmount && typeof invoices.data[0].total === 'number') {
+          paymentAmount = invoices.data[0].total ?? paymentAmount
+        }
+      } else {
+        console.warn(`⚠️  No invoice found for subscription ${subscriptionId}, using mock ID`)
+      }
+    } catch (error) {
+      console.error(`Failed to fetch invoice for subscription ${subscriptionId}:`, error)
+    }
+  }
+
+  if (!hasExplicitAmount && paymentAmount === 0) {
+    paymentAmount = submission.payment_amount || 0
   }
 
   // For 100% discount payments, there's no PaymentIntent (no payment to process)
@@ -150,32 +299,40 @@ export async function triggerMockWebhookForPayment(submissionId: string, expecte
 
     // Fetch the real invoice ID from Stripe instead of using a mock ID
     // This ensures validation tests can retrieve the invoice later
-    let invoiceId = `in_mock_${Date.now()}`
-    try {
-      const Stripe = (await import('stripe')).default
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-        apiVersion: '2025-09-30.clover'
-      })
+    let resolvedInvoiceId = invoiceId || `in_mock_${Date.now()}`
+    if (!invoiceId) {
+      try {
+        const stripe = getStripeClient()
 
-      // Get the latest invoice for this subscription
-      const invoices = await stripe.invoices.list({
-        subscription: subscriptionId,
-        limit: 1
-      })
+        // Get the latest invoice for this subscription
+        const invoices = await stripe.invoices.list({
+          subscription: subscriptionId,
+          limit: 1
+        })
 
-      if (invoices.data.length > 0) {
-        invoiceId = invoices.data[0].id
-        console.log(`📊 Using real Stripe invoice ID: ${invoiceId}`)
-      } else {
-        console.warn(`⚠️  No invoice found for subscription ${subscriptionId}, using mock ID`)
+        if (invoices.data.length > 0) {
+          resolvedInvoiceId = invoices.data[0].id
+          console.log(`📊 Using real Stripe invoice ID: ${resolvedInvoiceId}`)
+          if (!hasExplicitAmount && typeof invoices.data[0].total === 'number') {
+            paymentAmount = invoices.data[0].total ?? paymentAmount
+          }
+          if (!paymentIntentId) {
+            const invoicePaymentIntentRaw = (invoices.data[0] as Stripe.Invoice & { payment_intent?: string | Stripe.PaymentIntent | null }).payment_intent ?? null
+            paymentIntentId = typeof invoicePaymentIntentRaw === 'string'
+              ? invoicePaymentIntentRaw
+              : invoicePaymentIntentRaw?.id || paymentIntentId
+          }
+        } else {
+          console.warn(`⚠️  No invoice found for subscription ${subscriptionId}, using mock ID`)
+        }
+      } catch (error) {
+        console.error(`Failed to fetch invoice for subscription ${subscriptionId}:`, error)
+        console.log(`Using mock invoice ID as fallback`)
       }
-    } catch (error) {
-      console.error(`Failed to fetch invoice for subscription ${subscriptionId}:`, error)
-      console.log(`Using mock invoice ID as fallback`)
     }
 
     const invoiceEvent = createMockInvoicePaidEvent(
-      invoiceId,
+      resolvedInvoiceId,
       subscriptionId,
       customerId || '',
       paymentAmount,
