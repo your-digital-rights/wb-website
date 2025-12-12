@@ -126,9 +126,6 @@ test.describe('Custom Software Page', () => {
 
     // Check language selector
     await expect(page.getByRole('button').filter({ has: page.locator('span:has-text("Select language")') })).toBeVisible();
-
-    // Check theme toggle
-    await expect(page.getByRole('button').filter({ has: page.locator('span:has-text("Toggle theme")') })).toBeVisible();
   });
 
   test('footer is displayed on custom software page', async ({ page }) => {
@@ -164,7 +161,8 @@ test.describe('Custom Software Page', () => {
     await expect(page.getByTestId('custom-software-hero-title')).toBeVisible();
   });
 
-  test('theme toggle works', async ({ page, isMobile }) => {
+  // Theme functionality disabled - all visitors use light theme
+  test.skip('theme toggle works', async ({ page, isMobile }) => {
     const html = page.locator('html');
 
     // On mobile, open the mobile menu first
@@ -222,7 +220,6 @@ test.describe('Custom Software Page', () => {
 
       // Check that mobile navigation controls are present
       await expect(page.getByRole('button').filter({ has: page.locator('span:has-text("Select language")') })).toBeVisible();
-      await expect(page.getByRole('button').filter({ has: page.locator('span:has-text("Toggle theme")') })).toBeVisible();
 
       // Close mobile menu
       await page.getByLabel('Toggle mobile menu').click();

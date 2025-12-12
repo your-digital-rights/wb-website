@@ -63,7 +63,7 @@ export default async function ContactPage({
   const t = await getTranslations({ locale, namespace: 'contact' })
 
   return (
-    <ThemeProvider defaultTheme="system" storageKey="wb-ui-theme">
+    <ThemeProvider>
       <div className="min-h-screen flex flex-col">
         <Navigation />
         <main className="flex-1">

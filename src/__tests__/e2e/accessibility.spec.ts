@@ -207,7 +207,8 @@ test('should be keyboard accessible', async ({ page, isMobile, browserName }) =>
     }
   });
   
-  test('should announce content changes to screen readers', async ({ page, isMobile }) => {
+  // Theme functionality disabled - all visitors use light theme
+  test.skip('should announce content changes to screen readers', async ({ page, isMobile }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 

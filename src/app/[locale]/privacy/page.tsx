@@ -62,7 +62,7 @@ export default async function PrivacyPage({
   const t = await getTranslations({ locale, namespace: 'privacy' })
 
   return (
-    <ThemeProvider defaultTheme="system" storageKey="wb-ui-theme">
+    <ThemeProvider>
       <div className="min-h-screen flex flex-col">
         <Navigation />
 

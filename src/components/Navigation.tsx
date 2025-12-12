@@ -7,7 +7,6 @@ import { useTranslations } from "next-intl"
 import { Menu, X as CloseIcon } from "lucide-react"
 import { motion, useReducedMotion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { ThemeToggle } from "@/components/ThemeToggle"
 import { LanguageSelector } from "@/components/LanguageSelector"
 import { WhiteBoarLogo } from "@/components/WhiteBoarLogo"
 import { slideFade } from "../../context/design-system/motion/variants"
@@ -95,10 +94,9 @@ export function Navigation() {
               <Link href="/onboarding">{t('start')}</Link>
             </Button>
 
-            {/* Language & Theme Controls */}
+            {/* Language Controls */}
             <div className="flex items-center space-x-2">
               <LanguageSelector />
-              <ThemeToggle />
             </div>
           </div>
 
@@ -154,10 +152,9 @@ export function Navigation() {
                 </div>
 
                 {/* Mobile Controls */}
-                <div className="flex items-center justify-between px-3 py-2 border-t border-gray-200 dark:border-gray-800">
+                <div className="flex items-center justify-between px-3 py-2 border-t border-gray-200">
                   <div className="flex items-center space-x-4">
                     <LanguageSelector />
-                    <ThemeToggle />
                   </div>
                 </div>
 
