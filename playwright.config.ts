@@ -47,7 +47,15 @@ export default defineConfig({
     // In CI, only run chromium to save time and resources
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        // Explicitly include bypass header at project level for CI
+        ...(process.env.VERCEL_AUTOMATION_BYPASS_SECRET && {
+          extraHTTPHeaders: {
+            'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET,
+          },
+        }),
+      },
     },
   ] : [
     // Locally, test all browsers
