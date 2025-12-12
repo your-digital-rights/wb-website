@@ -1,5 +1,36 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const baseURL = process.env.BASE_URL || 'http://localhost:3783';
+
+const vercelBypassStorageState = (() => {
+  const secret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+  const url = process.env.BASE_URL;
+
+  if (!secret || !url) {
+    return undefined;
+  }
+
+  try {
+    const target = new URL(url);
+    return {
+      cookies: [
+        {
+          name: '__vercel_protection_bypass',
+          value: secret,
+          domain: target.hostname,
+          path: '/',
+          httpOnly: false,
+          secure: true,
+          sameSite: 'Lax'
+        }
+      ],
+      origins: []
+    };
+  } catch {
+    return undefined;
+  }
+})();
+
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
@@ -20,26 +51,13 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // Use BASE_URL from environment (for CI deployments) or fallback to localhost
-    baseURL: process.env.BASE_URL || 'http://localhost:3783',
+    baseURL,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
 
-    /* Ensure fresh browser context for each test to avoid state persistence */
-    contextOptions: {
-      // Clear all storage (localStorage, sessionStorage, etc.)
-      storageState: undefined,
-    },
-
     /* Clear local storage and other browser state */
-    storageState: undefined,
-
-    /* Add Vercel protection bypass header if secret is provided (for CI testing against protected deployments) */
-    ...(process.env.VERCEL_AUTOMATION_BYPASS_SECRET && {
-      extraHTTPHeaders: {
-        'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET,
-      },
-    }),
+    storageState: vercelBypassStorageState ?? undefined,
   },
 
   /* Configure projects for major browsers */
@@ -49,12 +67,6 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        // Explicitly include bypass header at project level for CI
-        ...(process.env.VERCEL_AUTOMATION_BYPASS_SECRET && {
-          extraHTTPHeaders: {
-            'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET,
-          },
-        }),
       },
     },
   ] : [
