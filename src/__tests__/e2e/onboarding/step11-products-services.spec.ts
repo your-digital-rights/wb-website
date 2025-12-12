@@ -73,6 +73,9 @@ async function seedSessionThroughStep10(page: Page) {
 }
 
 test.describe('Step 11: Enhanced Products & Services Entry', () => {
+  // Run tests serially to avoid race conditions with database/API resources in CI
+  test.describe.configure({ mode: 'serial' })
+
   test.beforeEach(async ({ page }) => {
     // Seed session directly without navigating to /onboarding first
     await seedSessionThroughStep10(page)

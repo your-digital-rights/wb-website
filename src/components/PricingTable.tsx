@@ -22,6 +22,7 @@ import {
 import { Link } from "@/i18n/navigation"
 import { fadeInUp, staggerChildren, scaleIn } from "../../context/design-system/motion/variants"
 import { usePricing } from "@/hooks/usePricing"
+import { trackSelectItem } from "@/lib/analytics"
 
 export function PricingTable() {
   const t = useTranslations('pricing')
@@ -147,6 +148,10 @@ export function PricingTable() {
                     className="w-full"
                     variant={plan.popular ? "default" : "outline"}
                     asChild
+                    onClick={() => trackSelectItem(
+                      plan.id === 'fast' ? 'fast_simple' : 'custom_made',
+                      'pricing_card'
+                    )}
                   >
                     <Link href={plan.href}>
                       Start with {plan.name}

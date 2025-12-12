@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { LanguageSelector } from "@/components/LanguageSelector"
 import { WhiteBoarLogo } from "@/components/WhiteBoarLogo"
 import { slideFade } from "../../context/design-system/motion/variants"
+import { trackSelectItem } from "@/lib/analytics"
 
 export function Navigation() {
   const params = useParams<{ locale?: string }>()
@@ -55,8 +56,8 @@ export function Navigation() {
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2">
               <WhiteBoarLogo
-                width={175}
-                height={175}
+                width={120}
+                height={40}
                 className="text-accent dark:text-accent"
               />
             </Link>
@@ -90,7 +91,7 @@ export function Navigation() {
             </div>
 
             {/* CTA Button */}
-            <Button asChild data-testid="nav-start-cta">
+            <Button asChild data-testid="nav-start-cta" onClick={() => trackSelectItem('fast_simple', 'nav')}>
               <Link href="/onboarding">{t('start')}</Link>
             </Button>
 
@@ -160,7 +161,7 @@ export function Navigation() {
 
                 {/* Mobile CTA */}
                 <div className="px-3">
-                  <Button asChild className="w-full">
+                  <Button asChild className="w-full" onClick={() => trackSelectItem('fast_simple', 'nav_mobile')}>
                     <Link href="/onboarding" onClick={() => setMobileMenuOpen(false)}>
                       {t('start')}
                     </Link>

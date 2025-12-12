@@ -13,6 +13,7 @@ import { getStepSchema, type StepFormData } from '@/schemas/onboarding'
 import { submitOnboarding } from '@/services/onboarding-client'
 import { getNextStep, getPreviousStep, calculateProgress } from '@/lib/step-navigation'
 import { OnboardingFormData, StepNumber } from '@/types/onboarding'
+import { trackBeginCheckout, trackOnboardingComplete } from '@/lib/analytics'
 
 // Tell Next.js this is a fully dynamic route (no static generation)
 export const dynamic = 'force-dynamic'
@@ -94,6 +95,20 @@ export default function OnboardingStep() {
       router.push(`/${locale}/onboarding/step/${currentStep}`)
     }
   }, [stepNumber, currentStep, router, sessionId, locale])
+
+  // Track begin checkout when step 1 loads
+  useEffect(() => {
+    if (stepNumber === 1 && sessionId) {
+      trackBeginCheckout('onboarding_step_1')
+    }
+  }, [stepNumber, sessionId])
+
+  // Track onboarding complete when step 14 (checkout) loads
+  useEffect(() => {
+    if (stepNumber === 14 && sessionId) {
+      trackOnboardingComplete()
+    }
+  }, [stepNumber, sessionId])
 
   // Track if we're currently resetting form from store to prevent auto-save loop
   const isResettingRef = useRef(false)

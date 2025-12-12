@@ -35,6 +35,7 @@ import {
   getLanguageName
 } from '@/data/european-languages'
 import { CheckoutSession } from '@/types/onboarding'
+import { trackPurchase } from '@/lib/analytics'
 
 // Initialize Stripe
 const STRIPE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
@@ -311,6 +312,8 @@ function CheckoutForm({
           console.log('[Step14] Payment method collected for future billing (SetupIntent)', {
             setupIntentId: setupIntent.id
           })
+          // Track purchase event (value is 0 for setup intents)
+          trackPurchase(setupIntent.id, 0, 'EUR')
           window.location.href = `/${locale}/onboarding/thank-you`
           return
         }
@@ -343,6 +346,8 @@ function CheckoutForm({
           console.log('[Step14] Payment processed successfully (PaymentIntent)', {
             paymentIntentId: paymentIntent.id
           })
+          // Track purchase event with actual payment amount
+          trackPurchase(paymentIntent.id, totalDueToday, 'EUR')
           window.location.href = `/${locale}/onboarding/thank-you`
           return
         }
@@ -1273,8 +1278,10 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
     }
 
     zeroRedirectingRef.current = true
+    // Track purchase event for zero payment (100% discount)
+    trackPurchase(`zero_payment_${submissionId}`, 0, 'EUR')
     window.location.href = `${window.location.origin}/${locale}/onboarding/thank-you`
-  }, [locale])
+  }, [locale, submissionId])
 
   useEffect(() => {
     if (typeof window === 'undefined') {

@@ -1,4 +1,5 @@
 import '@/app/globals.css';
+import { Suspense } from 'react';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -6,6 +7,7 @@ import { routing } from '@/i18n/routing';
 import { Metadata } from 'next';
 import { CookieConsent } from '@/components/CookieConsent';
 import { GoogleTagManager } from '@next/third-parties/google';
+import { AnalyticsRouterEvents } from '@/components/analytics-router-events';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://whiteboar.it'),
@@ -39,6 +41,9 @@ export default async function LocaleLayout({
       <GoogleTagManager gtmId="GTM-K8XHX82G" />
       <body className="font-body antialiased">
         <NextIntlClientProvider messages={messages} locale={locale}>
+          <Suspense fallback={null}>
+            <AnalyticsRouterEvents />
+          </Suspense>
           {children}
           <CookieConsent />
         </NextIntlClientProvider>
