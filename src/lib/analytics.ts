@@ -23,7 +23,7 @@ export const ANALYTICS_ITEMS = {
 } as const
 
 export type PackageId = keyof typeof ANALYTICS_ITEMS
-export type CtaLocation = 'hero' | 'pricing_card' | 'comparison_table' | 'footer' | 'custom_software_form'
+export type CtaLocation = 'hero' | 'pricing_card' | 'comparison_table' | 'footer' | 'custom_software_form' | 'onboarding_step_1' | 'nav' | 'nav_mobile'
 
 interface AnalyticsItem {
   item_id: string
