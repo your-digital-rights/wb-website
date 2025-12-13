@@ -1,8 +1,25 @@
 import { defineConfig, devices } from '@playwright/test';
 
+type BypassStorageState = {
+  cookies: {
+    name: string;
+    value: string;
+    domain: string;
+    path: string;
+    expires: number;
+    httpOnly: boolean;
+    secure: boolean;
+    sameSite: 'Lax' | 'Strict' | 'None';
+  }[];
+  origins: {
+    origin: string;
+    localStorage: {name: string; value: string}[];
+  }[];
+};
+
 const baseURL = process.env.BASE_URL || 'http://localhost:3783';
 
-const vercelBypassStorageState = (() => {
+const vercelBypassStorageState: BypassStorageState | undefined = (() => {
   const secret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
   const url = process.env.BASE_URL;
 
@@ -19,12 +36,19 @@ const vercelBypassStorageState = (() => {
           value: secret,
           domain: target.hostname,
           path: '/',
+          // Allow long-lived cookie for preview access
+          expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
           httpOnly: false,
           secure: true,
-          sameSite: 'Lax'
+          sameSite: 'Lax' as const,
         }
       ],
-      origins: []
+      origins: [
+        {
+          origin: target.origin,
+          localStorage: []
+        }
+      ]
     };
   } catch {
     return undefined;

@@ -335,11 +335,13 @@ test.describe('Onboarding Accessibility', () => {
       await page.keyboard.press('Tab');
     }
 
-    if (await skipLink.isVisible()) {
-      await skipLink.click();
-      const mainContent = page.locator('#main, #content, main, [role="main"]');
-      await expect(mainContent).toBeInViewport();
-    }
+    // Ensure the skip link is focusable and activate it via keyboard to mimic real usage
+    await expect(skipLink).toBeVisible({ timeout: 5000 });
+    await skipLink.focus();
+    await page.keyboard.press('Enter');
+
+    const mainContent = page.locator('#main, #content, main, [role="main"]');
+    await expect(mainContent).toBeInViewport();
   });
 
   test('form field help text is accessible', async ({ page }) => {

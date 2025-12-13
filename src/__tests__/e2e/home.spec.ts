@@ -9,8 +9,8 @@ test.describe('WhiteBoar Homepage', () => {
   });
 
   test('loads homepage successfully', async ({ page }) => {
-    // Check that page loads with 200 status
-    const response = await page.waitForLoadState('networkidle');
+    // Wait for the initial render to settle
+    await page.waitForLoadState('domcontentloaded');
 
     // Check main heading is visible using test ID
     await expect(page.getByTestId('hero-title')).toBeVisible();
