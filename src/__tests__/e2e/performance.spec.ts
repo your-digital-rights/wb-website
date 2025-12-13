@@ -1,5 +1,9 @@
+import path from 'path';
 import { test, expect } from '@playwright/test';
 import { setCookieConsentBeforeLoad } from './helpers/test-utils';
+
+// Load web-vitals bundle from local dependency to avoid CSP failures on previews
+const webVitalsPath = path.join(process.cwd(), 'node_modules/web-vitals/dist/web-vitals.iife.js');
 
 test.describe('Performance Tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -14,10 +18,8 @@ test.describe('Performance Tests', () => {
     // Wait for page to fully load
     await page.waitForLoadState('networkidle');
     
-    // Inject web-vitals script
-    await page.addScriptTag({
-      url: 'https://unpkg.com/web-vitals@3/dist/web-vitals.iife.js'
-    });
+    // Inject web-vitals script from local dependency (avoids CSP issues on previews)
+    await page.addScriptTag({ path: webVitalsPath });
     
     // Measure Core Web Vitals
     const vitals = await page.evaluate(() => {
