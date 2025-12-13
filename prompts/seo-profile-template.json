@@ -1,0 +1,40 @@
+{
+  "pages": [
+    {
+      "slug": "/",
+      "language": "en",
+      "pageTitle": "",
+      "metaDescription": "",
+      "targetKeywords": [],
+      "headers": {
+        "h1": "",
+        "h2": []
+      },
+      "structuredData": {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "",
+        "logo": "/logo.png",
+        "contactPoint": {}
+      }
+    },
+    {
+      "slug": "/",
+      "language": "it",
+      "pageTitle": "",
+      "metaDescription": "",
+      "targetKeywords": [],
+      "headers": {
+        "h1": "",
+        "h2": []
+      },
+      "structuredData": {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "",
+        "logo": "/logo.png",
+        "contactPoint": {}
+      }
+    }
+  ]
+}

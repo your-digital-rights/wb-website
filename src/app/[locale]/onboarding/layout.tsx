@@ -59,7 +59,7 @@ export default async function OnboardingLayout({
   children
 }: OnboardingLayoutProps) {
   return (
-    <ThemeProvider defaultTheme="system" storageKey="wb-ui-theme">
+    <ThemeProvider>
       <GoogleMapsProvider>
         <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
           {/* Header */}

@@ -356,13 +356,29 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
         className="text-center text-sm text-muted-foreground space-y-2"
       >
         <p>{t('tips.title')}</p>
-        <div className="flex flex-wrap justify-center gap-4">
+        {/* Desktop: inline with bullet separators */}
+        <div className="hidden sm:flex flex-wrap justify-center gap-4">
           <span>{t('tips.emotion')}</span>
           <span>•</span>
           <span>{t('tips.industry')}</span>
           <span>•</span>
           <span>{t('tips.accessible')}</span>
         </div>
+        {/* Mobile: vertical list with bullets on the left */}
+        <ul className="sm:hidden space-y-1 text-left max-w-xs mx-auto">
+          <li className="flex items-start gap-2">
+            <span className="mt-1.5">•</span>
+            <span>{t('tips.emotion')}</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-1.5">•</span>
+            <span>{t('tips.industry')}</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-1.5">•</span>
+            <span>{t('tips.accessible')}</span>
+          </li>
+        </ul>
       </motion.div>
     </div>
   )

@@ -62,7 +62,7 @@ export default async function TermsPage({
   const t = await getTranslations({ locale, namespace: 'terms' })
 
   return (
-    <ThemeProvider defaultTheme="system" storageKey="wb-ui-theme">
+    <ThemeProvider>
       <div className="min-h-screen flex flex-col">
         <Navigation />
 

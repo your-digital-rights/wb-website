@@ -32,16 +32,14 @@ interface OnboardingSubmission {
     businessName: string;
     businessEmail: string;
     businessPhone: string;
+    businessStreet: string;
+    businessCity: string;
+    businessPostalCode: string;
+    businessProvince: string;
+    businessCountry: string;
+    businessPlaceId?: string;
     industry: string;
     vatNumber?: string;
-    physicalAddress: {
-      street: string;
-      city: string;
-      postalCode: string;
-      province: string;
-      country: string;
-      placeId?: string;
-    };
     businessDescription: string;
     competitorUrls?: string[];
     competitorAnalysis?: string;
@@ -57,10 +55,9 @@ interface OnboardingSubmission {
     websiteReferences?: string[];
     designStyle: string;
     imageStyle: string;
-    colorPalette: string;
+    colorPalette: string[]; // Array of hex colors: [background, primary, secondary, accent]
     websiteSections: string[];
     primaryGoal: string;
-    offerings: string[];
     logoUpload?: any;
     businessPhotos?: any[];
   };
@@ -132,13 +129,11 @@ const testData = {
   industry: 'Technology',
   businessEmail: 'info@innovativa-tech.com',
   businessPhone: '3201234567',
-  physicalAddress: {
-    street: 'Via Giuseppe Mazzini 142',
-    city: 'Milano',
-    postalCode: '20123',
-    province: 'BG', // Province code (Bergamo)
-    country: 'Italy'
-  },
+  businessStreet: 'Via Giuseppe Mazzini 142',
+  businessCity: 'Milano',
+  businessPostalCode: '20123',
+  businessProvince: 'BG', // Province code (Bergamo)
+  businessCountry: 'Italy',
   vatNumber: 'IT12345678901',
 
   // Step 4: Brand Definition
@@ -358,7 +353,7 @@ test.describe('Complete Onboarding Flow', () => {
 
     const businessStreetInput = page.locator('input[name="businessStreet"]');
     if (await businessStreetInput.isVisible()) {
-      await businessStreetInput.fill(testDataForWorker.physicalAddress.street);
+      await businessStreetInput.fill(testDataForWorker.businessStreet);
       // Dismiss autocomplete dropdown by blurring the input and clicking elsewhere
       await businessStreetInput.blur();
       await page.waitForTimeout(500);
@@ -371,14 +366,14 @@ test.describe('Complete Onboarding Flow', () => {
 
     const businessCityInput = page.locator('input[name="businessCity"]');
     if (await businessCityInput.isVisible()) {
-      await businessCityInput.fill(testDataForWorker.physicalAddress.city);
+      await businessCityInput.fill(testDataForWorker.businessCity);
     } else {
       console.log('❌ businessCity input not found');
     }
 
     const businessPostalCodeInput = page.locator('input[name="businessPostalCode"]');
     if (await businessPostalCodeInput.isVisible()) {
-      await businessPostalCodeInput.fill(testDataForWorker.physicalAddress.postalCode);
+      await businessPostalCodeInput.fill(testDataForWorker.businessPostalCode);
     } else {
       console.log('❌ businessPostalCode input not found');
     }
@@ -455,7 +450,7 @@ test.describe('Complete Onboarding Flow', () => {
     // Validate all fields are filled (using flattened field names)
     await expect(page.locator('input[name="businessName"]')).toHaveValue(testDataForWorker.businessName);
     await expect(page.locator('input[name="businessEmail"]')).toHaveValue(testDataForWorker.businessEmail);
-    await expect(page.locator('input[name="businessStreet"]')).toHaveValue(testDataForWorker.physicalAddress.street);
+    await expect(page.locator('input[name="businessStreet"]')).toHaveValue(testDataForWorker.businessStreet);
 
     // Wait for form validation to complete and enable the Next button
     const step3Next = page.locator('button').filter({ hasText: 'Next' }).and(page.locator(':not([data-next-mark])')).first();
@@ -1125,27 +1120,12 @@ test.describe('Complete Onboarding Flow', () => {
     expect(formData?.vatNumber).toBe(testDataForWorker.vatNumber);
     console.log('✓ Optional VAT number validation passed');
 
-    // 6. Verify address information (Step 3) - now using flattened fields
-    // Check both flattened fields and legacy nested structure for compatibility
-    const hasFlattened = formData?.businessStreet !== undefined;
-    const hasNested = formData?.physicalAddress !== undefined;
-
-    if (hasFlattened) {
-      expect(formData?.businessStreet).toBe(testDataForWorker.physicalAddress.street);
-      expect(formData?.businessCity).toBe(testDataForWorker.physicalAddress.city);
-      expect(formData?.businessPostalCode).toBe(testDataForWorker.physicalAddress.postalCode);
-      expect(formData?.businessProvince).toBe(testDataForWorker.physicalAddress.province);
-      expect(formData?.businessCountry).toBe(testDataForWorker.physicalAddress.country);
-    } else if (hasNested) {
-      // Fallback to nested structure for backward compatibility
-      expect(formData?.physicalAddress?.street).toBe(testDataForWorker.physicalAddress.street);
-      expect(formData?.physicalAddress?.city).toBe(testDataForWorker.physicalAddress.city);
-      expect(formData?.physicalAddress?.postalCode).toBe(testDataForWorker.physicalAddress.postalCode);
-      expect(formData?.physicalAddress?.province).toBe(testDataForWorker.physicalAddress.province);
-      expect(formData?.physicalAddress?.country).toBe(testDataForWorker.physicalAddress.country);
-    } else {
-      throw new Error('Neither flattened nor nested address fields found in database');
-    }
+    // 6. Verify address information (Step 3) - using flat fields
+    expect(formData?.businessStreet).toBe(testDataForWorker.businessStreet);
+    expect(formData?.businessCity).toBe(testDataForWorker.businessCity);
+    expect(formData?.businessPostalCode).toBe(testDataForWorker.businessPostalCode);
+    expect(formData?.businessProvince).toBe(testDataForWorker.businessProvince);
+    expect(formData?.businessCountry).toBe(testDataForWorker.businessCountry);
     console.log('✓ Address information validation passed');
 
     // 7. Verify business description (Step 4)
@@ -1184,6 +1164,7 @@ test.describe('Complete Onboarding Flow', () => {
     expect(formData?.designStyle).toBeTruthy();
     expect(formData?.imageStyle).toBeTruthy();
     expect(formData?.colorPalette).toBeTruthy();
+    expect(Array.isArray(formData?.colorPalette)).toBe(true); // Must be array of hex colors
     console.log('✓ Design choices validation passed');
 
     // 13. Verify website structure (Step 11)

@@ -77,8 +77,8 @@ export function OnboardingHeader() {
             <div className="flex-shrink-0">
               <Link href="/" className="flex items-center focus-visible:outline-none focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2">
                 <WhiteBoarLogo
-                  width={175}
-                  height={175}
+                  width={120}
+                  height={40}
                   className="text-accent dark:text-accent"
                 />
               </Link>

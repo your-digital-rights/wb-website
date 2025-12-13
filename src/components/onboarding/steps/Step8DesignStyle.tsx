@@ -201,13 +201,29 @@ export function Step8DesignStyle({ form, errors, isLoading }: StepComponentProps
         className="text-center text-sm text-muted-foreground space-y-2"
       >
         <p>{t('tips.title')}</p>
-        <div className="flex flex-wrap justify-center gap-4">
+        {/* Desktop: inline with bullet separators */}
+        <div className="hidden sm:flex flex-wrap justify-center gap-4">
           <span>{t('tips.authentic')}</span>
           <span>•</span>
           <span>{t('tips.audience')}</span>
           <span>•</span>
           <span>{t('tips.flexible')}</span>
         </div>
+        {/* Mobile: vertical list with bullets on the left */}
+        <ul className="sm:hidden space-y-1 text-left max-w-xs mx-auto">
+          <li className="flex items-start gap-2">
+            <span className="mt-1.5">•</span>
+            <span>{t('tips.authentic')}</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-1.5">•</span>
+            <span>{t('tips.audience')}</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-1.5">•</span>
+            <span>{t('tips.flexible')}</span>
+          </li>
+        </ul>
       </motion.div>
     </div>
   )

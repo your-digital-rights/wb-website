@@ -63,7 +63,7 @@ export default async function CustomSoftwarePage({
   setRequestLocale(locale);
 
   return (
-    <ThemeProvider defaultTheme="system" storageKey="wb-ui-theme">
+    <ThemeProvider>
       <div className="min-h-screen flex flex-col">
         <Navigation />
         <main className="flex-1">

@@ -1,5 +1,65 @@
 import { defineConfig, devices } from '@playwright/test';
 
+type BypassStorageState = {
+  cookies: {
+    name: string;
+    value: string;
+    domain: string;
+    path: string;
+    expires: number;
+    httpOnly: boolean;
+    secure: boolean;
+    sameSite: 'Lax' | 'Strict' | 'None';
+  }[];
+  origins: {
+    origin: string;
+    localStorage: {name: string; value: string}[];
+  }[];
+};
+
+const baseURL = process.env.BASE_URL || 'http://localhost:3783';
+
+const vercelBypassStorageState: BypassStorageState | undefined = (() => {
+  const secret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+  const url = process.env.BASE_URL;
+
+  if (!secret || !url) {
+    return undefined;
+  }
+
+  try {
+    const target = new URL(url);
+    return {
+      cookies: [
+        {
+          name: '__vercel_protection_bypass',
+          value: secret,
+          domain: target.hostname,
+          path: '/',
+          // Allow long-lived cookie for preview access
+          expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
+          httpOnly: false,
+          secure: true,
+          sameSite: 'Lax' as const,
+        }
+      ],
+      origins: [
+        {
+          origin: target.origin,
+          localStorage: []
+        }
+      ]
+    };
+  } catch {
+    return undefined;
+  }
+})();
+const vercelBypassHeaders = process.env.VERCEL_AUTOMATION_BYPASS_SECRET
+  ? {
+      'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET,
+    }
+  : undefined;
+
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
@@ -20,26 +80,16 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // Use BASE_URL from environment (for CI deployments) or fallback to localhost
-    baseURL: process.env.BASE_URL || 'http://localhost:3783',
+    baseURL,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
 
-    /* Ensure fresh browser context for each test to avoid state persistence */
-    contextOptions: {
-      // Clear all storage (localStorage, sessionStorage, etc.)
-      storageState: undefined,
-    },
-
     /* Clear local storage and other browser state */
-    storageState: undefined,
+    storageState: vercelBypassStorageState ?? undefined,
 
-    /* Add Vercel protection bypass header if secret is provided (for CI testing against protected deployments) */
-    ...(process.env.VERCEL_AUTOMATION_BYPASS_SECRET && {
-      extraHTTPHeaders: {
-        'x-vercel-protection-bypass': process.env.VERCEL_AUTOMATION_BYPASS_SECRET,
-      },
-    }),
+    /* Ensure protected previews are bypassed */
+    extraHTTPHeaders: vercelBypassHeaders,
   },
 
   /* Configure projects for major browsers */
@@ -47,7 +97,10 @@ export default defineConfig({
     // In CI, only run chromium to save time and resources
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        extraHTTPHeaders: vercelBypassHeaders,
+      },
     },
   ] : [
     // Locally, test all browsers

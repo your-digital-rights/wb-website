@@ -550,7 +550,7 @@ export class AnalyticsService {
     const fieldMap: Record<StepNumber, string[]> = {
       1: ['name', 'email'],
       2: ['emailVerified'],
-      3: ['businessName', 'businessEmail', 'businessPhone', 'physicalAddress', 'industry'],
+      3: ['businessName', 'businessEmail', 'businessPhone', 'businessStreet', 'businessCity', 'businessPostalCode', 'businessProvince', 'businessCountry', 'industry'],
       4: ['offer', 'competitors', 'uniqueness'],
       5: ['customerProfile'],
       6: ['problemSolved', 'customerDelight'],

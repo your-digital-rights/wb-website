@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { CheckCircle2, Loader2 } from "lucide-react"
 import { CustomSoftwareFormData, CustomSoftwareFormErrors, CustomSoftwareFormState } from "@/types/custom-software"
 import { fadeInUp } from "../../context/design-system/motion/variants"
+import { trackGenerateLead } from "@/lib/analytics"
 
 export function CustomSoftwareForm() {
   const t = useTranslations('customSoftware.form')
@@ -116,6 +117,9 @@ export function CustomSoftwareForm() {
         isSuccess: true,
         errors: {}
       })
+
+      // Track lead generation event
+      trackGenerateLead()
 
       // Reset form
       setFormData({

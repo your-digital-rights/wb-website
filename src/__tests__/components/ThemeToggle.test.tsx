@@ -16,7 +16,8 @@ jest.mock('@/components/theme-provider', () => ({
   ThemeProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>
 }))
 
-describe('ThemeToggle', () => {
+// Theme functionality disabled - all visitors use light theme
+describe.skip('ThemeToggle', () => {
   beforeEach(() => {
     mockSetTheme.mockClear()
   })

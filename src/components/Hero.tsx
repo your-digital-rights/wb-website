@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl"
 import { motion, useReducedMotion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { fadeInUp, slideFade, staggerChildren } from "../../context/design-system/motion/variants"
+import { trackSelectItem } from "@/lib/analytics"
 
 export function Hero() {
   const t = useTranslations('hero')
@@ -60,7 +61,13 @@ export function Hero() {
         </motion.p>
 
         <motion.div variants={variants.cta}>
-          <Button size="lg" className="text-lg px-8 py-3" asChild data-testid="hero-cta">
+          <Button
+            size="lg"
+            className="text-lg px-8 py-3"
+            asChild
+            data-testid="hero-cta"
+            onClick={() => trackSelectItem('fast_simple', 'hero')}
+          >
             <Link href="/onboarding">
               {t('cta')}
             </Link>

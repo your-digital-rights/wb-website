@@ -1,14 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect } from "react"
 
-type Theme = "dark" | "light" | "system"
+type Theme = "light"
 
 type ThemeProviderProps = {
   children: React.ReactNode
-  defaultTheme?: Theme
-  storageKey?: string
 }
 
 type ThemeProviderState = {
@@ -17,7 +15,7 @@ type ThemeProviderState = {
 }
 
 const initialState: ThemeProviderState = {
-  theme: "system",
+  theme: "light",
   setTheme: () => null,
 }
 
@@ -25,54 +23,19 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
-  storageKey = "wb-ui-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(defaultTheme)
-  const [mounted, setMounted] = useState(false)
-
-  // Initialize theme on mount
+  // Always force light theme
   useEffect(() => {
-    setMounted(true)
-    const stored = localStorage?.getItem(storageKey) as Theme
-    if (stored && ['light', 'dark', 'system'].includes(stored)) {
-      setTheme(stored)
-    }
-  }, [storageKey])
-
-  // Apply theme changes to DOM
-  useEffect(() => {
-    if (!mounted) return
-
     const root = window.document.documentElement
-    const applyTheme = (themeToApply: 'light' | 'dark') => {
-      root.classList.remove("light", "dark")
-      root.classList.add(themeToApply)
-    }
-
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
-      applyTheme(systemTheme)
-
-      // Listen for system theme changes
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
-      const handleChange = (e: MediaQueryListEvent) => {
-        applyTheme(e.matches ? "dark" : "light")
-      }
-
-      mediaQuery.addEventListener('change', handleChange)
-      return () => mediaQuery.removeEventListener('change', handleChange)
-    } else {
-      applyTheme(theme)
-    }
-  }, [theme, mounted])
+    root.classList.remove("dark")
+    root.classList.add("light")
+  }, [])
 
   const value = {
-    theme,
-    setTheme: (newTheme: Theme) => {
-      localStorage?.setItem(storageKey, newTheme)
-      setTheme(newTheme)
+    theme: "light" as Theme,
+    setTheme: () => {
+      // Theme switching disabled - always light
     },
   }
 

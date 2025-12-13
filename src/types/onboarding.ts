@@ -27,16 +27,6 @@ export interface OnboardingFormData {
   customIndustry?: string // Temporary field when "Other" is selected
   vatNumber?: string
 
-  // Legacy compatibility - will be transformed to flat fields
-  physicalAddress?: {
-    street: string
-    city: string
-    province: string
-    postalCode: string
-    country: string
-    placeId?: string
-  }
-  
   // Step 4: Brand Definition
   businessDescription: string
   competitorUrls?: string[] // URLs to competitor websites (max 3)
@@ -72,7 +62,6 @@ export interface OnboardingFormData {
   websiteSections: WebsiteSection[]
   primaryGoal: PrimaryGoal
   offeringType?: 'products' | 'services' | 'both' // Conditional on sections
-  offerings?: string[] // Dynamic list (1-6 items)
 
   // Step 11 (Enhanced): Products & Services Entry
   products?: Product[] // Array of 0-6 products with photos (Feature: 002-improved-products-service)
@@ -112,16 +101,6 @@ export type ImageStyleOption =
   | 'sketch'
   | 'collage'
   | '3d'
-
-// @deprecated - No longer used. Keeping for backward compatibility.
-// Color palette is now stored as array of hex values in OnboardingFormData.colorPalette
-export type ColorPaletteOption =
-  | 'palette-1'
-  | 'palette-2'
-  | 'palette-3'
-  | 'palette-4'
-  | 'palette-5'
-  | 'palette-6'
 
 export type WebsiteSection = 
   | 'about-us'
@@ -450,7 +429,7 @@ export type FormDataAtStep<T extends StepNumber> =
   T extends 8 ? Pick<OnboardingFormData, 'designStyle'> :
   T extends 9 ? Pick<OnboardingFormData, 'imageStyle'> :
   T extends 10 ? Pick<OnboardingFormData, 'colorPalette'> :
-  T extends 11 ? Pick<OnboardingFormData, 'websiteSections' | 'primaryGoal' | 'offeringType' | 'offerings'> :
+  T extends 11 ? Pick<OnboardingFormData, 'websiteSections' | 'primaryGoal' | 'offeringType' | 'products'> :
   T extends 12 ? Pick<OnboardingFormData, 'logoUpload' | 'businessPhotos'> :
   T extends 13 ? { additionalLanguages: string[] } :
   T extends 14 ? { discountCode?: string; acceptTerms: boolean } :

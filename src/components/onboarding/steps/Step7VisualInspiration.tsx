@@ -189,13 +189,29 @@ export function Step7VisualInspiration({ form, errors, isLoading }: StepComponen
         className="text-center text-sm text-muted-foreground space-y-2"
       >
         <p>{t('tips.title')}</p>
-        <div className="flex flex-wrap justify-center gap-4">
+        {/* Desktop: inline with bullet separators */}
+        <div className="hidden sm:flex flex-wrap justify-center gap-4">
           <span>{t('tips.diverse')}</span>
           <span>•</span>
           <span>{t('tips.specific')}</span>
           <span>•</span>
           <span>{t('tips.relevant')}</span>
         </div>
+        {/* Mobile: vertical list with bullets on the left */}
+        <ul className="sm:hidden space-y-1 text-left max-w-xs mx-auto">
+          <li className="flex items-start gap-2">
+            <span className="mt-1.5">•</span>
+            <span>{t('tips.diverse')}</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-1.5">•</span>
+            <span>{t('tips.specific')}</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="mt-1.5">•</span>
+            <span>{t('tips.relevant')}</span>
+          </li>
+        </ul>
       </motion.div>
     </div>
   )

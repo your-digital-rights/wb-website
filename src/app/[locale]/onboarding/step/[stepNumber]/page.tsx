@@ -13,6 +13,7 @@ import { getStepSchema, type StepFormData } from '@/schemas/onboarding'
 import { submitOnboarding } from '@/services/onboarding-client'
 import { getNextStep, getPreviousStep, calculateProgress } from '@/lib/step-navigation'
 import { OnboardingFormData, StepNumber } from '@/types/onboarding'
+import { trackBeginCheckout, trackOnboardingComplete } from '@/lib/analytics'
 
 // Tell Next.js this is a fully dynamic route (no static generation)
 export const dynamic = 'force-dynamic'
@@ -95,6 +96,20 @@ export default function OnboardingStep() {
     }
   }, [stepNumber, currentStep, router, sessionId, locale])
 
+  // Track begin checkout when step 1 loads
+  useEffect(() => {
+    if (stepNumber === 1 && sessionId) {
+      trackBeginCheckout('onboarding_step_1')
+    }
+  }, [stepNumber, sessionId])
+
+  // Track onboarding complete when step 14 (checkout) loads
+  useEffect(() => {
+    if (stepNumber === 14 && sessionId) {
+      trackOnboardingComplete()
+    }
+  }, [stepNumber, sessionId])
+
   // Track if we're currently resetting form from store to prevent auto-save loop
   const isResettingRef = useRef(false)
 
@@ -119,12 +134,12 @@ export default function OnboardingStep() {
           businessName: formData?.businessName ?? '',
           businessEmail: formData?.businessEmail ?? '',
           businessPhone: formData?.businessPhone ?? '',
-          businessStreet: formData?.businessStreet ?? formData?.physicalAddress?.street ?? '',
-          businessCity: formData?.businessCity ?? formData?.physicalAddress?.city ?? '',
-          businessProvince: formData?.businessProvince ?? formData?.physicalAddress?.province ?? '',
-          businessPostalCode: formData?.businessPostalCode ?? formData?.physicalAddress?.postalCode ?? '',
-          businessCountry: formData?.businessCountry ?? formData?.physicalAddress?.country ?? 'Italy',
-          businessPlaceId: formData?.businessPlaceId ?? formData?.physicalAddress?.placeId ?? '',
+          businessStreet: formData?.businessStreet ?? '',
+          businessCity: formData?.businessCity ?? '',
+          businessProvince: formData?.businessProvince ?? '',
+          businessPostalCode: formData?.businessPostalCode ?? '',
+          businessCountry: formData?.businessCountry ?? 'Italy',
+          businessPlaceId: formData?.businessPlaceId ?? '',
           industry: formData?.industry ?? '',
           vatNumber: formData?.vatNumber ?? ''
         }

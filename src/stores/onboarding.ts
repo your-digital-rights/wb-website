@@ -74,7 +74,6 @@ const initialFormData: Partial<OnboardingFormData> = {
   websiteSections: [],
   primaryGoal: undefined,
   offeringType: undefined,
-  offerings: [],
   products: [], // Step 11 Enhanced: Products & Services Entry (Feature: 002-improved-products-service)
   logoUpload: undefined,
   businessPhotos: []
@@ -859,7 +858,7 @@ function extractStepData(formData: Partial<OnboardingFormData>, step: number): a
         websiteSections: formData.websiteSections,
         primaryGoal: formData.primaryGoal,
         offeringType: formData.offeringType,
-        offerings: formData.offerings
+        products: formData.products
       }
     case 12:
       return {

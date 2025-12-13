@@ -26,23 +26,46 @@ This document outlines the upcoming migration plan for Step 14 (Stripe checkout)
 ### Functional
 - **Controller API**
   - POST `/api/stripe/checkout` accepts `{ submissionId, sessionId, additionalLanguages, discountCode }`.
-  - Validates submission status (“submitted”), ensures email/terms readiness.
+  - Validates submission status ("submitted"), ensures email/terms readiness.
   - Creates/updates Stripe customer, subscription schedule, subscription, invoice items, optional coupons, metadata.
-  - Finalizes invoice, obtains PaymentIntent or SetupIntent, persists all IDs (customer, subscription, schedule, payment, invoice) plus pricing metadata in `onboarding_submissions`.
-  - Returns `{ clientSecret, summary (totals, recurring amounts, savings, languages), submissionId, stripeIds }`.
+  - **Metadata Strategy**:
+    - Customer: `{ submission_id, session_id, signup_source: 'web_onboarding' }`
+    - Subscription: `{ submission_id, additional_languages, commitment_months: '12' }`
+    - Invoice: `{ submission_id, session_id, is_initial_payment: 'true' }`
+    - PaymentIntent/SetupIntent: `{ submission_id, session_id, invoice_id }`
+  - **Tax Handling**: Enables Stripe Tax (`automatic_tax: { enabled: true }`) for automatic VAT/sales tax calculation per EU regulations.
+  - Finalizes invoice, obtains PaymentIntent or SetupIntent, persists all IDs (customer, subscription, schedule, payment, invoice) plus pricing metadata and tax amounts in `onboarding_submissions`.
+  - Returns `{ clientSecret, summary (totals, recurring amounts, savings, languages, tax breakdown), submissionId, stripeIds }`.
 - **Webhook Updates**
   - `invoice.paid` establishes `status='paid'`, `payment_amount`, `payment_completed_at`, analytics/email notifications.
   - `setup_intent.succeeded` attaches payment method and logs analytics; must tolerate missing customers/subscriptions (already fixed).
+  - `customer.subscription.updated` handles status transitions (active → past_due → unpaid → canceled) and updates `subscription_status` column.
+  - `customer.subscription.deleted` revokes access and sends cancellation confirmation email.
+  - **Webhook Best Practices**:
+    - Events may arrive out of order (e.g., `invoice.paid` before `invoice.created`); use `event.created` timestamp for ordering.
+    - Deduplication by `event.id` prevents double-processing.
+    - All handlers must be idempotent (safe to process same event twice).
 - **Frontend UX**
   - Continues to show inline order summary, discount, add-ons.
   - Uses controller response as single source of truth for pricing (no duplicate calculations).
   - Collects card details via Stripe Elements and confirms using the returned client secret.
+  - **3D Secure / SCA Compliance**:
+    - Detects PaymentIntent vs SetupIntent by client secret prefix (`pi_` vs `seti_`).
+    - Calls `stripe.confirmPayment()` for PaymentIntent or `stripe.confirmSetup()` for SetupIntent.
+    - Handles `requires_action` status for 3D Secure redirects (EU Strong Customer Authentication).
+    - Uses `redirect: 'if_required'` to minimize redirects when not needed.
 
 ### Non-Functional / Technical
 - **Idempotency**: Controller must be callable multiple times with same submission; use `stripe-idempotency-key` derived from submission/session. Apply idempotency keys per Stripe mutation (customer, schedule, subscription, invoice items, coupons, PaymentIntent/SetupIntent) so retries on 429/5xx are safe.
 - **Security**: All privileged Stripe calls remain server-side; client sees only publishable key + client secret. Webhooks must verify `Stripe-Signature`, reject expired signatures, and dedupe by `event.id`.
 - **Logging/Monitoring**: Structured logs for each controller invocation (submission ID, Stripe IDs, Stripe Request-Ids, timing). Emit metrics for success/failure to alerting system and surface request IDs for Stripe support.
 - **Rate Limiting/Resiliency**: Use exponential backoff with jitter on 429/409/5xx, honor `Retry-After`, and coalesce duplicate in-flight requests per submission/session. Cache static reads (e.g., Prices) and avoid polling.
+  - **Retry Strategy Details**:
+    - 429 (rate limit): Sleep for `Retry-After` header seconds, then retry with same idempotency key.
+    - 500/502/503/504: Exponential backoff (1s, 2s, 4s, 8s) with jitter (±50% randomization).
+    - 409 (conflict): Log error, return existing resource (idempotency key worked).
+    - Max 3-5 retry attempts before failing and alerting.
+    - All retries MUST use the SAME idempotency key for safety.
 - **Cleanup**: Maintain ability to cancel pending schedules/subscriptions on retries or when user restarts Step 14. Also expire/cancel incomplete PaymentIntents/SetupIntents and void draft invoices created during retries to avoid surprise captures.
 
 ### Testing Requirements
@@ -56,17 +79,36 @@ This document outlines the upcoming migration plan for Step 14 (Stripe checkout)
 - **Stripe Tooling**
   - Use Stripe CLI to replay webhooks locally and validate signature handling.
   - Use Stripe Test Clocks for subscription/schedule time-travel (renewals, proration) without long waits.
+  - **Test Clock Example**:
+    1. Create test clock: `stripe test_clocks create --name "renewal-test"`
+    2. Attach to customer during creation: `customer.test_clock = clock_id`
+    3. Advance 1 month: `stripe test_clocks advance <clock_id> --frozen_time <timestamp>`
+    4. Verify renewal invoice generated and subscription status updated
+    5. Test failed payment scenarios, past_due transitions, and cancellation flows
 - **Mock Data**
   - Provide JSON fixtures for pricing summaries so designers/devs can iterate quickly without Stripe.
 
 ### Operational Requirements
-- Document new environment variables (controller secret, feature flags).
+- **Environment Variables**:
+  - `STRIPE_WEBHOOK_SECRET_TEST` - Test mode webhook signing secret (from Stripe Dashboard or CLI)
+  - `STRIPE_WEBHOOK_SECRET_LIVE` - Production mode webhook signing secret
+  - Webhook handler selects correct secret based on environment or Stripe key prefix
+  - `STRIPE_BASE_PACKAGE_LOOKUP_KEY` - Price lookup key (e.g., 'monthly_base_plan') instead of hardcoded price ID
+  - `STRIPE_LANGUAGE_ADDON_LOOKUP_KEY` - Language add-on lookup key (e.g., 'language_addon')
+  - Controller fetches prices by lookup key for environment portability (works across test/live automatically)
+  - Feature flags for gradual rollout (`PAYMENT_CONTROLLER_V2`)
+- **Data Retention & Compliance**:
+  - GDPR-compliant customer data handling (right to be forgotten, data export)
+  - Stripe customer data synced with Supabase for deletion requests
+  - Tax records retained per EU requirements (minimum 10 years for Italian VAT)
+  - PCI-DSS: Never store raw card details (Stripe handles all payment data)
 - Provide runbooks for:
   - Rotating Stripe keys / env configuration.
     - Use restricted keys for CI/test where possible; isolate keys per environment.
   - Inspecting controller logs, Stripe dashboards, and Supabase rows.
   - Rolling back to legacy flow if necessary (feature flag/ENV switch).
   - Capturing `Stripe-Request-Id` and `event.id` for support/debug and replaying via Stripe CLI.
+  - Handling customer data deletion requests (GDPR compliance).
 - Update CI to run new integration suite plus reduced set of Playwright specs (with Stripe mocked by default).
 
 ### Migration Requirements
@@ -94,8 +136,23 @@ This document outlines the upcoming migration plan for Step 14 (Stripe checkout)
      - Validate submission/session state.
      - Create/update Stripe customer, schedule, subscription, invoice items.
      - Attach coupons/metadata, finalize invoice, derive PaymentIntent/SetupIntent with `payment_behavior=default_incomplete` and `save_default_payment_method`/`setup_future_usage` set so off-session renewals succeed.
+     - **Invoice Finalization Flow**:
+       1. Subscription creation generates draft invoice
+       2. Add language add-on invoice items to draft
+       3. Apply discount to invoice (affects all line items)
+       4. Finalize invoice to lock amounts and create PaymentIntent/SetupIntent
+       5. Use `expand: ['confirmation_secret', 'total_discount_amounts']` to get client secret in single API call
+     - **Renewal Setup**:
+       - Subscriptions created with `payment_settings.save_default_payment_method: 'on_subscription'`
+       - SetupIntents (for $0 invoices) use `usage: 'off_session'` for future charges
+       - Enables automatic renewal charges without customer interaction
+       - Payment method attached to both subscription and customer for redundancy
      - Persist Stripe IDs + payment metadata to Supabase in the same request.
      - Return `{ clientSecret, pricingSummary, submissionId, debugIds }` to the client.
+     - **Client Secret Format**:
+       - `pi_xxx_secret_yyy` for paid invoices (PaymentIntent)
+       - `seti_xxx_secret_yyy` for $0 invoices (SetupIntent)
+       - Client detects type via prefix and calls appropriate confirm method
    - Server handles idempotency, retries, and structured logging.
 
 2. **Frontend Step 14**
@@ -108,7 +165,17 @@ This document outlines the upcoming migration plan for Step 14 (Stripe checkout)
    - Verify signatures, dedupe by `event.id`, respond with 2xx quickly, and offload heavier work to a queue/async worker.
    - Metadata lookup remains but is simpler because the controller already saved all IDs.
 
-4. **Testing Strategy**
+4. **Subscription Lifecycle Management**
+   - **Cancellation Policy**:
+     - No proration for monthly subscriptions - access continues until period end
+     - `customer.subscription.deleted` webhook updates status to 'canceled'
+     - Send cancellation confirmation email with final access date
+   - **Upgrade/Downgrade Handling** (future):
+     - Language add-ons are currently one-time charges
+     - Future: Support mid-cycle language additions with `subscription.update()` and `proration_behavior: 'create_prorations'`
+     - Generate invoice item for prorated amount
+
+5. **Testing Strategy**
    - **Integration (Jest)**: focus on `/api/stripe/checkout`, mocking Stripe where appropriate and verifying Supabase updates; separate tests for webhook handlers.
    - **Playwright**:
      - A few real payments (happy path, language add-ons, 100% discount) to exercise the end-to-end flow.

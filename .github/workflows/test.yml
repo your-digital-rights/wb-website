@@ -95,13 +95,58 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Wait for Vercel Deployment
-      id: wait-for-deployment
+    - name: Get Vercel Preview URL
+      id: get-preview-url
       uses: patrickedqvist/wait-for-vercel-preview@v1.3.2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        max_timeout: 300
+        max_timeout: 60
         check_interval: 10
+      continue-on-error: true
+
+    - name: Wait for Vercel Deployment with Bypass
+      id: wait-for-deployment
+      run: |
+        # Get the preview URL from Vercel API
+        if [ -n "${{ steps.get-preview-url.outputs.url }}" ]; then
+          URL="${{ steps.get-preview-url.outputs.url }}"
+        else
+          # Fallback: construct URL from PR/commit info
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            # For PRs, Vercel typically uses: project-git-branch-org.vercel.app
+            BRANCH="${{ github.head_ref }}"
+          else
+            BRANCH="${{ github.ref_name }}"
+          fi
+          # Clean branch name for URL
+          CLEAN_BRANCH=$(echo "$BRANCH" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
+          URL="https://wb-website-git-${CLEAN_BRANCH}-yoav-avirams-projects.vercel.app"
+        fi
+
+        echo "Waiting for deployment at: $URL"
+
+        MAX_ATTEMPTS=30
+        ATTEMPT=0
+
+        while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "x-vercel-protection-bypass: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}" \
+            "$URL" 2>/dev/null || echo "000")
+
+          echo "Attempt $((ATTEMPT + 1))/$MAX_ATTEMPTS - Status: $STATUS"
+
+          if [ "$STATUS" == "200" ]; then
+            echo "Deployment ready!"
+            echo "url=$URL" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          ATTEMPT=$((ATTEMPT + 1))
+          sleep 10
+        done
+
+        echo "Timeout waiting for deployment"
+        exit 1
 
     - name: Comment deployment URL on PR
       if: github.event_name == 'pull_request'

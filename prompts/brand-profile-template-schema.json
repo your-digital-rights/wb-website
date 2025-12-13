@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BrandProfile",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "brand_name": {
+      "type": "string",
+      "description": "Business name. Copy from `business_name`"
+    },
+    "tagline": {
+      "type": "string",
+      "description": "Short phrase that captures the promise of the brand. Inferred."
+    },
+    "mission_statement": {
+      "type": "string",
+      "description": "Concise description of why the business exists and what it aims to achieve. Inferred."
+    },
+    "industry": {
+      "type": "string",
+      "description": "The sector in which the business operates. Copy from `industry`"
+    },
+    "positioning": {
+      "type": "string",
+      "description": "Explanation of how the brand is positioned in its market and against competitors. Inferred. Give weight to the analysis of competitor websites, `customerProfile`, and `competitorAnalysis`"
+    },
+    "target_audience": {
+      "type": "object",
+      "description": "High level overview of the ideal customers the brand serves, broken down into demographics and psychographics.",
+      "additionalProperties": false,
+      "properties": {
+        "demographics": {
+          "type": "string",
+          "description": "Demographic profile of the target audience, such as age, location, income or role. Inferred."
+        },
+        "psychographics": {
+          "type": "string",
+          "description": "Psychological and behavioral traits of the target audience, such as values, attitudes and lifestyle. Inferred."
+        }
+      },
+      "required": [
+        "demographics",
+        "psychographics"
+      ]
+    },
+    "tone_of_voice": {
+      "type": "string",
+      "description": "Description of how the brand should sound in writing, such as formal, playful or expert. Inferred."
+    },
+    "core_values": {
+      "type": "array",
+      "description": "List of core principles that define how the business behaves and makes decisions. Inferred.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "visual_style": {
+      "type": "string",
+      "description": "High level description of the visual direction for the brand, such as minimal, bold or classic. Inferred."
+    },
+    "color_palette": {
+      "type": "array",
+      "description": "List of brand colors as HEX codes in the following order: background, primary, secondary, accent. Copy from `colorPalette`",
+      "items": {
+        "type": "string",
+        "pattern": "^#([0-9a-fA-F]{6})$",
+        "description": "HEX color in the form #RRGGBB."
+      }
+    },
+    "typography": {
+      "type": "object",
+      "description": "Typography system for the brand. Inferred, with special attention to the links to visually admired websites. Use only system fonts or Google Fonts.",
+      "additionalProperties": false,
+      "properties": {
+        "font_families": {
+          "type": "array",
+          "description": "Ordered list of font families to use for headings and body text, chosen from system fonts or Google Fonts.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "style": {
+          "type": "string",
+          "description": "Narrative description of the typographic style, such as modern sans serif, elegant serif or friendly rounded."
+        }
+      },
+      "required": [
+        "font_families",
+        "style"
+      ]
+    },
+    "logo_guidelines": {
+      "type": "string",
+      "description": "Guidance for logo creation. Inferred."
+    },
+    "offer": {
+      "type": "string",
+      "description": "Single sentence description of what the business offers to a new customer. Inferred."
+    },
+    "differentiator": {
+      "type": "string",
+      "description": "Summary of what makes this business a better choice than competitors. Inferred. Give weight to `customerDelight`, `customerProblems`, and `competitorAnalysis`"
+    },
+    "customer_profile": {
+      "type": "string",
+      "description": "Long form description of the ideal customer, including budget, style, motivation, decision making, loyalty, main problem or need and why they would be thrilled after choosing the business. Inferred. Give weight to `customerProfile`"
+    }
+  },
+  "required": [
+    "brand_name",
+    "tagline",
+    "mission_statement",
+    "industry",
+    "positioning",
+    "target_audience",
+    "tone_of_voice",
+    "core_values",
+    "visual_style",
+    "color_palette",
+    "typography",
+    "logo_guidelines",
+    "offer",
+    "differentiator",
+    "customer_profile"
+  ]
+}

@@ -9,8 +9,8 @@ test.describe('WhiteBoar Homepage', () => {
   });
 
   test('loads homepage successfully', async ({ page }) => {
-    // Check that page loads with 200 status
-    const response = await page.waitForLoadState('networkidle');
+    // Wait for the initial render to settle
+    await page.waitForLoadState('domcontentloaded');
 
     // Check main heading is visible using test ID
     await expect(page.getByTestId('hero-title')).toBeVisible();
@@ -68,7 +68,8 @@ test.describe('WhiteBoar Homepage', () => {
     await expect(page.getByTestId('hero-title')).toBeVisible();
   });
 
-  test('theme toggle works', async ({ page, isMobile }) => {
+  // Theme functionality disabled - all visitors use light theme
+  test.skip('theme toggle works', async ({ page, isMobile }) => {
     // Check initial theme (should be light or system)
     const html = page.locator('html');
 
@@ -190,7 +191,6 @@ test.describe('WhiteBoar Homepage', () => {
 
       // Check that mobile navigation controls are present
       await expect(page.getByRole('button').filter({ has: page.locator('span:has-text("Select language")') })).toBeVisible();
-      await expect(page.getByRole('button').filter({ has: page.locator('span:has-text("Toggle theme")') })).toBeVisible();
 
       // Close mobile menu
       await page.getByLabel('Toggle mobile menu').click();

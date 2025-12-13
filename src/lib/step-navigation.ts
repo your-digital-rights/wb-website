@@ -210,10 +210,9 @@ export function calculateProgress(
  * Business type detection based on form data
  */
 export function detectBusinessType(formData: Partial<OnboardingFormData>): BusinessType {
-  // Analyze industry and offerings to determine business type
+  // Analyze industry and products to determine business type
   const industry = formData.industry?.toLowerCase() || ''
   const businessDesc = formData.businessDescription?.toLowerCase() || ''
-  const offerings = formData.offerings || []
   const offeringType = formData.offeringType
 
   // E-commerce indicators

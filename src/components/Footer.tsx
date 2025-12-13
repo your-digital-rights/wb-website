@@ -27,8 +27,8 @@ export function Footer() {
           <div className="space-y-4" data-testid="footer-brand">
             <div data-testid="footer-brand-logo">
               <WhiteBoarLogo
-                width={175}
-                height={175}
+                width={120}
+                height={40}
                 className="text-accent dark:text-accent"
               />
             </div>
