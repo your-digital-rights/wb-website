@@ -1537,5 +1537,11 @@
         "submitFailed": "Invio del messaggio non riuscito. Riprova."
       }
     }
+  },
+  "laboratorio": {
+    "meta": {
+      "title": "Workshop - WhiteBoar",
+      "description": "Registrati al nostro workshop e scopri come far crescere la tua attività online."
+    }
   }
 }

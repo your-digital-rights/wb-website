@@ -1540,6 +1540,12 @@ declare const messages: {
         "submitFailed": "Failed to send your message. Please try again."
       }
     }
+  },
+  "laboratorio": {
+    "meta": {
+      "title": "Workshop - WhiteBoar",
+      "description": "Register for our workshop and learn how to grow your business online."
+    }
   }
 };
 export default messages;
