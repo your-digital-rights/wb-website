@@ -1,8 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { Link } from "@/i18n/navigation"
-import { useParams } from "next/navigation"
+import { Link, useRouter } from "@/i18n/navigation"
+import { useParams, usePathname } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { Menu, X as CloseIcon } from "lucide-react"
 import { motion, useReducedMotion } from "framer-motion"
@@ -18,15 +18,26 @@ export function Navigation() {
   const t = useTranslations('nav')
   const shouldReduce = useReducedMotion()
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
+  const pathname = usePathname()
+  const router = useRouter()
 
   const variants = shouldReduce ? {} : {
     nav: slideFade('right')
   }
 
+  // Check if we're on the homepage (accounting for locale prefix)
+  const isHomepage = pathname === '/' || pathname === `/${locale}` || pathname === `/${locale}/`
+
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+    if (isHomepage) {
+      // On homepage, scroll to section
+      const element = document.getElementById(sectionId)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+    } else {
+      // On other pages, navigate to homepage with hash
+      router.push(`/#${sectionId}`)
     }
   }
 
