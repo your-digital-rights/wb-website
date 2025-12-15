@@ -15,10 +15,10 @@ export default function proxy(request: NextRequest) {
     const cspHeader = `
       default-src 'self';
       script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.js.stripe.com https://js.stripe.com https://m.stripe.network https://maps.googleapis.com https://*.googleapis.com https://www.googletagmanager.com https://*.googletagmanager.com;
-      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-      img-src 'self' blob: data: https://*.stripe.com https://maps.googleapis.com https://*.googleapis.com https://*.gstatic.com https://www.googletagmanager.com https://*.google-analytics.com;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.googletagmanager.com;
+      img-src 'self' blob: data: https://*.stripe.com https://maps.googleapis.com https://*.googleapis.com https://*.gstatic.com https://www.googletagmanager.com https://*.google-analytics.com https://*.google.com https://*.google.it;
       font-src 'self' data: https://fonts.gstatic.com;
-      connect-src 'self' https://api.stripe.com https://m.stripe.network https://*.supabase.co https://maps.googleapis.com https://*.googleapis.com https://www.googletagmanager.com https://*.googletagmanager.com https://*.google-analytics.com;
+      connect-src 'self' https://api.stripe.com https://m.stripe.network https://*.supabase.co https://maps.googleapis.com https://*.googleapis.com https://www.googletagmanager.com https://*.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com;
       frame-src 'self' https://*.js.stripe.com https://js.stripe.com https://hooks.stripe.com https://vercel.live;
       object-src 'none';
       base-uri 'self';
