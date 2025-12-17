@@ -8,6 +8,8 @@ import { Metadata } from 'next';
 import { CookieConsent } from '@/components/CookieConsent';
 import { GoogleTagManager } from '@next/third-parties/google';
 import { AnalyticsRouterEvents } from '@/components/analytics-router-events';
+import { GtagConsentHandler } from '@/components/GtagConsentHandler';
+import { GTAG_CONSENT_DEFAULT_SCRIPT } from '@/lib/gtag-consent';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://whiteboar.it'),
@@ -37,10 +39,16 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className="scroll-smooth light">
-      <head></head>
+      <head>
+        {/* Google Consent Mode v2 - MUST load before GTM */}
+        <script
+          dangerouslySetInnerHTML={{ __html: GTAG_CONSENT_DEFAULT_SCRIPT }}
+        />
+      </head>
       <GoogleTagManager gtmId="GTM-K8XHX82G" />
       <body className="font-body antialiased">
         <NextIntlClientProvider messages={messages} locale={locale}>
+          <GtagConsentHandler />
           <Suspense fallback={null}>
             <AnalyticsRouterEvents />
           </Suspense>
