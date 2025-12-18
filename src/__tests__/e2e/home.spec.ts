@@ -45,7 +45,7 @@ test.describe('WhiteBoar Homepage', () => {
     await expect(page.locator('#portfolio')).toBeInViewport();
   });
 
-  test('language switching works', async ({ page, isMobile }) => {
+  test('language switching to Italian works', async ({ page, isMobile }) => {
     // Check initial language (English) - verify hero is visible
     await expect(page.getByTestId('hero-title')).toBeVisible();
 
@@ -65,6 +65,29 @@ test.describe('WhiteBoar Homepage', () => {
     await expect(page).toHaveURL('/it');
 
     // Check content switches to Italian - hero should still be visible
+    await expect(page.getByTestId('hero-title')).toBeVisible();
+  });
+
+  test('language switching to Polish works', async ({ page, isMobile }) => {
+    // Check initial language (English) - verify hero is visible
+    await expect(page.getByTestId('hero-title')).toBeVisible();
+
+    // On mobile, open the mobile menu first
+    if (isMobile) {
+      await page.getByLabel('Toggle mobile menu').click();
+    }
+
+    // Click language selector using screen reader text
+    const languageSelector = page.getByRole('button').filter({ has: page.locator('span:has-text("Select language")') });
+    await languageSelector.click();
+
+    // Switch to Polish from the dropdown
+    await page.getByRole('button').filter({ hasText: /polish/i }).click();
+
+    // Check URL changes to /pl
+    await expect(page).toHaveURL('/pl');
+
+    // Check content switches to Polish - hero should still be visible
     await expect(page.getByTestId('hero-title')).toBeVisible();
   });
 

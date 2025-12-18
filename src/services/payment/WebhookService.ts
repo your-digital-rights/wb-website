@@ -7,6 +7,7 @@ import Stripe from 'stripe'
 import { SupabaseClient } from '@supabase/supabase-js'
 import { EmailService } from '@/services/resend'
 import { SubmissionLookupResult, WebhookHandlerResult } from './types'
+import { Locale } from '@/lib/i18n'
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.NOTIFICATION_ADMIN_EMAIL
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
@@ -482,7 +483,7 @@ export class WebhookService {
         // Send customer success confirmation email
         try {
           // Determine locale from submission metadata or default to 'en'
-          const locale = (submission.metadata?.locale as 'en' | 'it') || 'en'
+          const locale = (submission.metadata?.locale as Locale) || 'en'
 
           await EmailService.sendPaymentSuccessConfirmation(
             email,
@@ -727,7 +728,7 @@ export class WebhookService {
 
         try {
           // Determine locale from submission metadata or default to 'en'
-          const locale = (submission.metadata?.locale as 'en' | 'it') || 'en'
+          const locale = (submission.metadata?.locale as Locale) || 'en'
 
           await EmailService.sendPaymentSuccessConfirmation(
             email,
@@ -1060,7 +1061,7 @@ export class WebhookService {
                      'unknown@example.com'
 
         // Determine locale from submission metadata or default to 'en'
-        const locale = (submission.metadata?.locale as 'en' | 'it') || 'en'
+        const locale = (submission.metadata?.locale as Locale) || 'en'
 
         // Send customer cancellation confirmation email
         if (ADMIN_EMAIL) {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ContactFormData } from '@/types/contact'
+import { Locale } from '@/lib/i18n'
 
 // Validation helper functions
 function isValidEmail(email: string): boolean {
@@ -13,7 +14,7 @@ function isValidPhone(phone: string): boolean {
   return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 8
 }
 
-function validateFormData(data: ContactFormData, locale: 'en' | 'it'): {
+function validateFormData(data: ContactFormData, locale: Locale): {
   isValid: boolean
   errors: Record<string, string>
 } {
@@ -23,6 +24,8 @@ function validateFormData(data: ContactFormData, locale: 'en' | 'it'): {
   if (!data.name || data.name.trim().length < 2) {
     errors.name = locale === 'it'
       ? 'Il nome deve contenere almeno 2 caratteri'
+      : locale === 'pl'
+      ? 'Imie musi zawierac co najmniej 2 znaki'
       : 'Name must be at least 2 characters'
   }
 
@@ -30,10 +33,14 @@ function validateFormData(data: ContactFormData, locale: 'en' | 'it'): {
   if (!data.email) {
     errors.email = locale === 'it'
       ? "L'email è obbligatoria"
+      : locale === 'pl'
+      ? 'Email jest wymagany'
       : 'Email is required'
   } else if (!isValidEmail(data.email)) {
     errors.email = locale === 'it'
       ? 'Inserisci un indirizzo email valido'
+      : locale === 'pl'
+      ? 'Wprowadz prawidlowy adres email'
       : 'Please enter a valid email address'
   }
 
@@ -41,10 +48,14 @@ function validateFormData(data: ContactFormData, locale: 'en' | 'it'): {
   if (!data.phone) {
     errors.phone = locale === 'it'
       ? 'Il telefono è obbligatorio'
+      : locale === 'pl'
+      ? 'Telefon jest wymagany'
       : 'Phone is required'
   } else if (!isValidPhone(data.phone)) {
     errors.phone = locale === 'it'
       ? 'Inserisci un numero di telefono valido'
+      : locale === 'pl'
+      ? 'Wprowadz prawidlowy numer telefonu'
       : 'Please enter a valid phone number'
   }
 
@@ -52,6 +63,8 @@ function validateFormData(data: ContactFormData, locale: 'en' | 'it'): {
   if (!data.details || data.details.trim().length < 15) {
     errors.details = locale === 'it'
       ? 'Fornisci maggiori dettagli (almeno 15 caratteri)'
+      : locale === 'pl'
+      ? 'Podaj wiecej szczegolow (co najmniej 15 znakow)'
       : 'Please provide more details (at least 15 characters)'
   }
 
@@ -79,7 +92,7 @@ export async function POST(request: NextRequest) {
 
     const { formData, locale = 'en' } = body as {
       formData: ContactFormData
-      locale?: 'en' | 'it'
+      locale?: Locale
     }
 
     // Validate required fields

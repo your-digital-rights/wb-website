@@ -15,9 +15,30 @@ import { Badge } from '@/components/ui/badge'
 import { StepComponentProps } from './index'
 import industriesData from '@/data/industries.json'
 
-// Country list - Italy only for business address
+// Supported countries for business address
 const countries = [
-  { value: 'Italy', label: 'Italy', description: '🇮🇹 Italia' }
+  { value: 'Italy', label: 'Italy', description: '🇮🇹 Italia' },
+  { value: 'Poland', label: 'Poland', description: '🇵🇱 Polska' }
+]
+
+// Polish voivodeships (16 regions)
+const polishVoivodeships = [
+  { value: 'DS', label: 'Dolnoslaskie', description: 'Wroclaw' },
+  { value: 'KP', label: 'Kujawsko-Pomorskie', description: 'Bydgoszcz' },
+  { value: 'LU', label: 'Lubelskie', description: 'Lublin' },
+  { value: 'LB', label: 'Lubuskie', description: 'Gorzow Wielkopolski' },
+  { value: 'LD', label: 'Lodzkie', description: 'Lodz' },
+  { value: 'MA', label: 'Malopolskie', description: 'Krakow' },
+  { value: 'MZ', label: 'Mazowieckie', description: 'Warszawa' },
+  { value: 'OP', label: 'Opolskie', description: 'Opole' },
+  { value: 'PK', label: 'Podkarpackie', description: 'Rzeszow' },
+  { value: 'PD', label: 'Podlaskie', description: 'Bialystok' },
+  { value: 'PM', label: 'Pomorskie', description: 'Gdansk' },
+  { value: 'SL', label: 'Slaskie', description: 'Katowice' },
+  { value: 'SK', label: 'Swietokrzyskie', description: 'Kielce' },
+  { value: 'WN', label: 'Warminsko-Mazurskie', description: 'Olsztyn' },
+  { value: 'WP', label: 'Wielkopolskie', description: 'Poznan' },
+  { value: 'ZP', label: 'Zachodniopomorskie', description: 'Szczecin' }
 ]
 
 // Italian provinces (107 provinces) with their codes
@@ -131,7 +152,12 @@ const italianProvinces = [
   { value: 'VT', label: 'Viterbo', description: 'Lazio' }
 ]
 
-export function Step3BusinessBasics({ form, errors, isLoading }: StepComponentProps) {
+export interface Step3Props extends StepComponentProps {
+  /** Detected country from geolocation (Vercel header) */
+  detectedCountry?: 'Italy' | 'Poland'
+}
+
+export function Step3BusinessBasics({ form, errors, isLoading, detectedCountry }: Step3Props) {
   const t = useTranslations('onboarding.steps.3')
   const locale = useLocale()
   const { control, setValue, watch, trigger } = form
@@ -153,24 +179,60 @@ export function Step3BusinessBasics({ form, errors, isLoading }: StepComponentPr
     return [...italianProvinces].sort((a, b) => a.label.localeCompare(b.label, 'it'))
   }, [])
 
-  // Pre-select Italy on mount and trigger validation
+  // Sort voivodeships alphabetically
+  const sortedVoivodeships = useMemo(() => {
+    return [...polishVoivodeships].sort((a, b) => a.label.localeCompare(b.label, 'pl'))
+  }, [])
+
+  // Get regions based on selected country
+  const regionOptions = useMemo(() => {
+    return businessCountry === 'Poland' ? sortedVoivodeships : sortedProvinces
+  }, [businessCountry, sortedProvinces, sortedVoivodeships])
+
+  // Get country code for Google Places API
+  const addressCountryCode = useMemo(() => {
+    return businessCountry === 'Poland' ? 'PL' : 'IT'
+  }, [businessCountry])
+
+  // Pre-select country on mount based on geolocation or default to Italy
   useEffect(() => {
-    // Always set Italy if the field is empty, undefined, or not yet set
-    if (!businessCountry || businessCountry === '') {
-      setValue('businessCountry', 'Italy', { shouldValidate: true, shouldDirty: true, shouldTouch: true })
+    // Set country if the field is undefined or not yet set
+    if (!businessCountry) {
+      const defaultCountry = detectedCountry || 'Italy'
+      setValue('businessCountry', defaultCountry, { shouldValidate: true, shouldDirty: true, shouldTouch: true })
       // Trigger validation after a short delay to ensure the form is ready
       setTimeout(() => {
         trigger('businessCountry')
       }, 100)
     }
-  }, []) // Only run on mount
+  }, [detectedCountry, businessCountry, setValue, trigger]) // Run on mount and when detectedCountry changes
 
   // Separate effect to ensure value persists if cleared
   useEffect(() => {
-    if (!businessCountry || businessCountry === '') {
-      setValue('businessCountry', 'Italy', { shouldValidate: false, shouldDirty: false })
+    if (!businessCountry) {
+      const defaultCountry = detectedCountry || 'Italy'
+      setValue('businessCountry', defaultCountry, { shouldValidate: false, shouldDirty: false })
     }
-  }, [businessCountry, setValue])
+  }, [businessCountry, setValue, detectedCountry])
+
+  // Clear province when country changes (different region types)
+  useEffect(() => {
+    // Only clear if we already have a province set from a different country
+    const currentProvince = watch('businessProvince')
+    if (currentProvince) {
+      const isItalianProvince = italianProvinces.some(p => p.value === currentProvince)
+      const isPolishVoivodeship = polishVoivodeships.some(p => p.value === currentProvince)
+
+      // Clear province if switching countries and province belongs to old country
+      if ((businessCountry === 'Poland' && isItalianProvince) ||
+          (businessCountry === 'Italy' && isPolishVoivodeship)) {
+        setValue('businessProvince', '', { shouldValidate: true })
+        setValue('businessStreet', '', { shouldValidate: true })
+        setValue('businessCity', '', { shouldValidate: true })
+        setValue('businessPostalCode', '', { shouldValidate: true })
+      }
+    }
+  }, [businessCountry, setValue, watch])
 
   const handleAddressSelect = (address: any) => {
     if (address) {
@@ -178,25 +240,47 @@ export function Step3BusinessBasics({ form, errors, isLoading }: StepComponentPr
       setValue('businessCity', address.locality || '', { shouldValidate: true })
       setValue('businessPostalCode', address.postal_code || '', { shouldValidate: true })
 
-      // Find matching province code from administrative_area_level_2 (province) not level_1 (region)
-      // For Italy: level_2 = Province (Vicenza, Milano), level_1 = Region (Veneto, Lombardia)
-      let provinceName = address.administrative_area_level_2 || address.administrative_area_level_1 || ''
+      // Determine country from address or use current selection
+      const addressCountry = address.country
+      const isPoland = addressCountry === 'Poland' || addressCountry === 'Polska' || businessCountry === 'Poland'
 
-      // Strip common prefixes that Google Maps might add
-      provinceName = provinceName
-        .replace(/^Province of\s+/i, '')
-        .replace(/^Provincia di\s+/i, '')
-        .replace(/^Metropolitan City of\s+/i, '')
-        .replace(/^Città Metropolitana di\s+/i, '')
-        .trim()
+      if (isPoland) {
+        // For Poland: level_1 = Voivodeship (Mazowieckie), level_2 = County (Powiat)
+        let voivodeshipName = address.administrative_area_level_1 || ''
 
-      // Try exact match on province label first
-      const matchingProvince = italianProvinces.find(
-        p => p.label.toLowerCase() === provinceName.toLowerCase()
-      )
+        // Strip common prefixes that Google Maps might add
+        voivodeshipName = voivodeshipName
+          .replace(/^Voivodeship of\s+/i, '')
+          .replace(/^Województwo\s+/i, '')
+          .trim()
 
-      setValue('businessProvince', matchingProvince?.value || '', { shouldValidate: true })
-      setValue('businessCountry', 'Italy', { shouldValidate: true })
+        // Try exact match on voivodeship label
+        const matchingVoivodeship = polishVoivodeships.find(
+          p => p.label.toLowerCase() === voivodeshipName.toLowerCase()
+        )
+
+        setValue('businessProvince', matchingVoivodeship?.value || '', { shouldValidate: true })
+        setValue('businessCountry', 'Poland', { shouldValidate: true })
+      } else {
+        // For Italy: level_2 = Province (Vicenza, Milano), level_1 = Region (Veneto, Lombardia)
+        let provinceName = address.administrative_area_level_2 || address.administrative_area_level_1 || ''
+
+        // Strip common prefixes that Google Maps might add
+        provinceName = provinceName
+          .replace(/^Province of\s+/i, '')
+          .replace(/^Provincia di\s+/i, '')
+          .replace(/^Metropolitan City of\s+/i, '')
+          .replace(/^Città Metropolitana di\s+/i, '')
+          .trim()
+
+        // Try exact match on province label first
+        const matchingProvince = italianProvinces.find(
+          p => p.label.toLowerCase() === provinceName.toLowerCase()
+        )
+
+        setValue('businessProvince', matchingProvince?.value || '', { shouldValidate: true })
+        setValue('businessCountry', 'Italy', { shouldValidate: true })
+      }
 
       // Trigger validation for all updated fields
       trigger(['businessStreet', 'businessCity', 'businessPostalCode', 'businessProvince', 'businessCountry'])
@@ -402,7 +486,7 @@ export function Step3BusinessBasics({ form, errors, isLoading }: StepComponentPr
                     } as any : undefined}
                     error={errors.businessStreet?.message}
                     required
-                    country="IT"
+                    country={addressCountryCode}
                     onAddressSelect={handleAddressSelect}
                     onAddressChange={(query) => {
                       field.onChange(query)
@@ -452,9 +536,9 @@ export function Step3BusinessBasics({ form, errors, isLoading }: StepComponentPr
                   control={control}
                   render={({ field }) => (
                     <DropdownInput
-                      label={t('address.region.label')}
-                      placeholder={t('address.region.placeholder')}
-                      options={sortedProvinces}
+                      label={businessCountry === 'Poland' ? t('address.voivodeship.label') : t('address.region.label')}
+                      placeholder={businessCountry === 'Poland' ? t('address.voivodeship.placeholder') : t('address.region.placeholder')}
+                      options={regionOptions}
                       value={field.value}
                       onValueChange={(value) => {
                         field.onChange(value)
@@ -487,7 +571,7 @@ export function Step3BusinessBasics({ form, errors, isLoading }: StepComponentPr
                       }}
                       searchable={false}
                       clearable={false}
-                      disabled={true} // Always disabled - Italy is the only option
+                      disabled={isLoading}
                       name="businessCountry"
                     />
                   )}

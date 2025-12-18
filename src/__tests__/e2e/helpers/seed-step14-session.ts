@@ -3,6 +3,8 @@
  * Eliminates the need to navigate through all 14 steps in every test
  */
 
+import { Locale } from '@/lib/i18n'
+
 /**
  * Helper to get headers with Vercel protection bypass if available
  */
@@ -26,7 +28,7 @@ export interface SeedStep14Options {
   /** Custom email (auto-generated if not provided) */
   email?: string
   /** Locale (defaults to 'en') */
-  locale?: 'en' | 'it'
+  locale?: Locale
 }
 
 export interface SeedStep14Result {

@@ -354,12 +354,18 @@ test.describe('Complete Onboarding Flow', () => {
     const businessStreetInput = page.locator('input[name="businessStreet"]');
     if (await businessStreetInput.isVisible()) {
       await businessStreetInput.fill(testDataForWorker.businessStreet);
-      // Dismiss autocomplete dropdown by blurring the input and clicking elsewhere
+      // Wait for autocomplete to show up and then dismiss it
+      await page.waitForTimeout(500);
+      // Focus on input and press Escape to close autocomplete (Escape handler requires focus)
+      await businessStreetInput.focus();
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(200);
+      // Blur and click outside
       await businessStreetInput.blur();
-      await page.waitForTimeout(500);
-      // Click on a safe area (the heading) to ensure dropdown closes
       await page.getByRole('heading', { name: /Business Details/ }).first().click();
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(300);
+      // Wait for any autocomplete options to disappear
+      await page.locator('[role="option"]').first().waitFor({ state: 'hidden', timeout: 3000 }).catch(() => {});
     } else {
       console.log('❌ businessStreet input not found');
     }
@@ -379,6 +385,9 @@ test.describe('Complete Onboarding Flow', () => {
     }
 
     // Province is now a dropdown - select from Italian regions
+    // Wait for autocomplete to be fully closed before interacting with province
+    await page.locator('[role="option"]').first().waitFor({ state: 'hidden', timeout: 2000 }).catch(() => {});
+
     const provinceDropdowns = await page.getByRole('combobox').all();
     let provinceSelected = false;
 

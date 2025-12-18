@@ -16,10 +16,11 @@ import {
   EUROPEAN_LANGUAGES,
   getLanguageName
 } from '@/data/european-languages'
+import { Locale } from '@/lib/i18n'
 
 export function Step13AddOns({ form, errors, isLoading }: StepComponentProps) {
   const t = useTranslations('onboarding.steps.13')
-  const locale = useLocale() as 'en' | 'it'
+  const locale = useLocale() as Locale
   const { control, watch, getValues } = form
 
   const [searchQuery, setSearchQuery] = useState('')

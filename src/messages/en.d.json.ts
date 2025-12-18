@@ -14,7 +14,8 @@ declare const messages: {
     },
     "language": {
       "english": "English",
-      "italian": "Italian"
+      "italian": "Italian",
+      "polish": "Polish"
     }
   },
   "hero": {
@@ -307,9 +308,13 @@ declare const messages: {
             "label": "Province/Region",
             "placeholder": "Enter province or region"
           },
+          "voivodeship": {
+            "label": "Voivodeship",
+            "placeholder": "Select voivodeship"
+          },
           "country": {
-            "label": "Country",
-            "placeholder": "Enter country"
+            "label": "Business Country",
+            "placeholder": "Select country"
           }
         },
         "dataUsage": {

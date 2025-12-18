@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { EmailService, isEmailServiceConfigured } from '@/services/resend'
+import { Locale } from '@/lib/i18n'
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
 
     // Send test verification email
     const testCode = '123456'
-    const result = await EmailService.sendVerificationEmail(email, name, testCode, locale as 'en' | 'it')
+    const result = await EmailService.sendVerificationEmail(email, name, testCode, locale as Locale)
 
     if (result.success) {
       return NextResponse.json({

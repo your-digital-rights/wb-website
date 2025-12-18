@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { EmailService, isEmailServiceConfigured } from '@/services/resend'
+import { Locale } from '@/lib/i18n'
 
 /**
  * Test endpoint to trigger individual emails with sample data
@@ -9,7 +10,7 @@ import { EmailService, isEmailServiceConfigured } from '@/services/resend'
  * Body: {
  *   emailType: 'verification' | 'completion' | 'admin' | 'preview' | 'recovery' | 'payment-notification' | 'payment-success' | 'custom-software' | 'contact' | 'cancellation-confirmation' | 'cancellation-notification',
  *   toEmail: 'your-email@example.com',
- *   locale?: 'en' | 'it'
+ *   locale?: 'en' | 'it' | 'pl'
  * }
  */
 export async function POST(request: NextRequest) {
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
           toEmail,
           testData.name,
           '123456',
-          locale as 'en' | 'it'
+          locale as Locale
         )
         break
 
@@ -76,7 +77,7 @@ export async function POST(request: NextRequest) {
         result = await EmailService.sendCompletionConfirmation(
           toEmail,
           testData.businessName,
-          locale as 'en' | 'it'
+          locale as Locale
         )
         break
 
@@ -101,7 +102,7 @@ export async function POST(request: NextRequest) {
           toEmail,
           testData.businessName,
           'https://example.com/preview/test-123',
-          locale as 'en' | 'it'
+          locale as Locale
         )
         break
 
@@ -111,7 +112,7 @@ export async function POST(request: NextRequest) {
           testData.name,
           'https://example.com/onboarding/step/5?session=test-123',
           5,
-          locale as 'en' | 'it'
+          locale as Locale
         )
         break
 
@@ -133,7 +134,7 @@ export async function POST(request: NextRequest) {
           testData.businessName,
           3500, // €35.00
           'EUR',
-          locale as 'en' | 'it'
+          locale as Locale
         )
         break
 
@@ -145,7 +146,7 @@ export async function POST(request: NextRequest) {
             phone: testData.phone,
             description: 'I need a custom software solution for my business needs. Please contact me to discuss the requirements.'
           },
-          locale as 'en' | 'it'
+          locale as Locale
         )
         break
 
@@ -157,7 +158,7 @@ export async function POST(request: NextRequest) {
             phone: testData.phone,
             details: 'I would like to know more about your services. Please get in touch with me at your earliest convenience.'
           },
-          locale as 'en' | 'it'
+          locale as Locale
         )
         break
 
@@ -165,7 +166,7 @@ export async function POST(request: NextRequest) {
         result = await EmailService.sendCancellationConfirmation(
           toEmail,
           testData.businessName,
-          locale as 'en' | 'it'
+          locale as Locale
         )
         break
 

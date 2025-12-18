@@ -11,11 +11,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { CheckCircle2, Loader2, Mail } from "lucide-react"
 import { ContactFormData, ContactFormErrors, ContactFormState } from "@/types/contact"
 import { fadeInUp } from "../../context/design-system/motion/variants"
+import { Locale } from "@/lib/i18n"
 
 export function ContactForm() {
   const t = useTranslations('contact.form')
   const tContact = useTranslations('contact')
-  const locale = useLocale() as 'en' | 'it'
+  const locale = useLocale() as Locale
   const shouldReduce = useReducedMotion()
 
   const variants = shouldReduce ? {} : {
