@@ -155,10 +155,6 @@ CONSTRAINTS AND STYLE
 
 
 # Response
-Respond only with json object in the following structure:
-
-<seo-template>
-{{ JSON.stringify($json.seo_template) }}
-</seo-template>
+Respond only with json object in the following structure: `<seo-profile-schema/>`.
 
 
