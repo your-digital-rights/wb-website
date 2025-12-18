@@ -266,11 +266,13 @@ const primaryGoalSchema = z.enum([
   'visit-location',
   'purchase',
   'other'
-])
+], {
+  message: 'primaryGoalRequired'
+})
 
 export const step11Schema = z.object({
   websiteSections: z.array(websiteSectionSchema)
-    .min(1, 'Please select at least one website section'),
+    .min(1, 'websiteSectionsMin'),
   primaryGoal: primaryGoalSchema,
   offeringType: z.enum(['products', 'services', 'both']).optional(),
   products: ProductsArraySchema.optional().default([])

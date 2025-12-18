@@ -167,11 +167,25 @@ export function Step3BusinessBasics({ form, errors, isLoading, detectedCountry }
 
   // Transform industries data based on locale
   const industries = useMemo(() => {
-    return industriesData.map((industry) => ({
-      value: industry.category.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and'),
-      label: locale === 'it' ? industry.category_it : industry.category,
-      description: locale === 'it' ? industry.description_it : industry.description
-    }))
+    return industriesData.map((industry) => {
+      // Get localized label and description based on locale
+      let label = industry.category
+      let description = industry.description
+
+      if (locale === 'it') {
+        label = industry.category_it || industry.category
+        description = industry.description_it || industry.description
+      } else if (locale === 'pl') {
+        label = industry.category_pl || industry.category
+        description = industry.description_pl || industry.description
+      }
+
+      return {
+        value: industry.category.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and'),
+        label,
+        description
+      }
+    })
   }, [locale])
 
   // Sort provinces alphabetically by label (full name)
@@ -372,7 +386,7 @@ export function Step3BusinessBasics({ form, errors, isLoading, detectedCountry }
                 </motion.div>
               )}
 
-              {/* VAT Number (Italian specific) */}
+              {/* VAT Number */}
               <Controller
                 name="vatNumber"
                 control={control}
@@ -380,8 +394,8 @@ export function Step3BusinessBasics({ form, errors, isLoading, detectedCountry }
                   <TextInput
                     {...field}
                     label={t('businessInfo.vat.label')}
-                    placeholder={t('businessInfo.vat.placeholder')}
-                    hint={t('businessInfo.vat.hint')}
+                    placeholder={businessCountry === 'Poland' ? t('businessInfo.vat.placeholderPoland') : t('businessInfo.vat.placeholder')}
+                    hint={businessCountry === 'Poland' ? t('businessInfo.vat.hintPoland') : t('businessInfo.vat.hint')}
                     error={errors.vatNumber?.message}
                     disabled={isLoading}
                     leftIcon={<Hash className="w-4 h-4" />}

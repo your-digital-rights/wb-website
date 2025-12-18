@@ -124,7 +124,7 @@ export function Step7VisualInspiration({ form, errors, isLoading }: StepComponen
                     }))}
                     placeholder={t('inspirations.urls.placeholder')}
                     addButtonText={t('inspirations.urls.addButton')}
-                    hint="Add up to 3 websites that inspire you. Include competitors, similar businesses, or any sites you find well-designed."
+                    hint={t('inspirations.urls.hint')}
                     error={errors.websiteReferences?.message}
                     maxItems={3}
                     minItems={0}

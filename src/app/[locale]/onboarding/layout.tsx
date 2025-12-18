@@ -56,8 +56,12 @@ export async function generateMetadata({
 }
 
 export default async function OnboardingLayout({
-  children
+  children,
+  params
 }: OnboardingLayoutProps) {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: 'onboarding' })
+
   return (
     <ThemeProvider>
       <GoogleMapsProvider>
@@ -71,7 +75,7 @@ export default async function OnboardingLayout({
           </main>
 
           {/* Footer */}
-          <OnboardingFooter />
+          <OnboardingFooter secureSSLText={t('footer.secureSSL')} />
         </div>
       </GoogleMapsProvider>
     </ThemeProvider>
@@ -80,7 +84,7 @@ export default async function OnboardingLayout({
 
 
 // Onboarding Footer Component
-function OnboardingFooter() {
+function OnboardingFooter({ secureSSLText }: { secureSSLText: string }) {
   return (
     <footer className="border-t bg-background/50 backdrop-blur-sm mt-auto">
       <div className="max-w-7xl mx-auto px-4 py-6">
@@ -90,7 +94,7 @@ function OnboardingFooter() {
           </div>
 
           <div className="flex items-center gap-2">
-            <span>Secure & SSL Protected</span>
+            <span>{secureSSLText}</span>
             <div className="w-2 h-2 rounded-full bg-green-500"></div>
           </div>
         </div>

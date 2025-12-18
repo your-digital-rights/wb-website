@@ -3,126 +3,168 @@
     "category": "Agriculture & Agribusiness",
     "description": "Farms, greenhouses, producers of fruits, vegetables, dairy, and olive oil",
     "category_it": "Agricoltura e Agroindustria",
-    "description_it": "Aziende agricole, serre, produttori di frutta, verdura, latticini e olio d'oliva."
+    "description_it": "Aziende agricole, serre, produttori di frutta, verdura, latticini e olio d'oliva.",
+    "category_pl": "Rolnictwo i Agrobiznes",
+    "description_pl": "Gospodarstwa rolne, szklarnie, producenci owoców, warzyw, nabiału i oliwy z oliwek."
   },
   {
     "category": "Artisan & Craftsmanship",
     "description": "Furniture makers, ceramicists, leather artisans, and other handmade goods producers",
     "category_it": "Artigianato e Manifattura",
-    "description_it": "Falegnami, ceramisti, artigiani della pelle e altri produttori di beni fatti a mano."
+    "description_it": "Falegnami, ceramisti, artigiani della pelle e altri produttori di beni fatti a mano.",
+    "category_pl": "Rzemiosło i Rękodzieło",
+    "description_pl": "Producenci mebli, ceramicy, rzemieślnicy skórzani i inni producenci wyrobów ręcznie robionych."
   },
   {
     "category": "Automotive & Mobility Services",
     "description": "Car repair shops, tire services, car washes, and scooter/bike rentals",
     "category_it": "Automotive e Servizi di Mobilità",
-    "description_it": "Officine meccaniche, gommisti, autolavaggi e noleggio di scooter/biciclette."
+    "description_it": "Officine meccaniche, gommisti, autolavaggi e noleggio di scooter/biciclette.",
+    "category_pl": "Motoryzacja i Usługi Mobilności",
+    "description_pl": "Warsztaty samochodowe, serwisy opon, myjnie samochodowe oraz wynajem skuterów i rowerów."
   },
   {
     "category": "Beauty & Personal Care",
     "description": "Hairdressers, barbers, nail studios, and beauty salons",
     "category_it": "Bellezza e Cura della Persona",
-    "description_it": "Parrucchieri, barbieri, centri unghie e saloni di bellezza."
+    "description_it": "Parrucchieri, barbieri, centri unghie e saloni di bellezza.",
+    "category_pl": "Uroda i Pielęgnacja",
+    "description_pl": "Fryzjerzy, barberzy, studia paznokci i salony piękności."
   },
   {
     "category": "Cleaning & Maintenance Services",
     "description": "Residential and commercial cleaners, window washers, janitorial services",
     "category_it": "Servizi di Pulizia e Manutenzione",
-    "description_it": "Imprese di pulizie residenziali e commerciali, lavavetri e servizi di custodia."
+    "description_it": "Imprese di pulizie residenziali e commerciali, lavavetri e servizi di custodia.",
+    "category_pl": "Usługi Sprzątania i Konserwacji",
+    "description_pl": "Firmy sprzątające dla domów i firm, mycie okien, usługi porządkowe."
   },
   {
     "category": "Construction & Renovation",
     "description": "Builders, electricians, plumbers, roofers, and general contractors",
     "category_it": "Edilizia e Ristrutturazione",
-    "description_it": "Imprese edili, elettricisti, idraulici, coperturisti e general contractor."
+    "description_it": "Imprese edili, elettricisti, idraulici, coperturisti e general contractor.",
+    "category_pl": "Budownictwo i Remonty",
+    "description_pl": "Firmy budowlane, elektrycy, hydraulicy, dekarze i generalni wykonawcy."
   },
   {
     "category": "Education & Training",
     "description": "Language schools, tutoring centers, music academies, and vocational training",
     "category_it": "Istruzione e Formazione",
-    "description_it": "Scuole di lingue, centri ripetizioni, accademie di musica e formazione professionale."
+    "description_it": "Scuole di lingue, centri ripetizioni, accademie di musica e formazione professionale.",
+    "category_pl": "Edukacja i Szkolenia",
+    "description_pl": "Szkoły językowe, centra korepetycji, akademie muzyczne i szkolenia zawodowe."
   },
   {
     "category": "Events & Creative Services",
     "description": "Photographers, videographers, event planners, and graphic designers",
     "category_it": "Eventi e Servizi Creativi",
-    "description_it": "Fotografi, videomaker, organizzatori di eventi e graphic designer."
+    "description_it": "Fotografi, videomaker, organizzatori di eventi e graphic designer.",
+    "category_pl": "Eventy i Usługi Kreatywne",
+    "description_pl": "Fotografowie, videografowie, organizatorzy wydarzeń i graficy."
   },
   {
     "category": "Fashion & Apparel",
     "description": "Clothing boutiques, tailors, shoemakers, and accessory designers",
     "category_it": "Moda e Abbigliamento",
-    "description_it": "Boutique di abbigliamento, sarti, calzolai e designer di accessori."
+    "description_it": "Boutique di abbigliamento, sarti, calzolai e designer di accessori.",
+    "category_pl": "Moda i Odzież",
+    "description_pl": "Butiki odzieżowe, krawcy, szewcy i projektanci akcesoriów."
   },
   {
     "category": "Food & Beverage",
     "description": "Restaurants, cafés, bakeries, and artisanal food producers like cheese or cured meats",
     "category_it": "Cibo e Bevande",
-    "description_it": "Ristoranti, caffè, pasticcerie e produttori artigianali di alimenti come formaggi o salumi."
+    "description_it": "Ristoranti, caffè, pasticcerie e produttori artigianali di alimenti come formaggi o salumi.",
+    "category_pl": "Jedzenie i Napoje",
+    "description_pl": "Restauracje, kawiarnie, piekarnie i rzemieślniczy producenci żywności jak sery czy wędliny."
   },
   {
     "category": "Health & Wellness",
     "description": "Pharmacies, physiotherapists, private clinics, spas, and wellness centers",
     "category_it": "Salute e Benessere",
-    "description_it": "Farmacie, fisioterapisti, cliniche private, spa e centri benessere."
+    "description_it": "Farmacie, fisioterapisti, cliniche private, spa e centri benessere.",
+    "category_pl": "Zdrowie i Wellness",
+    "description_pl": "Apteki, fizjoterapeuci, prywatne kliniki, spa i centra odnowy biologicznej."
   },
   {
     "category": "Hospitality & Tourism",
     "description": "Hotels, B&Bs, agriturismi, and travel services targeting local and international guests",
     "category_it": "Ospitalità e Turismo",
-    "description_it": "Hotel, B&B, agriturismi e servizi turistici per clienti locali e internazionali."
+    "description_it": "Hotel, B&B, agriturismi e servizi turistici per clienti locali e internazionali.",
+    "category_pl": "Hotelarstwo i Turystyka",
+    "description_pl": "Hotele, pensjonaty, agroturystyka i usługi turystyczne dla gości lokalnych i międzynarodowych."
   },
   {
     "category": "Pet Services & Supplies",
     "description": "Pet groomers, boarding facilities, pet shops, and dog walking businesses",
     "category_it": "Servizi e Prodotti per Animali",
-    "description_it": "Toelettatori, pensioni per animali, negozi per animali e servizi di dog walking."
+    "description_it": "Toelettatori, pensioni per animali, negozi per animali e servizi di dog walking.",
+    "category_pl": "Usługi i Produkty dla Zwierząt",
+    "description_pl": "Salony groomerskie, hotele dla zwierząt, sklepy zoologiczne i usługi wyprowadzania psów."
   },
   {
     "category": "Professional Services",
     "description": "Accountants, notaries, lawyers, architects, and business consultants",
     "category_it": "Servizi Professionali",
-    "description_it": "Commercialisti, notai, avvocati, architetti e consulenti aziendali."
+    "description_it": "Commercialisti, notai, avvocati, architetti e consulenti aziendali.",
+    "category_pl": "Usługi Profesjonalne",
+    "description_pl": "Księgowi, notariusze, prawnicy, architekci i konsultanci biznesowi."
   },
   {
     "category": "Real Estate & Property Management",
     "description": "Real estate agencies, property managers, and vacation rental hosts",
     "category_it": "Immobiliare e Gestione Proprietà",
-    "description_it": "Agenzie immobiliari, property manager e gestori di case vacanza."
+    "description_it": "Agenzie immobiliari, property manager e gestori di case vacanza.",
+    "category_pl": "Nieruchomości i Zarządzanie",
+    "description_pl": "Agencje nieruchomości, zarządcy nieruchomości i właściciele wynajmu wakacyjnego."
   },
   {
     "category": "Retail & Local Shops",
     "description": "Grocery stores, bookshops, florists, toy stores, and general neighborhood retailers",
     "category_it": "Commercio al Dettaglio e Negozi Locali",
-    "description_it": "Supermercati, librerie, fiorai, negozi di giocattoli e altri negozi di quartiere."
+    "description_it": "Supermercati, librerie, fiorai, negozi di giocattoli e altri negozi di quartiere.",
+    "category_pl": "Handel Detaliczny i Sklepy Lokalne",
+    "description_pl": "Sklepy spożywcze, księgarnie, kwiaciarnie, sklepy z zabawkami i inne sklepy osiedlowe."
   },
   {
     "category": "Sports & Recreation",
     "description": "Gyms, yoga/pilates studios, dance schools, martial arts centers, and sports clubs",
     "category_it": "Sport e Tempo Libero",
-    "description_it": "Palestre, studi di yoga/pilates, scuole di danza, centri di arti marziali e club sportivi."
+    "description_it": "Palestre, studi di yoga/pilates, scuole di danza, centri di arti marziali e club sportivi.",
+    "category_pl": "Sport i Rekreacja",
+    "description_pl": "Siłownie, studia jogi/pilates, szkoły tańca, centra sztuk walki i kluby sportowe."
   },
   {
     "category": "Technology & IT Services",
     "description": "Web developers, software firms, IT consultants, and cybersecurity services",
     "category_it": "Tecnologia e Servizi IT",
-    "description_it": "Sviluppatori web, aziende software, consulenti IT e servizi di cybersicurezza."
+    "description_it": "Sviluppatori web, aziende software, consulenti IT e servizi di cybersicurezza.",
+    "category_pl": "Technologia i Usługi IT",
+    "description_pl": "Twórcy stron internetowych, firmy software, konsultanci IT i usługi cyberbezpieczeństwa."
   },
   {
     "category": "Transport & Delivery Services",
     "description": "Local couriers, moving companies, shuttle services, and freight handlers",
     "category_it": "Trasporti e Servizi di Consegna",
-    "description_it": "Corrieri locali, ditte di traslochi, servizi navetta e operatori logistici."
+    "description_it": "Corrieri locali, ditte di traslochi, servizi navetta e operatori logistici.",
+    "category_pl": "Transport i Usługi Dostaw",
+    "description_pl": "Lokalni kurierzy, firmy przeprowadzkowe, usługi transferowe i operatorzy logistyczni."
   },
   {
     "category": "Wine, Beer & Distilleries",
     "description": "Small vineyards, craft breweries, grappa distillers, and tasting rooms",
     "category_it": "Vino, Birra e Distillerie",
-    "description_it": "Piccole cantine, birrifici artigianali, distillerie di grappa e sale degustazione."
+    "description_it": "Piccole cantine, birrifici artigianali, distillerie di grappa e sale degustazione.",
+    "category_pl": "Wino, Piwo i Gorzelnie",
+    "description_pl": "Małe winnice, browary rzemieślnicze, gorzelnie i sale degustacyjne."
   },
   {
     "category": "Other",
     "description": "Other business industry",
     "category_it": "Altro",
-    "description_it": "Altro settore commerciale"
+    "description_it": "Altro settore commerciale",
+    "category_pl": "Inne",
+    "description_pl": "Inna branża biznesowa"
   }
 ]

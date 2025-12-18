@@ -44,6 +44,7 @@ export interface ColorPaletteOption {
 interface RawPalette {
   palette_name_en: string
   palette_name_it: string
+  palette_name_pl: string
   colors: {
     background: string
     primary: string
@@ -53,8 +54,10 @@ interface RawPalette {
   }
   main_colors_en: string[]
   main_colors_it: string[]
+  main_colors_pl: string[]
   description_en: string
   description_it: string
+  description_pl: string
 }
 
 /**
@@ -115,11 +118,51 @@ function normalizeHex(hex: string): string {
 }
 
 /**
+ * Get localized palette name based on locale
+ */
+function getLocalizedName(palette: RawPalette, locale: string): string {
+  switch (locale) {
+    case 'it':
+      return palette.palette_name_it
+    case 'pl':
+      return palette.palette_name_pl
+    default:
+      return palette.palette_name_en
+  }
+}
+
+/**
+ * Get localized description based on locale
+ */
+function getLocalizedDescription(palette: RawPalette, locale: string): string {
+  switch (locale) {
+    case 'it':
+      return palette.description_it
+    case 'pl':
+      return palette.description_pl
+    default:
+      return palette.description_en
+  }
+}
+
+/**
+ * Get localized color names based on locale
+ */
+function getLocalizedColorNames(palette: RawPalette, locale: string): string[] {
+  switch (locale) {
+    case 'it':
+      return palette.main_colors_it
+    case 'pl':
+      return palette.main_colors_pl
+    default:
+      return palette.main_colors_en
+  }
+}
+
+/**
  * Get color palettes based on current locale
  */
 export function getColorPalettes(locale: string = 'en'): ColorPaletteOption[] {
-  const isItalian = locale === 'it'
-
   return (colorPalettesData as RawPalette[]).map((palette) => {
     // Extract colors from the new object structure
     const { background, primary, secondary, accent, additional = [] } = palette.colors
@@ -134,7 +177,7 @@ export function getColorPalettes(locale: string = 'en'): ColorPaletteOption[] {
     ]
 
     // Get localized color names
-    const colorNames = isItalian ? palette.main_colors_it : palette.main_colors_en
+    const colorNames = getLocalizedColorNames(palette, locale)
 
     // Create colors array by pairing hex colors with names
     // If we have more colors than names, use generic names
@@ -154,8 +197,8 @@ export function getColorPalettes(locale: string = 'en'): ColorPaletteOption[] {
 
     return {
       id: slugify(palette.palette_name_en),
-      name: isItalian ? palette.palette_name_it : palette.palette_name_en,
-      description: isItalian ? palette.description_it : palette.description_en,
+      name: getLocalizedName(palette, locale),
+      description: getLocalizedDescription(palette, locale),
       colors,
       preview,
       tags: colorNames

@@ -85,7 +85,7 @@ export function ImageGrid({
 
   // Refs for keyboard navigation
   const gridRef = useRef<HTMLDivElement>(null)
-  const optionRefs = useRef<Map<string, HTMLButtonElement>>(new Map())
+  const optionRefs = useRef<Map<string, HTMLDivElement>>(new Map())
   // Track last selection to prevent duplicate announcements from keyboard+click
   const lastSelectionRef = useRef<{ id: string; timestamp: number } | null>(null)
 
@@ -340,12 +340,11 @@ export function ImageGrid({
                         duration: 0.2
                       }}
                     >
-                      <button
+                      <div
                         ref={(el) => {
                           if (el) optionRefs.current.set(option.id, el)
                           else optionRefs.current.delete(option.id)
                         }}
-                        type="button"
                         role={multiple ? "checkbox" : "radio"}
                         aria-checked={selected}
                         aria-label={`${option.title}${option.description ? `, ${option.description}` : ''}${selected ? ', selected' : ''}`}
@@ -358,7 +357,7 @@ export function ImageGrid({
                           }
                         }}
                         onKeyDown={(e) => handleKeyDown(e, option.id, flatIndex, flatOptions)}
-                        className="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg"
+                        className="w-full text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg"
                       >
                         <Card
                           className={cn(
@@ -516,7 +515,7 @@ export function ImageGrid({
                         )}
                       </CardContent>
                         </Card>
-                      </button>
+                      </div>
                     </motion.div>
                   )
                 })}

@@ -26,6 +26,7 @@ export function Step5CustomerProfile({ form, errors, isLoading }: StepComponentP
   const sliderOptions = [
     {
       key: 'budget',
+      title: t('profile.budget.title'),
       leftLabel: t('profile.budget.left'),
       rightLabel: t('profile.budget.right'),
       value: customerProfile.budget || 50,
@@ -45,6 +46,7 @@ export function Step5CustomerProfile({ form, errors, isLoading }: StepComponentP
     },
     {
       key: 'style',
+      title: t('profile.style.title'),
       leftLabel: t('profile.style.left'),
       rightLabel: t('profile.style.right'),
       value: customerProfile.style || 50,
@@ -64,6 +66,7 @@ export function Step5CustomerProfile({ form, errors, isLoading }: StepComponentP
     },
     {
       key: 'motivation',
+      title: t('profile.motivation.title'),
       leftLabel: t('profile.motivation.left'),
       rightLabel: t('profile.motivation.right'),
       value: customerProfile.motivation || 50,
@@ -83,6 +86,7 @@ export function Step5CustomerProfile({ form, errors, isLoading }: StepComponentP
     },
     {
       key: 'decisionMaking',
+      title: t('profile.decision.title'),
       leftLabel: t('profile.decision.left'),
       rightLabel: t('profile.decision.right'),
       value: customerProfile.decisionMaking || 50,
@@ -102,6 +106,7 @@ export function Step5CustomerProfile({ form, errors, isLoading }: StepComponentP
     },
     {
       key: 'loyalty',
+      title: t('profile.loyalty.title'),
       leftLabel: t('profile.loyalty.left'),
       rightLabel: t('profile.loyalty.right'),
       value: customerProfile.loyalty || 50,

@@ -739,7 +739,7 @@ function CheckoutForm({
                   </div>
                   {errors.discountCode && (
                     <p className="text-sm text-destructive">
-                      {errors.discountCode.message || 'Invalid discount code'}
+                      {errors.discountCode.message || t('discount.invalidCode')}
                     </p>
                   )}
                 </div>
@@ -1396,6 +1396,9 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
     )
   }
 
+  // Map locale to Stripe supported locale format
+  const stripeLocale = locale === 'en' ? 'en' : locale === 'it' ? 'it' : locale === 'pl' ? 'pl' : 'auto'
+
   return (
     <Elements
       stripe={stripePromise}
@@ -1404,6 +1407,7 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
         clientSecret: clientSecret!,
         ...(stripeAppearance ? { appearance: stripeAppearance } : {}),
         loader: 'always',
+        locale: stripeLocale,
       }}
     >
       <ElementsConsumer>

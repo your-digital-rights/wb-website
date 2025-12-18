@@ -73,27 +73,32 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
     return allColorPalettes.filter((palette, index) => {
       const rawPalette = colorPalettesData[index]
 
-      // Search in palette names (both locales)
+      // Search in palette names (all locales)
       if (rawPalette.palette_name_en.toLowerCase().includes(query) ||
-          rawPalette.palette_name_it.toLowerCase().includes(query)) {
+          rawPalette.palette_name_it.toLowerCase().includes(query) ||
+          rawPalette.palette_name_pl.toLowerCase().includes(query)) {
         return true
       }
 
-      // Search in descriptions (both locales)
+      // Search in descriptions (all locales)
       if (rawPalette.description_en.toLowerCase().includes(query) ||
-          rawPalette.description_it.toLowerCase().includes(query)) {
+          rawPalette.description_it.toLowerCase().includes(query) ||
+          rawPalette.description_pl.toLowerCase().includes(query)) {
         return true
       }
 
-      // Search in main colors (both locales)
+      // Search in main colors (all locales)
       const mainColorsEn = rawPalette.main_colors_en.some(color =>
         color.toLowerCase().includes(query)
       )
       const mainColorsIt = rawPalette.main_colors_it.some(color =>
         color.toLowerCase().includes(query)
       )
+      const mainColorsPl = rawPalette.main_colors_pl.some(color =>
+        color.toLowerCase().includes(query)
+      )
 
-      return mainColorsEn || mainColorsIt
+      return mainColorsEn || mainColorsIt || mainColorsPl
     })
   }, [searchQuery, allColorPalettes, locale])
 
@@ -184,9 +189,7 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   type="text"
-                  placeholder={locale === 'it'
-                    ? 'Cerca palette per nome, colore o descrizione...'
-                    : 'Search palettes by name, color, or description...'}
+                  placeholder={t('search.placeholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9 pr-9"
@@ -205,9 +208,7 @@ export function Step10ColorPalette({ form, errors, isLoading }: StepComponentPro
               </div>
               {searchQuery && (
                 <p className="text-sm text-muted-foreground">
-                  {locale === 'it'
-                    ? `${filteredPalettes.length} palette ${filteredPalettes.length === 1 ? 'trovata' : 'trovate'}`
-                    : `${filteredPalettes.length} ${filteredPalettes.length === 1 ? 'palette' : 'palettes'} found`}
+                  {t('search.results', { count: filteredPalettes.length })}
                 </p>
               )}
             </div>

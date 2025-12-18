@@ -98,6 +98,9 @@
     "stepCurrent": "Aktualny krok {step}",
     "stepUpcoming": "Nadchodzacy krok {step}",
     "previous": "Poprzedni",
+    "footer": {
+      "secureSSL": "Bezpieczne i chronione SSL"
+    },
     "step1": {
       "title": "Szybko i Prosto",
       "description": "Idealne dla malych firm, ktore potrzebuja profesjonalnej obecnosci online szybko. Otrzymaj niestandardowa jednostronicowa strone z brandingiem w zaledwie 2 dni robocze.",
@@ -268,10 +271,10 @@
           },
           "vat": {
             "label": "Numer VAT",
-            "placeholder": "IT12345678901 lub PL1234567890",
-            "hint": "Numer VAT (opcjonalnie)",
-            "hintItaly": "Wloski numer VAT (IT + 11 cyfr)",
-            "hintPoland": "Polski NIP (PL + 10 cyfr)"
+            "placeholder": "IT12345678901",
+            "placeholderPoland": "PL1234567890",
+            "hint": "Wloski numer VAT (opcjonalnie)",
+            "hintPoland": "Polski NIP (opcjonalnie)"
           }
         },
         "contactInfo": {
@@ -403,6 +406,7 @@
           "title": "Profil klienta",
           "required": "Wymagane",
           "budget": {
+            "title": "Budzet",
             "left": "Oszczedny",
             "right": "Premium",
             "description": "Jak wrazliwi na cene sa Twoi klienci?",
@@ -420,6 +424,7 @@
             }
           },
           "style": {
+            "title": "Styl",
             "left": "Tradycyjny",
             "right": "Nowoczesny",
             "description": "Jaka estetyka projektowa preferuja?",
@@ -437,6 +442,7 @@
             }
           },
           "motivation": {
+            "title": "Motywacja",
             "left": "Praktyczny",
             "right": "Aspiracyjny",
             "description": "Co kieruje ich decyzjami zakupowymi?",
@@ -454,6 +460,7 @@
             }
           },
           "decision": {
+            "title": "Decyzja",
             "left": "Szybko decydujacy",
             "right": "Starannie analizujacy",
             "description": "Jak podejmuja decyzje zakupowe?",
@@ -471,6 +478,7 @@
             }
           },
           "loyalty": {
+            "title": "Lojalnosc",
             "left": "Szukajacy okazji",
             "right": "Lojalny marce",
             "description": "Jak lojalni sa wobec marek?",
@@ -524,6 +532,10 @@
             "label": "Jakie sa glowne potrzeby klientow wobec Twojej firmy?",
             "placeholder": "Opisz konkretne wyzwania, jakie maja Twoi klienci, zanim Cie znajda...",
             "hint": "Skup sie na problemach, ktore rozwiazujesz - to pomoze nam stworzyc przekonujacy przekaz"
+          },
+          "validation": {
+            "minLength": "Opisz problemy klientow w co najmniej 30 znakach",
+            "maxLength": "Opis problemow klientow nie moze przekraczac 400 znakow"
           }
         },
         "solutions": {
@@ -673,6 +685,68 @@
             "branding": "Spojnosc z tozsamoscia Twojej marki"
           }
         },
+        "styles": {
+          "minimalist": {
+            "title": "Minimalistyczny",
+            "description": "Czyste linie, duzo bialej przestrzeni, wyrafinowana prostota",
+            "tags": {
+              "clean": "Czysty",
+              "simple": "Prosty",
+              "professional": "Profesjonalny",
+              "spacious": "Przestrzenny"
+            }
+          },
+          "corporate": {
+            "title": "Korporacyjny",
+            "description": "Design zorientowany na biznes z elementami budujacymi zaufanie",
+            "tags": {
+              "professional": "Profesjonalny",
+              "trustworthy": "Godny zaufania",
+              "corporate": "Korporacyjny",
+              "structured": "Strukturalny"
+            }
+          },
+          "bold": {
+            "title": "Odwazny",
+            "description": "Dynamiczne uklady z zywymi kolorami i kreatywnymi elementami",
+            "tags": {
+              "dynamic": "Dynamiczny",
+              "vibrant": "Zywy",
+              "artistic": "Artystyczny",
+              "expressive": "Ekspresyjny"
+            }
+          },
+          "playful": {
+            "title": "Zabawny",
+            "description": "Zabawny i angazujacy design z zabawnymi elementami",
+            "tags": {
+              "fun": "Zabawny",
+              "engaging": "Angazujacy",
+              "friendly": "Przyjazny",
+              "creative": "Kreatywny"
+            }
+          },
+          "editorial": {
+            "title": "Edytorski",
+            "description": "Uklad w stylu magazynu z bogata typografia i skupieniem na tresci",
+            "tags": {
+              "editorial": "Edytorski",
+              "typography": "Typografia",
+              "content": "Tresc",
+              "reading": "Czytanie"
+            }
+          },
+          "retro": {
+            "title": "Retro",
+            "description": "Design inspirowany vintage z nostalgicznymi elementami",
+            "tags": {
+              "retro": "Retro",
+              "nostalgic": "Nostalgiczny",
+              "classic": "Klasyczny",
+              "unique": "Unikalny"
+            }
+          }
+        },
         "tips": {
           "title": "Wybierz styl, ktory:",
           "authentic": "Wydaje sie autentyczny dla Twojej marki",
@@ -715,6 +789,68 @@
           "quality": "Wysokiej jakosci obrazy odzwierciedlajace wartosci Twojej marki",
           "relevance": "Obrazy wspierajace i wzmacniajace Twoj przekaz"
         },
+        "styles": {
+          "photorealistic": {
+            "title": "Fotorealistyczne",
+            "description": "Wysokiej jakosci profesjonalne fotografie z czysta kompozycja",
+            "tags": {
+              "highQuality": "Wysoka jakosc",
+              "professional": "Profesjonalne",
+              "clean": "Czyste",
+              "authentic": "Autentyczne"
+            }
+          },
+          "flatIllustration": {
+            "title": "Plaska ilustracja",
+            "description": "Nowoczesne ilustracje w stylu flat z czysta grafika wektorowa",
+            "tags": {
+              "vector": "Wektorowe",
+              "clean": "Czyste",
+              "contemporary": "Wspolczesne",
+              "scalable": "Skalowalne"
+            }
+          },
+          "sketch": {
+            "title": "Styl szkicu",
+            "description": "Artystyczne recznie rysowane ilustracje z osobistym, kreatywnym akcentem",
+            "tags": {
+              "artistic": "Artystyczne",
+              "personal": "Osobiste",
+              "creative": "Kreatywne",
+              "unique": "Unikalne"
+            }
+          },
+          "3d": {
+            "title": "Rendering 3D",
+            "description": "Nowoczesna grafika 3D dla dynamicznego efektu wizualnego",
+            "tags": {
+              "dynamic": "Dynamiczne",
+              "modern": "Nowoczesne",
+              "dimensional": "Wymiarowe",
+              "engaging": "Angazujace"
+            }
+          },
+          "lineArt": {
+            "title": "Line Art",
+            "description": "Prosta, czysta grafika liniowa z naciskiem na istotne elementy",
+            "tags": {
+              "simple": "Proste",
+              "clean": "Czyste",
+              "focused": "Skupione",
+              "elegant": "Eleganckie"
+            }
+          },
+          "collage": {
+            "title": "Styl kolazu",
+            "description": "Kreatywne polaczenie elementow dla unikalnej narracji wizualnej",
+            "tags": {
+              "creative": "Kreatywne",
+              "versatile": "Wszechstronne",
+              "artistic": "Artystyczne",
+              "storytelling": "Narracyjne"
+            }
+          }
+        },
         "tips": {
           "title": "Wybierz obrazy, ktore:",
           "brand": "Sa zgodne z osobowoscia Twojej marki",
@@ -747,6 +883,10 @@
           "title": "Wybierz swoja palete kolorow",
           "required": "Wymagane",
           "optional": "Opcjonalne"
+        },
+        "search": {
+          "placeholder": "Szukaj kolorow, palet lub stylow...",
+          "results": "{count, plural, one {# paleta znaleziona} few {# palety znalezione} many {# palet znalezionych} other {# palet znalezionych}}"
         },
         "psychology": {
           "title": "Psychologia kolorow",
@@ -793,6 +933,28 @@
             "label": "Jaki jest Twoj glowny cel dla tej strony?",
             "placeholder": "Wybierz swoj glowny cel",
             "hint": "To wplynie na to, jakie sekcje polecamy i jak strukturyzujemy Twoja tresc"
+          },
+          "options": {
+            "other": {
+              "label": "Inne",
+              "description": "Niestandardowy cel biznesowy lub mieszane cele"
+            },
+            "phone-call": {
+              "label": "Telefon",
+              "description": "Zachecanie odwiedzajacych do kontaktu telefonicznego"
+            },
+            "purchase": {
+              "label": "Zakup produktu lub uslugi",
+              "description": "Napedzanie bezposredniej sprzedazy i transakcji"
+            },
+            "contact-form": {
+              "label": "Wyslanie formularza kontaktowego",
+              "description": "Generowanie zapytan przez formularze kontaktowe"
+            },
+            "visit-location": {
+              "label": "Wizyta w lokalizacji",
+              "description": "Przyciaganie klientow do Twojej fizycznej lokalizacji"
+            }
           }
         },
         "sections": {
@@ -802,11 +964,56 @@
           "recommended": {
             "title": "Polecane sekcje dla",
             "badge": "Polecane"
+          },
+          "items": {
+            "hero": {
+              "label": "Hero / Wprowadzenie",
+              "description": "Mocny naglowek, krotki opis i wezwanie do dzialania"
+            },
+            "contact": {
+              "label": "Kontakt",
+              "description": "Informacje kontaktowe i formularz"
+            },
+            "about": {
+              "label": "O nas / Historia",
+              "description": "Kim jestes, co wyroznia Twoja firme"
+            },
+            "portfolio": {
+              "label": "Portfolio / Galeria",
+              "description": "Pokaz swoje prace"
+            },
+            "services": {
+              "label": "Uslugi / Produkty",
+              "description": "Kluczowe oferty lub obszary specjalizacji"
+            },
+            "testimonials": {
+              "label": "Referencje / Opinie",
+              "description": "Dowod spoleczny od klientow lub partnerow"
+            },
+            "events": {
+              "label": "Wydarzenia",
+              "description": "Nadchodzace wydarzenia i aktywnosci"
+            }
           }
         },
         "offerings": {
           "title": "Produkty i uslugi",
           "optional": "Opcjonalne",
+          "typeLabel": "Co oferujesz?",
+          "types": {
+            "products": {
+              "label": "Produkty",
+              "description": "Towary fizyczne lub cyfrowe"
+            },
+            "services": {
+              "label": "Uslugi",
+              "description": "Konsulting, wsparcie, utrzymanie"
+            },
+            "both": {
+              "label": "Oba",
+              "description": "Produkty i uslugi"
+            }
+          },
           "examples": {
             "title": "Przyklady tego, co mozesz oferowac:",
             "consulting": "Uslugi konsultingowe",
@@ -843,6 +1050,10 @@
           "essential": "Uwzglednij istotne sekcje",
           "goal": "Dopasuj do glownego celu",
           "simple": "Zachowaj prosta nawigacje"
+        },
+        "validation": {
+          "primaryGoalRequired": "Wybierz glowny cel strony",
+          "websiteSectionsMin": "Wybierz co najmniej jedna sekcje strony"
         },
         "products": {
           "emptyState": "Nie dodano jeszcze produktow",
@@ -1150,7 +1361,8 @@
     },
     "slider": {
       "reset": "Zresetuj do srodka",
-      "required": "To pole jest wymagane"
+      "required": "To pole jest wymagane",
+      "summary": "Podsumowanie"
     },
     "imageGrid": {
       "premium": "Premium",

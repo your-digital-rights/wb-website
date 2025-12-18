@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo } from 'react'
 import { useTranslations } from 'next-intl'
 import { Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
@@ -10,67 +11,97 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { StepComponentProps } from './index'
 
-// Image style options
-const imageStyleOptions = [
-  {
-    id: 'photorealistic',
-    title: 'Photorealistic',
-    description: 'High-quality, professional photographs with clean composition',
-    imageUrl: '/images/onboarding/image-photorealistic.png',
-    category: 'Photorealistic',
-    tags: ['High-quality', 'Professional', 'Clean', 'Authentic'],
-    premium: false
-  },
-  {
-    id: 'flat-illustration',
-    title: 'Flat Illustration',
-    description: 'Modern flat design illustrations with clean vector graphics',
-    imageUrl: '/images/onboarding/image-flat-illustration.png',
-    category: 'Flat Illustration',
-    tags: ['Vector', 'Clean', 'Contemporary', 'Scalable'],
-    premium: false
-  },
-  {
-    id: 'sketch',
-    title: 'Sketch Style',
-    description: 'Artistic hand-drawn illustrations with personal, creative touch',
-    imageUrl: '/images/onboarding/image-sketch.png',
-    category: 'Sketch Style',
-    tags: ['Artistic', 'Personal', 'Creative', 'Unique'],
-    premium: true
-  },
-  {
-    id: '3d',
-    title: '3D Rendered',
-    description: 'Modern 3D rendered graphics for dynamic visual impact',
-    imageUrl: '/images/onboarding/image-3d.png',
-    category: '3D Rendered',
-    tags: ['Dynamic', 'Modern', 'Dimensional', 'Engaging'],
-    premium: false
-  },
-  {
-    id: 'line-art',
-    title: 'Line Art',
-    description: 'Simple, clean line art with focus on essential elements only',
-    imageUrl: '/images/onboarding/image-line-art.png',
-    category: 'Line Art',
-    tags: ['Simple', 'Clean', 'Focused', 'Elegant'],
-    premium: false
-  },
-  {
-    id: 'collage',
-    title: 'Collage Style',
-    description: 'Creative combination of elements for unique visual storytelling',
-    imageUrl: '/images/onboarding/image-collage.png',
-    category: 'Collage Style',
-    tags: ['Creative', 'Versatile', 'Artistic', 'Storytelling'],
-    premium: false
-  }
-]
-
 export function Step9ImageStyle({ form, errors, isLoading }: StepComponentProps) {
   const t = useTranslations('onboarding.steps.9')
   const { control } = form
+
+  // Image style options with translated content
+  const imageStyleOptions = useMemo(() => [
+    {
+      id: 'photorealistic',
+      title: t('styles.photorealistic.title'),
+      description: t('styles.photorealistic.description'),
+      imageUrl: '/images/onboarding/image-photorealistic.png',
+      category: t('styles.photorealistic.title'),
+      tags: [
+        t('styles.photorealistic.tags.highQuality'),
+        t('styles.photorealistic.tags.professional'),
+        t('styles.photorealistic.tags.clean'),
+        t('styles.photorealistic.tags.authentic')
+      ],
+      premium: false
+    },
+    {
+      id: 'flat-illustration',
+      title: t('styles.flatIllustration.title'),
+      description: t('styles.flatIllustration.description'),
+      imageUrl: '/images/onboarding/image-flat-illustration.png',
+      category: t('styles.flatIllustration.title'),
+      tags: [
+        t('styles.flatIllustration.tags.vector'),
+        t('styles.flatIllustration.tags.clean'),
+        t('styles.flatIllustration.tags.contemporary'),
+        t('styles.flatIllustration.tags.scalable')
+      ],
+      premium: false
+    },
+    {
+      id: 'sketch',
+      title: t('styles.sketch.title'),
+      description: t('styles.sketch.description'),
+      imageUrl: '/images/onboarding/image-sketch.png',
+      category: t('styles.sketch.title'),
+      tags: [
+        t('styles.sketch.tags.artistic'),
+        t('styles.sketch.tags.personal'),
+        t('styles.sketch.tags.creative'),
+        t('styles.sketch.tags.unique')
+      ],
+      premium: true
+    },
+    {
+      id: '3d',
+      title: t('styles.3d.title'),
+      description: t('styles.3d.description'),
+      imageUrl: '/images/onboarding/image-3d.png',
+      category: t('styles.3d.title'),
+      tags: [
+        t('styles.3d.tags.dynamic'),
+        t('styles.3d.tags.modern'),
+        t('styles.3d.tags.dimensional'),
+        t('styles.3d.tags.engaging')
+      ],
+      premium: false
+    },
+    {
+      id: 'line-art',
+      title: t('styles.lineArt.title'),
+      description: t('styles.lineArt.description'),
+      imageUrl: '/images/onboarding/image-line-art.png',
+      category: t('styles.lineArt.title'),
+      tags: [
+        t('styles.lineArt.tags.simple'),
+        t('styles.lineArt.tags.clean'),
+        t('styles.lineArt.tags.focused'),
+        t('styles.lineArt.tags.elegant')
+      ],
+      premium: false
+    },
+    {
+      id: 'collage',
+      title: t('styles.collage.title'),
+      description: t('styles.collage.description'),
+      imageUrl: '/images/onboarding/image-collage.png',
+      category: t('styles.collage.title'),
+      tags: [
+        t('styles.collage.tags.creative'),
+        t('styles.collage.tags.versatile'),
+        t('styles.collage.tags.artistic'),
+        t('styles.collage.tags.storytelling')
+      ],
+      premium: false
+    }
+  ], [t])
 
   return (
     <div className="space-y-8">
