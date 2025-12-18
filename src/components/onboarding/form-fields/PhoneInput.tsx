@@ -86,6 +86,14 @@ const countries = [
     pattern: /^\d{9}$/, // Dutch phone: 9 digits (mobile or landline)
     placeholder: 'X XXXX XXXX',
     format: (num: string) => num.replace(/(\d{1})(\d{4})(\d{4})/, '$1 $2 $3')
+  },
+  {
+    code: 'PL',
+    name: 'Poland',
+    dialCode: '+48',
+    pattern: /^\d{9}$/, // Polish phone: 9 digits
+    placeholder: 'XXX XXX XXX',
+    format: (num: string) => num.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3')
   }
 ]
 

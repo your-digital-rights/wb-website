@@ -1,0 +1,1560 @@
+{
+  "nav": {
+    "services": "Uslugi",
+    "clients": "Klienci",
+    "contact": "Kontakt",
+    "start": "Rozpocznij",
+    "theme": {
+      "light": "Jasny",
+      "dark": "Ciemny",
+      "system": "Systemowy"
+    },
+    "language": {
+      "english": "Angielski",
+      "italian": "Wloski",
+      "polish": "Polski"
+    }
+  },
+  "hero": {
+    "title": "Rozwin Swoj Biznes Online",
+    "subtitle": "Sprzedawaj klientom miedzynarodowym nawet po sezonie swiatecznym: wielojezyczna strona internetowa, ktora utrzymuje Cie w kontakcie.",
+    "cta": "Rozpocznij teraz!"
+  },
+  "steps": {
+    "title": "Trzy proste kroki",
+    "step1": {
+      "title": "Rozpocznij teraz",
+      "subtitle": "Opowiedz nam o swojej wizji",
+      "description": "W zaledwie 15 minut nasz inteligentny formularz uchwyci istote Twojego biznesu."
+    },
+    "step2": {
+      "title": "Zatwierdz swoj projekt",
+      "subtitle": "W ciagu pieciu dni otrzymasz kompletna strone internetowa",
+      "description": "Piekna, zgodna z marka i gotowa do uruchomienia w jezyku angielskim i wloskim."
+    },
+    "step3": {
+      "title": "Uruchom i rozwijaj sie",
+      "subtitle": "Uruchom swoj biznes online",
+      "description": "Przyciagnij nowych klientow i buduj trwala lojalnosc dzieki naszej platformie."
+    }
+  },
+  "pricing": {
+    "title": "Uslugi",
+    "fast": {
+      "name": "Szybko i Prosto",
+      "tagline": "Spersonalizowana strona jednostronicowa",
+      "price": "35 EUR / miesiac",
+      "feature1": "Spersonalizowany branding",
+      "feature2": "Dostawa w 5 dni roboczych",
+      "feature3": "Wielojezycznosc: angielski i wloski w cenie",
+      "feature3Tooltip": "Dodatkowe jezyki moga byc dodane za dodatkowa oplata.",
+      "feature4": "Widocznosc w wyszukiwarkach",
+      "feature5": "Pakiet poprawek w cenie",
+      "feature5Tooltip": "Po przygotowaniu strony masz tydzien na zgloszenie zmian. Po tym czasie dalsze aktualizacje sa dostepne za oplata.",
+      "feature6": "Hosting w cenie",
+      "feature6Tooltip": "Ten pakiet obejmuje do dziesieciu tysiecy miesiecznych odwiedzin. Wyzsze limity ruchu moga byc dodane za dodatkowa oplata."
+    },
+    "custom": {
+      "name": "Na Zamowienie",
+      "tagline": "Niestandardowe tworzenie oprogramowania",
+      "price": "od 3000 EUR",
+      "feature1": "Integracje AI i automatyzacja",
+      "feature2": "Rozwiazania e-commerce",
+      "feature3": "Aplikacje mobilne",
+      "feature4": "Aplikacje webowe i dashboardy",
+      "feature5": "Platformy SaaS"
+    },
+    "addons": "Dodatki",
+    "addonsDescription": "Rozszerz swoj pakiet o dodatkowe uslugi"
+  },
+  "portfolio": {
+    "title": "Klienci",
+    "subtitle": "Zobacz, co zbudowalismy dla firm takich jak Twoja"
+  },
+  "footer": {
+    "brandDescription": "Agencja cyfrowa oparta na AI, wspierajaca male firmy w profesjonalnej obecnosci online.",
+    "quickLinks": "Szybkie linki",
+    "legal": "Informacje prawne",
+    "terms": "Regulamin",
+    "privacy": "Polityka prywatnosci",
+    "copyright": "© 2025 WhiteBoar",
+    "manageCookies": "Zarzadzaj plikami cookie",
+    "cookieSettings": "Ustawienia plikow cookie",
+    "analytics": "Analityka",
+    "marketing": "Marketing"
+  },
+  "meta": {
+    "title": "WhiteBoar - Wprowadz Swoj Biznes Online",
+    "description": "Sprzedawaj klientom miedzynarodowym nawet po sezonie swiatecznym: profesjonalna obecnosc online w dni, nie miesiace."
+  },
+  "onboarding": {
+    "title": "Rozpocznij z WhiteBoar",
+    "description": "Wybierz swoja droge do poteznej obecnosci online. Przeprowadzimy Cie przez kazdy krok.",
+    "step": "Krok",
+    "of": "z",
+    "next": "Dalej",
+    "progressLabel": "Krok {step} z {total}",
+    "stepCompleted": "Krok {step} ukonczony",
+    "stepCurrent": "Aktualny krok {step}",
+    "stepUpcoming": "Nadchodzacy krok {step}",
+    "previous": "Poprzedni",
+    "step1": {
+      "title": "Szybko i Prosto",
+      "description": "Idealne dla malych firm, ktore potrzebuja profesjonalnej obecnosci online szybko. Otrzymaj niestandardowa jednostronicowa strone z brandingiem w zaledwie 2 dni robocze.",
+      "button": "Wybierz Szybko i Prosto"
+    },
+    "step2": {
+      "title": "Rozwiazanie Na Zamowienie",
+      "description": "Potrzebujesz czegos bardziej zlozone? Porozmawiajmy o Twojej niestandardowej aplikacji webowej, platformie SaaS lub zaawansowanych wymaganiach biznesowych.",
+      "button": "Rozpocznij Projekt Na Zamowienie"
+    },
+    "help_text": "Nie wiesz, ktora opcja jest dla Ciebie odpowiednia?",
+    "contact_support": "Skontaktuj sie z naszym zespolem po wskazowki",
+    "meta": {
+      "title": "Rozpocznij - WhiteBoar",
+      "description": "Stworz swoja idealna strone internetowa w 15 minut."
+    },
+    "welcome": {
+      "title": "Twoj biznes. Sprzedawanie globalnie. Caly rok.",
+      "subtitle": "Stworz swoja idealna strone internetowa w 15 minut. Nasz unikalny proces uchwyci istote Twojej marki, aby zbudowac niestandardowa strone gotowa do zaimponowania Twoim klientom.",
+      "features": {
+        "fast": {
+          "title": "Szybko i bezwysilkowo",
+          "description": "Nasz proces jest prosty, z przewodnikiem i szanuje Twoj czas."
+        },
+        "secure": {
+          "title": "Duze wyniki",
+          "description": "Otrzymaj kompletna, wielojezyczna strone gotowa do uruchomienia w kilka dni."
+        },
+        "smart": {
+          "title": "Skup sie na tym, co wazne",
+          "description": "Ty przynosisz wizje biznesowa; my zajmujemy sie technologia."
+        }
+      },
+      "process": {
+        "title": "Jak to dziala",
+        "steps": {
+          "1": {
+            "title": "Wypelnij formularz",
+            "description": "Opowiedz nam o swoim biznesie i wizji."
+          },
+          "2": {
+            "title": "Subskrybuj",
+            "description": "Dokonaj platnosci {price}."
+          },
+          "3": {
+            "title": "Przejrzyj i dopracuj",
+            "description": "Zobacz swoja nowa strone, popros o poprawki."
+          },
+          "4": {
+            "title": "Zatwierdz i uruchom",
+            "description": "Uruchom i podziel sie ze swiatem."
+          }
+        }
+      },
+      "guarantee": {
+        "text": "30-dniowa gwarancja zwrotu pieniedzy"
+      },
+      "actions": {
+        "start": "Rozpocznij Twoja Strone",
+        "continue": "Kontynuuj tam, gdzie skonczyles",
+        "startOver": "Zacznij od nowa"
+      },
+      "disclaimer": "Zajmuje okolo 10-15 minut. Twoj postep jest automatycznie zapisywany."
+    },
+    "saving": "Zapisywanie...",
+    "saved": "Zapisano",
+    "loading": "Ladowanie...",
+    "complete": "Zakoncz",
+    "sessionExpired": {
+      "title": "Sesja wygasla",
+      "description": "Twoja sesja wygasla ze wzgledow bezpieczenstwa. Mozesz odzyskac swoj postep lub zaczac od nowa.",
+      "recover": "Odzyskaj sesje",
+      "startOver": "Zacznij od nowa"
+    },
+    "emailVerification": {
+      "title": "Zweryfikuj swoj email",
+      "description": "Wyslalismy 6-cyfrowy kod weryfikacyjny na <email>{emailValue}</email>. Wprowadz go ponizej, aby kontynuowac.",
+      "enterCode": "Wprowadz kod weryfikacyjny",
+      "verifying": "Weryfikacja kodu...",
+      "codeComplete": "Kod kompletny",
+      "codeSent": "Kod weryfikacyjny wyslany pomyslnie",
+      "verify": "Zweryfikuj kod",
+      "didntReceive": "Nie otrzymales kodu?",
+      "sending": "Wysylanie...",
+      "resendIn": "Wyslij ponownie za {seconds}s",
+      "resendCode": "Wyslij kod ponownie",
+      "resendError": "Nie udalo sie ponownie wyslac kodu. Sprobuj ponownie.",
+      "clear": "Wyczysc",
+      "changeEmail": "Zmien email",
+      "checkSpam": "Sprawdz folder spam/smieci, jesli nie widzisz emaila.",
+      "pasteSupported": "Mozesz wkleic kod ze schowka.",
+      "digitLabel": "Cyfra kodu weryfikacyjnego {position}"
+    },
+    "steps": {
+      "validationError": "Prosze poprawic bledy powyzej przed kontynuowaniem.",
+      "nextStepError": "Nie udalo sie przejsc do nastepnego kroku. Sprobuj ponownie.",
+      "submissionError": "Nie udalo sie przeslac formularza. Sprobuj ponownie.",
+      "complete": "Zakoncz rejestracje",
+      "finish": "Zakoncz",
+      "back": "Powrot do powitania",
+      "1": {
+        "title": "Powitanie",
+        "description": "Zacznijmy od informacji o Twojej firmie",
+        "welcome": "Wprowadz swoj biznes online",
+        "subtitle": "Stworzmy Twoja idealna strone w kilku prostych krokach.",
+        "stats": {
+          "steps": "Prostych krokow",
+          "minutes": "Minut lacznie",
+          "price": "Miesiecznie"
+        },
+        "contactInfo": {
+          "title": "Twoje dane kontaktowe",
+          "required": "Wymagane",
+          "firstName": {
+            "label": "Imie",
+            "placeholder": "Wprowadz swoje imie",
+            "hint": "Twoje imie, jak chcesz, zeby sie pojawilo"
+          },
+          "lastName": {
+            "label": "Nazwisko",
+            "placeholder": "Wprowadz swoje nazwisko",
+            "hint": "Twoje nazwisko do profesjonalnej komunikacji"
+          },
+          "email": {
+            "label": "Adres email",
+            "placeholder": "Wprowadz swoj adres email",
+            "hint": "Uzyjemy go do wysylania aktualizacji i finalnej strony"
+          }
+        },
+        "nextSteps": {
+          "title": "Co dalej",
+          "step1": "Szczegoly biznesowe i cele",
+          "step2": "Preferencje projektowe i styl",
+          "step3": "Tresc i finalna weryfikacja"
+        },
+        "privacy": {
+          "notice": "Twoje informacje sa bezpieczne i beda uzywane tylko do stworzenia Twojej strony.",
+          "policy": "Polityka prywatnosci",
+          "terms": "Regulamin"
+        }
+      },
+      "2": {
+        "title": "Weryfikacja email",
+        "description": "Zweryfikuj swoj adres email, aby kontynuowac",
+        "invalidCode": "Nieprawidlowy kod weryfikacyjny. Prosze sprawdzic i sprobowac ponownie.",
+        "verificationFailed": "Weryfikacja email nie powiodla sie. Sprobuj ponownie."
+      },
+      "3": {
+        "title": "Szczegoly firmy",
+        "description": "Opowiedz nam o swojej firmie",
+        "businessInfo": {
+          "title": "Informacje o firmie",
+          "required": "Wymagane",
+          "name": {
+            "label": "Nazwa firmy",
+            "placeholder": "Wprowadz nazwe firmy",
+            "hint": "Oficjalna nazwa Twojej firmy"
+          },
+          "industry": {
+            "label": "Branza",
+            "placeholder": "Wybierz swoja branze",
+            "hint": "Jaki rodzaj dzialalnosci prowadzisz?"
+          },
+          "customIndustry": {
+            "label": "Inna branza",
+            "placeholder": "Opisz swoja branze",
+            "hint": "Wpisz nazwe swojej branzy"
+          },
+          "vat": {
+            "label": "Numer VAT",
+            "placeholder": "IT12345678901 lub PL1234567890",
+            "hint": "Numer VAT (opcjonalnie)",
+            "hintItaly": "Wloski numer VAT (IT + 11 cyfr)",
+            "hintPoland": "Polski NIP (PL + 10 cyfr)"
+          }
+        },
+        "contactInfo": {
+          "title": "Dane kontaktowe",
+          "required": "Wymagane",
+          "email": {
+            "label": "Email firmowy",
+            "placeholder": "firma@przyklad.pl",
+            "hint": "Glowny adres email firmy"
+          },
+          "phone": {
+            "label": "Telefon firmowy",
+            "hint": "Glowny numer telefonu firmy"
+          },
+          "website": {
+            "label": "Aktualna strona internetowa",
+            "placeholder": "https://twoja-strona.pl",
+            "hint": "Adres Twojej obecnej strony (jesli masz)"
+          }
+        },
+        "address": {
+          "title": "Adres firmy",
+          "required": "Wymagane",
+          "street": {
+            "label": "Adres",
+            "placeholder": "Wprowadz adres firmy",
+            "hint": "Zacznij pisac adres, aby zobaczyc podpowiedzi"
+          },
+          "city": {
+            "label": "Miasto",
+            "placeholder": "Wprowadz miasto"
+          },
+          "postalCode": {
+            "label": "Kod pocztowy",
+            "placeholder": "00-001"
+          },
+          "region": {
+            "label": "Prowincja/Region",
+            "placeholder": "Wybierz prowincje lub region"
+          },
+          "voivodeship": {
+            "label": "Wojewodztwo",
+            "placeholder": "Wybierz wojewodztwo"
+          },
+          "country": {
+            "label": "Kraj dzialalnosci",
+            "placeholder": "Wybierz kraj"
+          }
+        },
+        "dataUsage": {
+          "notice": "Te informacje beda uzyte do stworzenia Twojej strony firmowej i moga byc publicznie widoczne."
+        }
+      },
+      "4": {
+        "title": "Definicja marki",
+        "description": "Zdefiniuj swoja unikalna propozycje wartosci i pozycjonowanie konkurencyjne",
+        "offering": {
+          "title": "Twoja historia",
+          "required": "Wymagane",
+          "description": {
+            "label": "Opis firmy",
+            "placeholder": "Opisz, co oferuje Twoja firma w jednym zdaniu, ktore przekona nowego klienta",
+            "hint": "Zachowaj jasnosc i przekonujacosc - pomysl, co sprawia, ze klienci wybieraja Ciebie"
+          }
+        },
+        "audience": {
+          "title": "Grupa docelowa",
+          "optional": "Opcjonalne",
+          "description": {
+            "label": "Kim sa Twoi idealni klienci?",
+            "placeholder": "Opisz swoich typowych klientow (wiek, zainteresowania, potrzeby itp.)",
+            "hint": "Zrozumienie odbiorcy pomaga nam tworzyc tresci, ktore rezonuja"
+          }
+        },
+        "uniqueness": {
+          "title": "Co Cie wyroznia",
+          "required": "Wymagane",
+          "value": {
+            "label": "Twoja unikalna wartosc",
+            "placeholder": "Co wyroznia Cie na tle konkurencji? Co robisz lepiej lub inaczej?",
+            "hint": "Pomysl o swoich mocnych stronach, specjalnych uslugach lub unikalnym podejsciu"
+          },
+          "goals": {
+            "label": "Cele biznesowe",
+            "placeholder": "Jakie sa Twoje glowne cele biznesowe na nastepny rok?",
+            "hint": "Przyklady: zwiekszenie sprzedazy, ekspansja rynkowa, poprawa obslugi klienta"
+          }
+        },
+        "competitors": {
+          "title": "Analiza konkurencji",
+          "optional": "Opcjonalne",
+          "description": "Pomoz nam zrozumiec Twoj rynek, udostepniajac strony konkurencji",
+          "urls": {
+            "label": "Strony konkurencji",
+            "placeholder": "https://strona-konkurencji.pl",
+            "addButton": "Dodaj konkurenta",
+            "hint": "Udostepnij do 5 stron konkurencji, aby pomoc nam wyroznic Twoja marke"
+          },
+          "analysis": {
+            "label": "Analiza konkurencyjna",
+            "placeholder": "Co lubisz/nie lubisz u konkurencji? Jakie luki widzisz na rynku?",
+            "hint": "Pomoz nam zrozumiec, jak pozycjonowac Twoja firme unikalnie"
+          }
+        },
+        "keywords": {
+          "title": "Slowa kluczowe marki",
+          "description": "Jakie slowa najlepiej opisuja osobowosc Twojej marki?",
+          "input": {
+            "label": "Slowa kluczowe marki",
+            "placeholder": "Wprowadz slowa kluczowe opisujace Twoja marke (np. profesjonalny, innowacyjny, niezawodny)",
+            "hint": "Wybierz 3-5 slow, ktore najlepiej reprezentuja osobowosc i wartosci Twojej marki"
+          },
+          "examples": {
+            "professional": "Profesjonalny, godny zaufania, ugruntowany",
+            "innovative": "Innowacyjny, nowoczesny, awangardowy",
+            "reliable": "Niezawodny, solidny, konsekwentny",
+            "creative": "Kreatywny, unikalny, artystyczny"
+          }
+        }
+      },
+      "5": {
+        "title": "Grupa docelowa",
+        "description": "Kim sa Twoi idealni klienci?",
+        "intro": {
+          "title": "Profilowanie klientow",
+          "description": "Pomoz nam zrozumiec Twoich idealnych klientow, dostosowujac suwaki do ich typowych cech."
+        },
+        "profile": {
+          "title": "Profil klienta",
+          "required": "Wymagane",
+          "budget": {
+            "left": "Oszczedny",
+            "right": "Premium",
+            "description": "Jak wrazliwi na cene sa Twoi klienci?",
+            "examples": {
+              "left": {
+                "price": "Szuka najlepszych okazji i rabatow",
+                "discount": "Porownuje ceny u konkurencji",
+                "value": "Ceni przystepnosc nad luksus"
+              },
+              "right": {
+                "quality": "Gotow zaplacic wiecej za jakosc",
+                "premium": "Ceni funkcje premium i obsluge",
+                "exclusive": "Szuka opcji ekskluzywnych lub luksusowych"
+              }
+            }
+          },
+          "style": {
+            "left": "Tradycyjny",
+            "right": "Nowoczesny",
+            "description": "Jaka estetyka projektowa preferuja?",
+            "examples": {
+              "left": {
+                "classic": "Preferuje klasyczne, ponadczasowe projekty",
+                "proven": "Ufa sprawdzonym, ustalonym podejsciom",
+                "conservative": "Konserwatywne, ostrozne wybory"
+              },
+              "right": {
+                "innovative": "Przyciagany przez innowacyjne rozwiazania",
+                "trendy": "Sledzi najnowsze trendy i technologie",
+                "cutting": "Wczesni uzytkownicy nowoczesnych produktow"
+              }
+            }
+          },
+          "motivation": {
+            "left": "Praktyczny",
+            "right": "Aspiracyjny",
+            "description": "Co kieruje ich decyzjami zakupowymi?",
+            "examples": {
+              "left": {
+                "functional": "Skupia sie na praktycznych korzysciach",
+                "efficient": "Ceni wydajnosc i funkcjonalnosc",
+                "practical": "Podejmuje decyzje w oparciu o uzytecznosc"
+              },
+              "right": {
+                "memorable": "Szuka niezapomnianych doswiadczen",
+                "emotional": "Kierowany polaczeniem emocjonalnym",
+                "inspiring": "Ceni inspiracje i aspiracje"
+              }
+            }
+          },
+          "decision": {
+            "left": "Szybko decydujacy",
+            "right": "Starannie analizujacy",
+            "description": "Jak podejmuja decyzje zakupowe?",
+            "examples": {
+              "left": {
+                "impulse": "Reaguje na natychmiastowe potrzeby",
+                "quick": "Podejmuje szybkie, intuicyjne decyzje",
+                "instinct": "Ufa przeczuciu i pierwszemu wrazeniu"
+              },
+              "right": {
+                "research": "Szeroko bada przed zakupem",
+                "compare": "Starannie porownuje opcje i funkcje",
+                "deliberate": "Poswiecza czas na przemyslane decyzje"
+              }
+            }
+          },
+          "loyalty": {
+            "left": "Szukajacy okazji",
+            "right": "Lojalny marce",
+            "description": "Jak lojalni sa wobec marek?",
+            "examples": {
+              "left": {
+                "deals": "Zmienia marki w zaleznosci od ceny lub promocji",
+                "compare": "Zawsze porownuje opcje przed zakupem",
+                "switch": "Otwarty na probowanie nowych marek i uslug"
+              },
+              "right": {
+                "relationship": "Ceni dlugoterminowe relacje",
+                "trust": "Trzyma sie zaufanych marek i dostawcow",
+                "consistent": "Preferuje spojnosc i niezawodnosc"
+              }
+            }
+          }
+        },
+        "insights": {
+          "title": "Wnioski z targetowania",
+          "description": "Na podstawie Twoich wyborow dostosujemy przekaz i projekt strony do Twoich idealnych klientow.",
+          "targeting": {
+            "title": "Przekaz na stronie",
+            "messaging": "Ton i jezyk tresci beda dopasowane do preferencji klientow",
+            "pricing": "Prezentacja cen bedzie zgodna z oczekiwaniami budzetowymi",
+            "features": "Wyroznienie funkcji podkresli to, co jest najwazniejsze"
+          },
+          "optimization": {
+            "title": "Projekt i uklad",
+            "layout": "Uklad strony bedzie odpowiadal stylowi podejmowania decyzji",
+            "content": "Hierarchia wizualna poprowadzi podrozc klienta",
+            "calls": "Rozmieszczenie przyciskow akcji zmaksymalizuje konwersje"
+          }
+        },
+        "tips": {
+          "honest": "Badz szczery co do swoich rzeczywistych klientow, nie tych wymarzonych",
+          "typical": "Pomysl o najbardziej typowych klientach, nie o wyjatkach",
+          "adjust": "Mozesz pozniej dostosowac te ustawienia w miare rozwoju firmy"
+        }
+      },
+      "6": {
+        "title": "Potrzeby klientow",
+        "description": "Zrozumienie, czego naprawde potrzebuja Twoi klienci",
+        "intro": {
+          "title": "Zrozumienie wyzwan klientow",
+          "description": "Pomoz nam zrozumiec, jakie problemy maja Twoi klienci i jak Twoja firma je rozwiazuje. Te informacje uksztaltuja przekaz i pozycjonowanie Twojej strony."
+        },
+        "problems": {
+          "title": "Problemy i bolaczki klientow",
+          "required": "Wymagane",
+          "input": {
+            "label": "Jakie sa glowne potrzeby klientow wobec Twojej firmy?",
+            "placeholder": "Opisz konkretne wyzwania, jakie maja Twoi klienci, zanim Cie znajda...",
+            "hint": "Skup sie na problemach, ktore rozwiazujesz - to pomoze nam stworzyc przekonujacy przekaz"
+          }
+        },
+        "solutions": {
+          "title": "Twoje rozwiazania i korzysci",
+          "required": "Wymagane",
+          "examples": {
+            "title": "Jak Twoja firma rozwiazuje problemy:",
+            "professional": "Profesjonalna strona buduje natychmiastowa wiarygodnosc",
+            "seo": "Tresci zoptymalizowane pod SEO pomagaja klientom Cie znalezc",
+            "mobile": "Projekt przyjazny mobilnie obsluguje klientow wszedzie",
+            "social": "Dowody spoleczne i referencje buduja zaufanie"
+          },
+          "input": {
+            "label": "Jak Twoja firma rozwiazuje te problemy?",
+            "placeholder": "Wyjasnij konkretne sposoby, w jakie Twoje produkty lub uslugi odpowiadaja na wyzwania klientow...",
+            "hint": "Badz konkretny co do korzysci i rezultatow, ktore klienci uzyskuja wybierajac Ciebie"
+          }
+        },
+        "delight": {
+          "title": "Momenty zachwytu klienta",
+          "optional": "Opcjonalne",
+          "input": {
+            "label": "Jak przekraczasz oczekiwania klientow?",
+            "placeholder": "Opisz specjalne elementy lub dodatkowa wartosc, ktora sprawia, ze klienci kochaja wspolprace z Toba...",
+            "hint": "Te unikalne zalety stana sie kluczowymi punktami sprzedazy na Twojej stronie"
+          }
+        },
+        "insights": {
+          "title": "Wnioski z podrozy klienta",
+          "awareness": {
+            "title": "Etap swiadomosci",
+            "description": "Jak klienci odkrywaja, ze potrzebuja Twojego rozwiazania"
+          },
+          "consideration": {
+            "title": "Etap rozwazan",
+            "description": "Jak klienci oceniaja i porownuja opcje"
+          },
+          "decision": {
+            "title": "Etap decyzji",
+            "description": "Co sprawia, ze klienci wybieraja Ciebie zamiast konkurencji"
+          }
+        },
+        "tips": {
+          "title": "Wskazowki dla lepszych odpowiedzi:",
+          "specific": "Badz konkretny i szczegolowy",
+          "customer": "Mysl z perspektywy klienta",
+          "emotional": "Uwzglednij korzysci emocjonalne"
+        }
+      },
+      "7": {
+        "title": "Wizualna inspiracja",
+        "description": "Pokaz nam strony i projekty, ktore podziwiasz",
+        "intro": {
+          "title": "Inspiracja projektowa i referencje",
+          "description": "Udostepnij strony, ktore uwazasz za wizualnie atrakcyjne lub funkcjonalnie imponujace. To pomoze nam zrozumiec Twoje preferencje estetyczne i kierunek projektowy."
+        },
+        "inspirations": {
+          "title": "Inspiracje stronami",
+          "optional": "Opcjonalne",
+          "guidelines": {
+            "title": "Na co zwracac uwage w stronach inspirujacych:",
+            "layout": "Czysty, zorganizowany uklad i struktura",
+            "colors": "Schematy kolorow, ktore Ci odpowiadaja",
+            "typography": "Style tekstu i czytelnosc",
+            "navigation": "Latwa w uzyciu nawigacja i menu",
+            "images": "Wysokiej jakosci zdjecia i grafiki",
+            "overall": "Ogolne wrazenie i doswiadczenie uzytkownika"
+          },
+          "urls": {
+            "label": "Adresy URL inspirujacych stron",
+            "placeholder": "https://przykladowa-strona.pl",
+            "addButton": "Dodaj strone",
+            "hint": "Dodaj do 10 stron, ktore Cie inspiruja. Uwzglednij konkurentow, podobne firmy lub dowolne strony, ktore uwazasz za dobrze zaprojektowane."
+          }
+        },
+        "categories": {
+          "title": "Szybkie kategorie",
+          "description": "Kliknij, aby dodac przykladowe strony z roznych branzy",
+          "restaurant": "Restauracja i Jedzenie",
+          "retail": "Handel i E-commerce",
+          "professional": "Uslugi profesjonalne",
+          "creative": "Kreatywne i Portfolio"
+        },
+        "preferences": {
+          "title": "Preferencje wizualne",
+          "optional": "Opcjonalne",
+          "examples": {
+            "title": "Opisz preferowany styl:",
+            "clean": "Czysty i minimalistyczny z duza iloscia bialej przestrzeni",
+            "bold": "Odwazny i zywy z silnym wplywem wizualnym",
+            "professional": "Profesjonalny i godny zaufania wyglad",
+            "creative": "Kreatywny i unikalny z elementami artystycznymi"
+          },
+          "input": {
+            "label": "Opisz swoje preferencje wizualne",
+            "placeholder": "Powiedz nam o wygladzie i klimacie, jaki chcesz dla swojej strony - kolory, styl ukladu, nastroj itp...",
+            "hint": "To pomoze nam zrozumiec Twoj kierunek projektowy poza inspirujacymi stronami"
+          }
+        },
+        "analysis": {
+          "title": "Proces analizy projektowej",
+          "layout": {
+            "title": "Analiza ukladu",
+            "description": "Przeanalizujemy wzorce struktury i organizacji"
+          },
+          "content": {
+            "title": "Strategia tresci",
+            "description": "Zbadamy, jak tresc jest prezentowana i organizowana"
+          },
+          "interaction": {
+            "title": "Doswiadczenie uzytkownika",
+            "description": "Przestudiujemy wzorce nawigacji i interakcji"
+          }
+        },
+        "tips": {
+          "title": "Wskazowki dla lepszej inspiracji:",
+          "diverse": "Uwzglednij roznorodne przyklady",
+          "specific": "Badz konkretny co do tego, co lubisz",
+          "relevant": "Wybieraj strony odpowiednie dla Twojej branzy"
+        }
+      },
+      "8": {
+        "title": "Styl projektowy",
+        "description": "Wybierz styl wizualny, ktory najlepiej reprezentuje Twoja marke",
+        "intro": {
+          "title": "Wybierz swoj styl projektowy",
+          "description": "Wybierz styl projektowy, ktory odzwierciedla Twoja marke i przemawia do Twojej publicznosci. Ustala on wizualny kierunek Twojej strony, ale nie wplywa na pokazywane sekcje ani pisana tresc."
+        },
+        "selection": {
+          "title": "Wybor stylu projektowego",
+          "required": "Wymagane"
+        },
+        "characteristics": {
+          "title": "Wplyw stylu projektowego",
+          "visual": {
+            "title": "Elementy wizualne",
+            "layout": "Struktura strony i organizacja",
+            "typography": "Wybor czcionek i hierarchia tekstu",
+            "spacing": "Biala przestrzen i pozycjonowanie elementow",
+            "elements": "Przyciski, formularze i interaktywne komponenty"
+          },
+          "impact": {
+            "title": "Wplyw na biznes",
+            "perception": "Jak klienci postrzegaja Twoj profesjonalizm",
+            "audience": "Atrakcyjnosc dla Twojej grupy docelowej",
+            "conversion": "Wplyw na dzialania i decyzje uzytkownikow",
+            "branding": "Spojnosc z tozsamoscia Twojej marki"
+          }
+        },
+        "tips": {
+          "title": "Wybierz styl, ktory:",
+          "authentic": "Wydaje sie autentyczny dla Twojej marki",
+          "audience": "Przemawia do Twojej grupy docelowej",
+          "flexible": "Dziala na roznych urzadzeniach"
+        }
+      },
+      "9": {
+        "title": "Styl obrazow",
+        "description": "Wybierz styl wizualny dla obrazow na Twojej stronie",
+        "intro": {
+          "title": "Wybierz swoj styl obrazow",
+          "description": "Wybierz typ obrazow, ktory najlepiej reprezentuje Twoja marke i laczy sie z Twoja publicznoscia. Ten wybor pokieruje cala zawartoscia wizualna na Twojej stronie."
+        },
+        "selection": {
+          "title": "Wybor stylu obrazow",
+          "required": "Wymagane"
+        },
+        "impact": {
+          "title": "Wplyw wizualny i rozwazania",
+          "psychology": {
+            "title": "Wplyw psychologiczny",
+            "trust": "Profesjonalne obrazy buduja wiarygodnosc i zaufanie",
+            "emotion": "Zdjecia lifestylowe tworza polaczenia emocjonalne",
+            "attention": "Kreatywne wizualizacje przyciagaja i utrzymuja uwage",
+            "memory": "Unikalne obrazy sprawiaja, ze Twoja marka zostaje zapamietana"
+          },
+          "technical": {
+            "title": "Korzysci techniczne",
+            "loading": "Zoptymalizowane obrazy zapewniaja szybkie ladowanie",
+            "scalability": "Grafiki wektorowe skaluja sie idealnie na wszystkich urzadzeniach",
+            "responsive": "Profesjonalne zdjecia dzialaja na wszystkich rozmiarach ekranow",
+            "accessibility": "Czyste obrazy poprawiaja dostepnosc dla wszystkich uzytkownikow"
+          }
+        },
+        "strategy": {
+          "title": "Integracja strategii tresci",
+          "description": "Wybrany styl obrazow wplynie na to, jak pozyskujemy, tworzymy i optymalizujemy cala zawartosc wizualna dla Twojej strony.",
+          "consistency": "Spojny jezyk wizualny na wszystkich stronach",
+          "quality": "Wysokiej jakosci obrazy odzwierciedlajace wartosci Twojej marki",
+          "relevance": "Obrazy wspierajace i wzmacniajace Twoj przekaz"
+        },
+        "tips": {
+          "title": "Wybierz obrazy, ktore:",
+          "brand": "Sa zgodne z osobowoscia Twojej marki",
+          "audience": "Rezonuja z Twoja grupa docelowa",
+          "quality": "Utrzymuja wysokie standardy jakosci"
+        }
+      },
+      "10": {
+        "title": "Paleta kolorow",
+        "description": "Wybierz kolory, ktore idealnie reprezentuja Twoja marke",
+        "intro": {
+          "title": "Wybor palety kolorow",
+          "description": "Kolory odgrywaja kluczowa role w postrzeganiu Twojej marki przez klientow. Wybierz palete, ktora odzwierciedla osobowosc Twojej firmy i przemawia do grupy docelowej."
+        },
+        "customColors": {
+          "title": "Zaawansowane: Niestandardowe kolory",
+          "description": "Dostosuj kolory marki, wybierajac najpierw palete powyzej, a nastepnie nadpisz poszczegolne kolory tutaj, jesli to konieczne. Wiekszosc uzytkownikow nie potrzebuje tej sekcji.",
+          "labels": {
+            "primary": "Podstawowy",
+            "secondary": "Dodatkowy",
+            "accent": "Akcent",
+            "background": "Tlo"
+          },
+          "empty": "Wybierz kolor",
+          "clear": "Wyczysc",
+          "done": "Gotowe",
+          "hint": "Opcjonalnie: Wybierz palete powyzej, aby zaczac, a nastepnie dostosuj poszczegolne kolory tutaj. Kliknij pole koloru, aby wybrac kolor wizualnie lub wprowadz kod hex."
+        },
+        "selection": {
+          "title": "Wybierz swoja palete kolorow",
+          "required": "Wymagane",
+          "optional": "Opcjonalne"
+        },
+        "psychology": {
+          "title": "Psychologia kolorow",
+          "emotional": {
+            "title": "Wplyw emocjonalny",
+            "trust": "Niebieski buduje zaufanie i profesjonalizm",
+            "energy": "Pomaranczowy i czerwony tworza energie i pilnosc",
+            "calm": "Zielony promuje spokoj i naturalnosc",
+            "luxury": "Fioletowy przekazuje luksus i wyrafinowanie"
+          },
+          "business": {
+            "title": "Korzysci biznesowe",
+            "conversion": "Odpowiednie kolory moga zwiekszyc konwersje nawet o 80%",
+            "branding": "Spojne kolory poprawiaja rozpoznawalnosc marki o 80%",
+            "accessibility": "Prawidlowy kontrast zapewnia dostepnosc dla wszystkich uzytkownikow",
+            "recognition": "Charakterystyczne kolory sprawiaja, ze Twoja marka jest zapamietywana"
+          }
+        },
+        "accessibility": {
+          "title": "Dostepnosc i standardy",
+          "description": "Zapewniamy, ze wszystkie kombinacje kolorow spelniaja standardy dostepnosci dla optymalnego doswiadczenia uzytkownika.",
+          "contrast": "Minimalny wspolczynnik kontrastu 4.5:1 dla czytelnosci tekstu",
+          "colorBlind": "Schematy kolorow dzialaja dla uzytkownikow ze sleposc barw",
+          "consistency": "Spojne uzycie kolorow we wszystkich elementach"
+        },
+        "tips": {
+          "title": "Wybierz kolory, ktore:",
+          "emotion": "Pasuja do emocji Twojej marki",
+          "industry": "Pasuja do Twojej branzy",
+          "accessible": "Sa dostepne dla wszystkich"
+        }
+      },
+      "11": {
+        "title": "Struktura strony",
+        "description": "Zdefiniuj cel strony i efektywnie zorganizuj jej tresc",
+        "intro": {
+          "title": "Zaplanuj strukture strony",
+          "description": "Zdefiniuj swoje glowne cele i wybierz sekcje, ktore pomoga je osiagnac. Dobrze zorganizowana strona plynnie prowadzi odwiedzajacych do pozadanych dzialan."
+        },
+        "goal": {
+          "title": "Glowny cel strony",
+          "required": "Wymagane",
+          "selection": {
+            "label": "Jaki jest Twoj glowny cel dla tej strony?",
+            "placeholder": "Wybierz swoj glowny cel",
+            "hint": "To wplynie na to, jakie sekcje polecamy i jak strukturyzujemy Twoja tresc"
+          }
+        },
+        "sections": {
+          "title": "Sekcje strony",
+          "required": "Wymagane",
+          "alwaysIncluded": "Zawsze dolaczone",
+          "recommended": {
+            "title": "Polecane sekcje dla",
+            "badge": "Polecane"
+          }
+        },
+        "offerings": {
+          "title": "Produkty i uslugi",
+          "optional": "Opcjonalne",
+          "examples": {
+            "title": "Przyklady tego, co mozesz oferowac:",
+            "consulting": "Uslugi konsultingowe",
+            "design": "Projektowanie stron i branding",
+            "development": "Tworzenie oprogramowania",
+            "photography": "Profesjonalna fotografia",
+            "marketing": "Uslugi marketingu cyfrowego",
+            "training": "Szkolenia i warsztaty"
+          },
+          "list": {
+            "label": "Twoje produkty/uslugi",
+            "placeholder": "Wprowadz produkt lub usluge",
+            "addButton": "Dodaj pozycje",
+            "hint": "Wymien swoje glowne produkty lub uslugi - to pomoze nam stworzyc ukierunkowana tresc dla kazdej oferty"
+          }
+        },
+        "insights": {
+          "title": "Struktura i doswiadczenie uzytkownika",
+          "navigation": {
+            "title": "Projekt nawigacji",
+            "clear": "Jasna, intuicyjna struktura menu",
+            "logical": "Logiczna hierarchia informacji",
+            "mobile": "Przyjazne dla urzadzen mobilnych wzorce nawigacji"
+          },
+          "conversion": {
+            "title": "Optymalizacja konwersji",
+            "cta": "Strategiczne rozmieszczenie przyciskow akcji",
+            "trust": "Pozycjonowanie sygnalow zaufania i dowodow spolecznych",
+            "contact": "Latwy dostep do informacji kontaktowych"
+          }
+        },
+        "tips": {
+          "title": "Wskazowki dotyczace struktury:",
+          "essential": "Uwzglednij istotne sekcje",
+          "goal": "Dopasuj do glownego celu",
+          "simple": "Zachowaj prosta nawigacje"
+        },
+        "products": {
+          "emptyState": "Nie dodano jeszcze produktow",
+          "emptyStateHint": "Kliknij \"Dodaj produkt\", aby rozpoczac",
+          "addProduct": "Dodaj produkt",
+          "updateProduct": "Zaktualizuj produkt",
+          "contactForPricing": "Skontaktuj sie po cene",
+          "priceHint": "Pozostaw puste, aby wyswietlic \"Skontaktuj sie po cene\"",
+          "deleteConfirm": {
+            "title": "Usunac produkt?",
+            "description": "Czy na pewno chcesz usunac ten produkt? Tej akcji nie mozna cofnac."
+          },
+          "cancelUploadConfirm": {
+            "title": "Anulowac przesylanie?",
+            "description": "Przesylanie zdjec jest w toku. Czy na pewno chcesz anulowac?"
+          },
+          "confirm": "Potwierdz",
+          "cancel": "Anuluj"
+        }
+      },
+      "12": {
+        "title": "Zasoby firmy",
+        "description": "Przeslij logo firmy i zdjecia, aby spersonalizowac swoja strone",
+        "intro": {
+          "title": "Zasoby firmy",
+          "description": "Przeslij logo firmy i zdjecia, aby spersonalizowac swoja strone i budowac zaufanie klientow."
+        },
+        "logo": {
+          "title": "Logo firmy",
+          "optional": "Opcjonalne",
+          "guidelines": "Przeslij wysokiej jakosci logo w formacie PNG lub JPG. Maksymalny rozmiar pliku: 2MB.",
+          "upload": {
+            "label": "Przeslij logo",
+            "hint": "Przeciagnij i upusc logo tutaj lub kliknij, aby przegladac pliki"
+          },
+          "requirements": {
+            "title": "Wymagania dla logo",
+            "format": "Format PNG lub JPG",
+            "size": "Maksymalny rozmiar 2MB",
+            "resolution": "Minimalna szerokosc 300px",
+            "background": "Preferowane przezroczyste tlo",
+            "colors": "Wysoki kontrast dla widocznosci",
+            "quality": "Profesjonalny wyglad"
+          }
+        },
+        "photos": {
+          "title": "Zdjecia firmy",
+          "optional": "Opcjonalne",
+          "benefits": {
+            "title": "Dlaczego zdjecia firmy sa wazne:",
+            "trust": "Buduja zaufanie i wiarygodnosc",
+            "personal": "Tworza osobiste polaczenie",
+            "professional": "Prezentuja profesjonalizm"
+          },
+          "upload": {
+            "label": "Przeslij zdjecia",
+            "hint": "Przeslij do 30 zdjec, 10MB kazde. Pokaz swoja firme, zespol lub uslugi."
+          }
+        },
+        "categories": {
+          "title": "Kategorie zdjec",
+          "exterior": {
+            "title": "Zewnetrzne i lokalizacja",
+            "storefront": "Witryna i zewnetrzna czesc budynku",
+            "signage": "Szyldy i branding firmy",
+            "entrance": "Wejscie i dostepnosc"
+          },
+          "interior": {
+            "title": "Wnetrze i przestrzen pracy",
+            "workspace": "Srodowisko pracy i udogodnienia",
+            "products": "Produkty lub obszary uslugowe",
+            "atmosphere": "Atmosfera i przestrzenie dla klientow"
+          },
+          "team": {
+            "title": "Zespol i ludzie",
+            "owner": "Wlasciciel lub manager firmy",
+            "staff": "Czlonkowie zespolu i pracownicy",
+            "action": "Ludzie w akcji, obslugujacy klientow"
+          },
+          "services": {
+            "title": "Uslugi i proces",
+            "process": "Wykonywane uslugi",
+            "results": "Przyklady przed i po",
+            "tools": "Uzywany sprzet i narzedzia"
+          }
+        },
+        "summary": {
+          "title": "Podsumowanie przesylania",
+          "logo": "Logo",
+          "photos": "Zdjecia",
+          "uploaded": "Przeslane",
+          "none": "Nic nie przeslano",
+          "photoCount": "{count} zdjec"
+        },
+        "quality": {
+          "title": "Wskazowki dotyczace jakosci zdjec",
+          "lighting": {
+            "title": "Dobre oswietlenie",
+            "description": "Naturalne swiatlo lub dobrze oswietlone srodowiska dzialaja najlepiej"
+          },
+          "composition": {
+            "title": "Czysta kompozycja",
+            "description": "Skup sie na obiekcie, unikaj zagubionych tel"
+          },
+          "authenticity": {
+            "title": "Autentyczne momenty",
+            "description": "Prawdziwe interakcje i rzeczywiste aktywnosci firmy"
+          }
+        },
+        "tips": {
+          "title": "Pamietaj:",
+          "quality": "Jakosc ponad ilosc",
+          "authentic": "Autentyczne momenty",
+          "variety": "Pokaz roznorodnosc"
+        }
+      },
+      "13": {
+        "title": "Dodatki jezykowe",
+        "description": "Wybierz dodatkowe jezyki dla swojej strony",
+        "heading": "Wybierz dodatkowe jezyki",
+        "includedLanguages": "W cenie: angielski i wloski",
+        "availableLanguages": "Dostepne jezyki ({count})",
+        "selectedCount": "{count} jezyk wybrany",
+        "pricePerLanguage": "75 EUR za jezyk",
+        "searchPlaceholder": "Szukaj jezykow...",
+        "selectLanguage": "Wybierz {language}",
+        "speakers": "uzytkownikow",
+        "clearAll": "Wyczysc wszystko",
+        "noResults": "Nie znaleziono jezykow pasujacych do wyszukiwania",
+        "clearSearch": "Wyczysc wyszukiwanie",
+        "basePackage": "Pakiet podstawowy (angielski i wloski w cenie)",
+        "languageAddonsInfo": "Dodatki jezykowe to jednorazowe oplaty konfiguracyjne.",
+        "totalFirstMonth": "Suma za pierwszy miesiac"
+      },
+      "14": {
+        "title": "Platnosc",
+        "description": "30-dniowa gwarancja zwrotu pieniedzy",
+        "heading": "Zakoncz zamowienie",
+        "subtitle": "Bezpieczna platnosc przez Stripe",
+        "orderSummary": "Podsumowanie zamowienia",
+        "basePackage": "Pakiet podstawowy WhiteBoar",
+        "billedMonthly": "Rozliczany miesiecznie",
+        "annualCommitment": "Zobowiazanie na 12 miesiecy",
+        "languageAddons": "Dodatki jezykowe",
+        "oneTimeFee": "Jednorazowa oplata konfiguracyjna",
+        "dueToday": "Do zaplaty dzis",
+        "subscription": "subskrypcja",
+        "setupFees": "oplaty konfiguracyjne",
+        "thenMonthly": "Nastepnie {amount} EUR/miesiac",
+        "discountCode": "Kod rabatowy",
+        "enterCode": "Masz kod rabatowy?",
+        "codePlaceholder": "Wprowadz kod",
+        "paymentMethod": "Metoda platnosci",
+        "securePayment": "Twoje dane platnicze sa bezpieczne i zaszyfrowane",
+        "noPaymentRequired": "Platnosc nie jest wymagana. Twoja znizka pokrywa cala kwote.",
+        "completeWithoutPayment": "Zakoncz bez platnosci",
+        "finalizingZeroPayment": "Finalizowanie...",
+        "termsText": "Akceptuje <termsLink>Regulamin</termsLink> i <privacyLink>Polityke prywatnosci</privacyLink>",
+        "paymentError": "Blad platnosci",
+        "paymentFailed": "Platnosc nie powiodla sie. Sprobuj ponownie.",
+        "unexpectedError": "Wystapil nieoczekiwany blad. Sprobuj ponownie.",
+        "paymentSuccess": "Platnosc udana",
+        "redirecting": "Przekierowywanie do potwierdzenia...",
+        "commitmentNotice": "Zobowiazujesz sie do 12 miesiecznych platnosci po {amount} EUR. Po 12 miesiacach mozesz anulowac w dowolnym momencie.",
+        "processing": "Przetwarzanie...",
+        "payNow": "Zaplac {amount} EUR",
+        "preparingCheckout": "Przygotowywanie sesji platnosci...",
+        "checkoutError": "Blad platnosci",
+        "noClientSecret": "Nie mozna zainicjowac formularza platnosci",
+        "goBack": "Wroc",
+        "stripeNotLoaded": "System platnosci sie laduje. Sprobuj ponownie.",
+        "sessionCreationFailed": "Nie udalo sie utworzyc sesji platnosci",
+        "loadingCheckout": "Ladowanie sesji platnosci...",
+        "discount": {
+          "title": "Kod rabatowy",
+          "label": "rabat",
+          "placeholder": "Wprowadz kod rabatowy",
+          "verify": "Zastosuj",
+          "verifying": "Stosowanie...",
+          "applied": "Rabat zastosowany",
+          "validMessage": "Kod rabatowy {code} zastosowany! Oszczedzasz {amount} EUR.",
+          "foreverDiscount": "Ta obnizana cena dotyczy wszystkich przyszlych platnosci miesiecznych (kod: {code})",
+          "emptyCode": "Prosze wprowadzic kod rabatowy",
+          "invalidCode": "Nieprawidlowy lub wygasly kod rabatowy",
+          "timeout": "Weryfikacja przekroczyla limit czasu. Sprobuj ponownie.",
+          "verificationError": "Nie udalo sie zweryfikowac kodu rabatowego. Sprobuj ponownie.",
+          "helperText": "Wprowadz kod rabatowy i kliknij Zastosuj, aby dodac go do zamowienia"
+        }
+      }
+    },
+    "thankYou": {
+      "title": "Swietnie! Mamy wszystko, czego potrzebujemy.",
+      "message": "Nasz zespol przeanalizuje Twoje informacje i przygotuje podglad dostosowany do przyciagniecia Twoich idealnych klientow i wyroznienia Cie na tle konkurencji.",
+      "timeline": {
+        "title": "Podglad gotowy",
+        "description": "W ciagu 5 dni roboczych"
+      },
+      "notification": {
+        "title": "Powiadomienie email",
+        "description": "Otrzymasz email, gdy bedzie gotowy"
+      },
+      "payment": {
+        "title": "Platnosc",
+        "description": "Dopiero po zatwierdzeniu podgladu"
+      },
+      "nextSteps": {
+        "title": "Co dalej?",
+        "step1": "Nasz zespol analizuje Twoje odpowiedzi i tworzy niestandardowy podglad strony",
+        "step2": "Otrzymasz email z linkiem do podgladu w ciagu 5 dni roboczych",
+        "step3": "Przejrzyj podglad i zaplac tylko jesli jestes w pelni zadowolony"
+      },
+      "backHome": "Powrot na strone glowna"
+    },
+    "restart": {
+      "button": "Restart",
+      "dialogTitle": "Zaczac od nowa?",
+      "dialogDescription": "To usunie caly Twoj postep i powroci Cie na poczatek procesu rejestracji. Czy na pewno chcesz zrestartowac?",
+      "cancel": "Anuluj",
+      "confirm": "Zacznij od nowa",
+      "confirming": "Restartowanie...",
+      "successTitle": "Rejestracja zrestartowana",
+      "successDescription": "Zostales przeniesiony na poczatek.",
+      "errorTitle": "Blad",
+      "errorDescription": "Nie udalo sie zrestartowac rejestracji. Sprobuj ponownie."
+    },
+    "accessibility": {
+      "skipToContent": "Przejdz do glownej tresci",
+      "progressNavigation": "Postep rejestracji",
+      "currentStep": "Aktualnie na kroku {step} z {total}",
+      "stepAnnouncement": "Krok {step} z {total}: {title}",
+      "stepContent": "Tresc formularza kroku {step}",
+      "stepNavigation": "Nawigacja krokow",
+      "stepIndicators": "Wskazniki postepu pokazujace status ukonczenia",
+      "keyboardNavHint": "Uzyj Alt plus strzalka w lewo, aby wrocic, Alt plus strzalka w prawo, aby przejsc dalej",
+      "keyboardNavHintShort": "Wskazowka: Alt + strzalki do nawigacji",
+      "goToPreviousStep": "Wroc do kroku {step}",
+      "goToNextStep": "Przejdz do kroku {step}",
+      "completeOnboarding": "Zakoncz rejestracje",
+      "formFieldRequired": "To pole jest wymagane",
+      "formFieldOptional": "To pole jest opcjonalne",
+      "autoSaveSaving": "Twoj postep jest zapisywany",
+      "autoSaveSaved": "Twoj postep zostal zapisany",
+      "errorOccurred": "Wystapil blad: {error}",
+      "stepCompleted": "Krok {step} jest ukonczony",
+      "stepInProgress": "Krok {step} jest w trakcie",
+      "stepNotStarted": "Krok {step} nie zostal jeszcze rozpoczety"
+    }
+  },
+  "forms": {
+    "required": "To pole jest wymagane",
+    "invalid": "Prosze wprowadzic prawidlowa wartosc",
+    "tooShort": "To pole jest za krotkie",
+    "tooLong": "To pole jest za dlugie",
+    "characterMinimum": "Musi zawierac co najmniej {count} znakow",
+    "characterMaximum": "Nie moze zawierac wiecej niz {count} znakow",
+    "showPassword": "Pokaz haslo",
+    "hidePassword": "Ukryj haslo",
+    "dynamicList": {
+      "add": "Dodaj pozycje",
+      "remove": "Usun",
+      "empty": "Nie dodano pozycji",
+      "placeholder": "Wprowadz pozycje i nacisnij Enter",
+      "duplicate": "Ta pozycja juz zostala dodana"
+    },
+    "email": {
+      "invalid": "Prosze wprowadzic prawidlowy adres email",
+      "checking": "Sprawdzanie emaila...",
+      "valid": "Email jest prawidlowy",
+      "taken": "Ten email jest juz uzywany"
+    },
+    "dropdown": {
+      "placeholder": "Wybierz opcje",
+      "search": "Szukaj...",
+      "noResults": "Nie znaleziono wynikow",
+      "loading": "Ladowanie...",
+      "required": "To pole jest wymagane"
+    },
+    "phone": {
+      "invalid": "Prosze wprowadzic prawidlowy numer telefonu",
+      "valid": "Numer telefonu jest prawidlowy",
+      "selectCountry": "Wybierz kraj",
+      "searchCountries": "Szukaj krajow...",
+      "required": "To pole jest wymagane",
+      "example": "Przyklad"
+    },
+    "address": {
+      "searching": "Szukanie...",
+      "noResults": "Nie znaleziono adresow",
+      "selectFromList": "Prosze wybrac adres z listy",
+      "googleMapsRequired": "Google Maps API jest wymagane do autouzupelniania adresow",
+      "required": "To pole jest wymagane"
+    },
+    "colorPalette": {
+      "required": "Prosze wybrac palete kolorow",
+      "noSelection": "Nie wybrano palety",
+      "preview": "Podglad",
+      "copyColor": "Kopiuj kod koloru",
+      "copied": "Skopiowano!",
+      "uncategorized": "Bez kategorii",
+      "all": "Wszystkie",
+      "selectedPalette": "Wybrana paleta",
+      "colors": "Kolory",
+      "usage": "Uzycie",
+      "noPalettes": "Brak dostepnych palet kolorow"
+    },
+    "slider": {
+      "reset": "Zresetuj do srodka",
+      "required": "To pole jest wymagane"
+    },
+    "imageGrid": {
+      "premium": "Premium",
+      "all": "Wszystkie",
+      "uncategorized": "Bez kategorii",
+      "required": "Wymagane",
+      "selectedCount": "{count} z {max} wybranych",
+      "noOptions": "Brak dostepnych opcji",
+      "imageLoadError": "Nie udalo sie zaladowac obrazu",
+      "preview": "Podglad"
+    },
+    "fileUpload": {
+      "dragAndDrop": "Przeciagnij i upusc pliki tutaj lub kliknij, aby wybrac",
+      "maxSize": "Maks. {maxSize}MB na plik, maksymalnie {maxFiles} plikow",
+      "selectFiles": "Wybierz pliki"
+    }
+  },
+  "common": {
+    "loading": "Ladowanie...",
+    "saving": "Zapisywanie...",
+    "saved": "Zapisano",
+    "error": "Blad",
+    "success": "Sukces",
+    "required": "Wymagane",
+    "optional": "Opcjonalne",
+    "close": "Zamknij",
+    "cancel": "Anuluj",
+    "confirm": "Potwierdz",
+    "continue": "Kontynuuj",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "submit": "Wyslij",
+    "save": "Zapisz",
+    "edit": "Edytuj",
+    "delete": "Usun",
+    "add": "Dodaj",
+    "remove": "Usun"
+  },
+  "customSoftware": {
+    "meta": {
+      "title": "Tworzenie oprogramowania na zamowienie - WhiteBoar",
+      "description": "Laczymy strategie AI z doswiadczona inzynieria, aby dostarczac produkty, ktore ucza sie i automatyzuja."
+    },
+    "hero": {
+      "title": "Tworzenie oprogramowania na zamowienie",
+      "subtitle": "Laczymy strategie AI z doswiadczona inzynieria, aby dostarczac produkty, ktore ucza sie i automatyzuja.",
+      "description": "Od kopilotow i inteligentnych przeplywo roboczych po aplikacje dla klientow, projektujemy, budujemy i uruchamiamy doswiadczenia natywne dla AI na kazdej platformie."
+    },
+    "services": {
+      "title": "Uslugi natywne dla AI, ktore dostarczamy",
+      "ai": "Integracje AI i automatyzacja",
+      "aiDesc": "Osadzamy kopiloty LLM, agentow i automatyzacje przeplywo roboczych w Twojej infrastrukturze.",
+      "api": "Integracje API",
+      "apiDesc": "Laczenie systemow i automatyzacja przeplywo roboczych ze stabilnymi, dobrze udokumentowanymi API.",
+      "ecommerce": "Rozwiazania e-commerce",
+      "ecommerceDesc": "Kompozytowe witryny sklepowe z personalizowanym merchandisingiem, subskrypcjami i platnosciami.",
+      "mobileApps": "Aplikacje mobilne",
+      "mobileAppsDesc": "Natywne i wieloplatformowe aplikacje przynoszace doswiadczenia zasilane AI na iOS i Android.",
+      "webDashboards": "Aplikacje webowe i dashboardy",
+      "webDashboardsDesc": "Bogate w dane aplikacje webowe, narzedzia wewnetrzne i centra analityczne z wgladem w czasie rzeczywistym.",
+      "saas": "Platformy SaaS",
+      "saasDesc": "Produkty multi-tenant z rozliczeniami, provisioningiem i wbudowana funkcjonalnoscia AI."
+    },
+    "form": {
+      "title": "Opowiedz nam o swoim projekcie",
+      "subtitle": "Podziel sie swoja wizja, a pomozemy ja zrealizowac",
+      "nameLabel": "Imie i nazwisko",
+      "namePlaceholder": "Twoje imie i nazwisko",
+      "emailLabel": "Email",
+      "emailPlaceholder": "twoj@email.pl",
+      "phoneLabel": "Telefon",
+      "phonePlaceholder": "+48 123 456 789",
+      "descriptionLabel": "Opisz, co chcialby stworzyc",
+      "descriptionPlaceholder": "Opowiedz nam o swoim projekcie, celach i konkretnych wymaganiach...",
+      "submitButton": "Wyslij",
+      "submitting": "Wysylanie...",
+      "success": {
+        "title": "Dziekujemy!",
+        "message": "Skontaktujemy sie z Toba w ciagu 2 dni roboczych."
+      },
+      "errors": {
+        "nameRequired": "Imie i nazwisko jest wymagane",
+        "nameTooShort": "Imie i nazwisko musi miec co najmniej 2 znaki",
+        "emailRequired": "Email jest wymagany",
+        "emailInvalid": "Prosze wprowadzic prawidlowy adres email",
+        "phoneRequired": "Telefon jest wymagany",
+        "phoneInvalid": "Prosze wprowadzic prawidlowy numer telefonu",
+        "descriptionRequired": "Opis projektu jest wymagany",
+        "descriptionTooShort": "Prosze podac wiecej szczegolow (co najmniej 20 znakow)",
+        "submitFailed": "Nie udalo sie wyslac zapytania. Sprobuj ponownie."
+      }
+    },
+    "clients": {
+      "title": "Nasze realizacje",
+      "subtitle": "Zobacz, co zbudowalismy dla firm takich jak Twoja"
+    }
+  },
+  "terms": {
+    "meta": {
+      "title": "Regulamin - WhiteBoar",
+      "description": "Regulamin korzystania z uslug tworzenia i hostingu stron internetowych WhiteBoar."
+    },
+    "title": "Regulamin",
+    "lastUpdated": "Ostatnia aktualizacja: styczen 2025",
+    "sections": {
+      "acceptance": {
+        "title": "1. Akceptacja warunkow",
+        "content": "Korzystajac z uslug WhiteBoar, akceptujesz i zgadzasz sie byc zwiazany niniejszym Regulaminem. Jesli nie zgadzasz sie z tymi warunkami, prosze nie korzystac z naszych uslug."
+      },
+      "serviceProvider": {
+        "title": "2. Dostawca uslug",
+        "content": "Uslugi WhiteBoar sa swiadczone przez Conscious Digital MTU, zarejestrowana estonska organizacje non-profit (numer rejestracyjny 80600079), z siedziba pod adresem Harju maakond, Tallinn, Sakala tn 7-2, 10141, Estonia. Kontakt: info@consciousdigital.org"
+      },
+      "services": {
+        "title": "3. Opis uslug",
+        "intro": "WhiteBoar swiadczy uslugi tworzenia stron internetowych, brandingu i hostingu oparte na AI, w tym:",
+        "items": {
+          "branding": "Zautomatyzowane tworzenie tozsamosci marki (logo, kolory, typografia)",
+          "design": "Projektowanie i tworzenie stron internetowych generowanych przez AI",
+          "hosting": "Zarzadzany hosting stron z globalnym CDN",
+          "seo": "Optymalizacja pod wyszukiwarki i metadane",
+          "multilingual": "Obsluga wielojezycznych stron internetowych",
+          "support": "Wsparcie techniczne i utrzymanie"
+        }
+      },
+      "subscription": {
+        "title": "4. Warunki subskrypcji",
+        "monthly": "Miesieczna subskrypcja z cyklicznym rozliczeniem",
+        "commitment": "Podstawowa subskrypcja wymaga minimalnego okresu zobowiazania 12 miesiecy",
+        "included": "Podstawowa subskrypcja obejmuje hosting strony i do 10 000 miesiecznych odslom stron",
+        "overage": "Ruch przekraczajacy 1 milion miesiecznych odwiedzajacych bedzie obciazony dodatkowa oplata 50 EUR za milion odwiedzajacych",
+        "addons": "Opcjonalne jednorazowe dodatki dostepne dla dodatkowych funkcji. Oplaty za dodatki sa bezzwrotne po rozpoczeciu konfiguracji",
+        "renewal": "Subskrypcje sa automatycznie odnawiane, chyba ze zostana anulowane",
+        "cancellation": "Mozesz anulowac subskrypcje w dowolnym momencie przez ustawienia konta. Obowiazuje 30-dniowa gwarancja zwrotu pieniedzy zgodnie z opisem w Sekcji 5. Nie ma zwrotow za pozostale miesiace po okresie gwarancji"
+      },
+      "guarantee": {
+        "title": "5. Gwarancja zwrotu pieniedzy",
+        "content": "Oferujemy 30-dniowa gwarancje zwrotu pieniedzy od daty pierwszej platnosci. Jesli nie jestes zadowolony z naszej uslugi w ciagu pierwszych 30 dni, mozesz poprosic o pelny zwrot pieniedzy, kontaktujac sie z info@consciousdigital.org. Po 30 dniach nie beda udzielane zwroty za juz oplacone oplaty subskrypcyjne."
+      },
+      "domain": {
+        "title": "6. Transfer domeny i strony",
+        "ownership": "Zachowujesz wlasnosc wszystkich tresci, ktore dostarczasz do WhiteBoar",
+        "registration": "Domeny sa poczatkowo rejestrowane i utrzymywane na nazwe WhiteBoar przez czas trwania aktywnej subskrypcji",
+        "transfer": "Pelny transfer domeny na Twoja wlasnosc jest dostepny na zadanie po 1 roku aktywnej subskrypcji",
+        "process": "Prosby o transfer nalezy wysylac na info@consciousdigital.org i beda przetwarzane w ciagu 14 dni roboczych",
+        "requirements": "Konto musi byc w dobrej kondycji bez zalegych platnosci"
+      },
+      "intellectualProperty": {
+        "title": "7. Wlasnosc intelektualna",
+        "yourContent": "Zachowujesz wszystkie prawa do tresci, ktore dostarczasz (tekst, obrazy, logo)",
+        "generatedContent": "Projekty i kod generowane przez AI stworzone dla Twojej strony staja sie Twoja wlasnoscia po pelnej platnosci",
+        "platform": "WhiteBoar zachowuje wszystkie prawa do swojej platformy, oprogramowania i technologii AI",
+        "license": "Udzielasz WhiteBoar licencji na wykorzystanie Twoich tresci wylacznie w celu swiadczenia uslug dla Ciebie"
+      },
+      "userResponsibilities": {
+        "title": "8. Obowiazki uzytkownika",
+        "intro": "Zgadzasz sie:",
+        "items": {
+          "accurate": "Podawac dokladne informacje biznesowe podczas rejestracji",
+          "legal": "Upewnic sie, ze wszystkie dostarczone tresci sa legalne i nie naruszaja praw osob trzecich",
+          "compliance": "Korzystac z uslugi zgodnie ze wszystkimi obowiazujacymi przepisami prawa",
+          "prohibited": "Nie wykorzystywac uslugi do nielegalnych dzialan, spamu lub zlosliwych celow",
+          "security": "Zachowac bezpieczenstwo danych logowania do konta"
+        }
+      },
+      "serviceLevel": {
+        "title": "9. Poziom uslugi i dostepnosc",
+        "effort": "WhiteBoar swiadczy hosting na zasadzie najlepszych staran",
+        "uptime": "Dazym do 99.9% czasu dzialania, ale nie udzielamy gwarancji SLA. Choc stawiamy sobie za cel maksymalny czas dzialania, nie gwarantujemy nieprzerwanej uslugi",
+        "maintenance": "Planowane prace konserwacyjne beda przeprowadzane z wczesniejszym powiadomieniem, gdy to mozliwe",
+        "support": "Wsparcie techniczne jest swiadczone przez email pod adresem info@consciousdigital.org"
+      },
+      "limitation": {
+        "title": "10. Ograniczenie odpowiedzialnosci",
+        "content": "W maksymalnym zakresie dozwolonym przez prawo, WhiteBoar i Conscious Digital MTU nie ponosza odpowiedzialnosci za zadne szkody posrednie, przypadkowe, specjalne, wynikowe lub karne, ani za utrate zyskow lub przychodow, poniesione bezposrednio lub posrednio, ani za utrate danych, uzytku, wartosci firmy lub innych strat niematerialnych wynikajacych z korzystania z naszych uslug."
+      },
+      "termination": {
+        "title": "11. Rozwiazanie umowy",
+        "byUser": "Mozesz zakycznac subskrypcje w dowolnym momencie przez ustawienia konta",
+        "byUs": "Zastrzegamy sobie prawo do zawieszenia lub zakonczenia kont, ktore naruszaja niniejszy regulamin",
+        "effect": "Po rozwiazaniu umowy, Twoj dostep do uslugi ustanie na koniec biezacego okresu rozliczeniowego",
+        "data": "Bedziemy przechowywac Twoja strone i dane przez 30 dni po rozwiazaniu umowy, po czym moga zostac trwale usuniete"
+      },
+      "modifications": {
+        "title": "12. Zmiany regulaminu",
+        "content": "Zastrzegamy sobie prawo do zmiany niniejszego regulaminu w dowolnym momencie. Zmiany beda publikowane na tej stronie z aktualna data rewizji. Dalsze korzystanie z uslugi po zmianach oznacza akceptacje zmodyfikowanego regulaminu."
+      },
+      "governingLaw": {
+        "title": "13. Prawo wlasciwe i spory",
+        "content": "Niniejszy regulamin podlega prawu Toskanii, Wlochy, oraz obowiazujacym przepisom Unii Europejskiej. Wszelkie spory beda rozwiazywane w drodze negocjacji w dobrej wierze lub, w razie koniecznosci, poprzez arbitraz zgodnie z wloskimi procedurami arbitrazowymi."
+      },
+      "contact": {
+        "title": "14. Informacje kontaktowe",
+        "content": "W razie pytan dotyczacych niniejszego Regulaminu prosimy o kontakt pod adresem info@consciousdigital.org"
+      }
+    }
+  },
+  "privacy": {
+    "meta": {
+      "title": "Polityka prywatnosci - WhiteBoar",
+      "description": "Polityka prywatnosci i informacje o ochronie danych dla uslug WhiteBoar."
+    },
+    "title": "Polityka prywatnosci",
+    "lastUpdated": "Ostatnia aktualizacja: styczen 2025",
+    "sections": {
+      "introduction": {
+        "title": "1. Wprowadzenie",
+        "content": "Niniejsza Polityka prywatnosci opisuje, jak Conscious Digital MTU (\"my\" lub \"WhiteBoar\") zbiera, wykorzystuje i chroni Twoje dane osobowe podczas korzystania z naszych uslug tworzenia i hostingu stron internetowych opartych na AI. Zobowiazujemy sie chronic Twoja prywatnosc i przestrzegac Ogolnego rozporzadzenia o ochronie danych (RODO) oraz innych obowiazujacych przepisow o ochronie danych."
+      },
+      "controller": {
+        "title": "2. Administrator danych",
+        "name": "Conscious Digital MTU",
+        "registration": "Numer rejestracyjny: 80600079",
+        "address": "Harju maakond, Tallinn, Sakala tn 7-2, 10141, Estonia",
+        "email": "info@consciousdigital.org"
+      },
+      "dataCollection": {
+        "title": "3. Zbierane informacje",
+        "intro": "Zbieramy nastepujace rodzaje informacji:",
+        "personal": {
+          "title": "Dane osobowe",
+          "items": {
+            "contact": "Imie i nazwisko, adres email, numer telefonu",
+            "business": "Nazwa firmy, adres, numer VAT",
+            "payment": "Informacje platnicze (przetwarzane bezpiecznie przez Stripe. WhiteBoar nie przechowuje ani nie ma dostepu do danych Twojej karty kredytowej)"
+          }
+        },
+        "business": {
+          "title": "Informacje biznesowe",
+          "items": {
+            "description": "Opis firmy, branza, grupa docelowa",
+            "assets": "Logo, zdjecia i inne materialy, ktore przesylasz",
+            "preferences": "Preferencje projektowe, wybor kolorow, wymagania dotyczace tresci"
+          }
+        },
+        "technical": {
+          "title": "Informacje techniczne",
+          "items": {
+            "analytics": "Dane o uzyciu strony przez Google Analytics (anonimowe)",
+            "logs": "Dzienniki serwera, adresy IP, informacje o przegladarce",
+            "performance": "Metryki wydajnosci do optymalizacji uslugi"
+          }
+        }
+      },
+      "dataUse": {
+        "title": "4. Jak wykorzystujemy Twoje informacje",
+        "intro": "Wykorzystujemy Twoje informacje do:",
+        "items": {
+          "service": "Swiadczenia i dostarczania naszych uslug tworzenia stron internetowych opartych na AI",
+          "branding": "Generowania niestandardowych tozsamosci marki i projektow stron",
+          "hosting": "Hostingu i utrzymania Twojej strony",
+          "communication": "Komunikacji z Toba w sprawie uslugi i konta",
+          "improvement": "Ulepszania naszych algorytmow AI i jakosci uslugi. Dane klientow moga byc anonimizowane i agregowane w celu ulepszania modeli AI. Indywidualne dane identyfikujace nigdy nie sa wykorzystywane do szkolenia modeli AI",
+          "legal": "Przestrzegania zobowiazan prawnych i ochrony naszych praw",
+          "analytics": "Zrozumienia, jak korzysta sie z naszych uslug (tylko zanonimizowane dane)"
+        }
+      },
+      "legalBasis": {
+        "title": "5. Podstawa prawna przetwarzania (RODO)",
+        "intro": "Przetwarzamy Twoje dane osobowe na podstawie:",
+        "items": {
+          "contract": "Wykonanie umowy - aby swiadczyc zamowione uslugi",
+          "consent": "Twoja wyrazna zgoda na okreslone czynnosci przetwarzania",
+          "legitimate": "Uzasadnione interesy - w tym zapobieganie oszustwom, bezpieczenstwo uslugi, analizy biznesowe z wykorzystaniem zanonimizowanych danych i poprawa jakosci uslugi. Przeprowadzamy testy rownowazenia, aby upewnic sie, ze nasze interesy nie przewazaja nad Twoimi prawami",
+          "legal": "Zobowiazania prawne - aby przestrzegac wymagan podatkowych i regulacyjnych"
+        }
+      },
+      "dataSharing": {
+        "title": "6. Udostepnianie danych i podmioty trzecie",
+        "intro": "Udostepniamy Twoje informacje tylko:",
+        "items": {
+          "vercel": "Vercel - hosting i wdrazanie stron (serwery w UE)",
+          "supabase": "Supabase - hosting bazy danych i uwierzytelnianie uzytkownikow (serwery w UE)",
+          "stripe": "Stripe - bezpieczne przetwarzanie platnosci (zgodne z PCI-DSS)",
+          "analytics": "Google Analytics - anonimowe statystyki uzytkowania z wlaczona anonimizacja IP",
+          "email": "Resend - dostarczanie emaili transakcyjnych i komunikacja serwisowa"
+        },
+        "location": "Wszystkie przetwarzanie danych odbywa sie w Unii Europejskiej. Nie przekazujemy danych poza UE.",
+        "noSale": "Nigdy nie sprzedajemy Twoich danych osobowych podmiotom trzecim."
+      },
+      "dataRetention": {
+        "title": "7. Przechowywanie danych",
+        "active": "Przechowujemy Twoje dane osobowe tak dlugo, jak Twoje konto jest aktywne",
+        "terminated": "Po zakonczeniu konta, dane osobowe (imie i nazwisko, email, dane kontaktowe) sa usuwane po 30 dniach. Wygenerowany kod strony i projekty sa przechowywane przez 90 dni, aby umozliwic odzyskanie w razie potrzeby, a nastepnie sa trwale usuwane",
+        "legal": "Niektore informacje moga byc przechowywane dluzej, jesli wymaga tego prawo (np. dokumenty podatkowe przez 7 lat)",
+        "backups": "Kopie zapasowe sa automatycznie usuwane w ciagu 90 dni"
+      },
+      "yourRights": {
+        "title": "8. Twoje prawa (RODO)",
+        "intro": "Zgodnie z RODO masz prawo do:",
+        "items": {
+          "access": "Dostepu - zadania kopii Twoich danych osobowych",
+          "rectification": "Sprostowania - poprawienia niedokladnych lub niekompletnych danych",
+          "erasure": "Usuniecia - zadania usuniecia Twoich danych (\"prawo do bycia zapomnianym\")",
+          "restriction": "Ograniczenia - ograniczenia sposobu wykorzystania Twoich danych",
+          "portability": "Przenoszenia danych - otrzymania danych w przenosnym formacie",
+          "object": "Sprzeciwu - sprzeciwu wobec okreslonych rodzajow przetwarzania",
+          "withdraw": "Wycofania zgody - wycofania zgody w dowolnym momencie"
+        },
+        "exercise": "Aby skorzystac z ktoregocolwiek z tych praw, skontaktuj sie z nami pod adresem info@consciousdigital.org. Odpowiemy na Twoje zadanie w ciagu 30 dni zgodnie z wymogami RODO",
+        "complaint": "Masz rowniez prawo do zlozenia skargi do lokalnego organu ochrony danych"
+      },
+      "cookies": {
+        "title": "9. Pliki cookie i sledzenie",
+        "analytics": "Uzywamy plikow cookie Google Analytics do zrozumienia uzycia strony. Anonimizacja IP jest wlaczona, dane sa przechowywane przez 26 miesiecy i wszystkie dane sa zanonimizowane. Mozesz zrezygnowac w dowolnym momencie za pomoca ustawien przegladarki lub dodatku do przegladarki Google Analytics Opt-out",
+        "essential": "Niezbedne pliki cookie do funkcjonalnosci strony i preferencji uzytkownika (motyw, jezyk)",
+        "noMarketing": "Nie uzywamy marketingowych ani reklamowych plikow cookie",
+        "control": "Mozesz kontrolowac pliki cookie przez ustawienia przegladarki lub zrezygnowac ze sledzenia Google Analytics"
+      },
+      "security": {
+        "title": "10. Bezpieczenstwo danych",
+        "intro": "Wdrazamy odpowiednie srodki techniczne i organizacyjne w celu ochrony Twoich danych:",
+        "items": {
+          "encryption": "Szyfrowanie SSL/TLS dla wszystkich transmisji danych",
+          "secure": "Bezpieczna infrastruktura serwerowa z regularnymi aktualizacjami bezpieczenstwa",
+          "access": "Ograniczony dostep do danych osobowych na zasadzie koniecznosci wiedzy",
+          "monitoring": "Regularne monitorowanie bezpieczenstwa i oceny podatnosci"
+        },
+        "breach": "W przypadku naruszenia danych powiadomimy dotkniete osoby i wladze zgodnie z wymogami prawa"
+      },
+      "children": {
+        "title": "11. Prywatnosc dzieci",
+        "content": "Nasze uslugi nie sa skierowane do osob ponizej 16 roku zycia. Swiadomie nie zbieramy danych osobowych od dzieci. Jesli uwazasz, ze zebralismy informacje od dziecka, prosimy o natychmiastowy kontakt."
+      },
+      "changes": {
+        "title": "12. Zmiany niniejszej polityki",
+        "content": "Mozemy od czasu do czasu aktualizowac niniejsza Polityke prywatnosci. Zmiany beda publikowane na tej stronie z aktualna data rewizji. Zachecamy do okresowego przegladania tej polityki."
+      },
+      "contact": {
+        "title": "13. Kontakt",
+        "content": "W razie pytan dotyczacych niniejszej Polityki prywatnosci lub aby skorzystac z praw ochrony danych, prosimy o kontakt:",
+        "email": "Email: info@consciousdigital.org",
+        "address": "Adres: Harju maakond, Tallinn, Sakala tn 7-2, 10141, Estonia"
+      }
+    }
+  },
+  "cookieConsent": {
+    "title": "Uzywamy plikow cookie",
+    "description": "Uzywamy niezbednych plikow cookie do funkcjonalnosci strony i opcjonalnych plikow cookie do analityki. Mozesz dostosowac swoje preferencje lub zaakceptowac wszystkie pliki cookie.",
+    "acceptAll": "Akceptuj wszystkie",
+    "essentialOnly": "Tylko niezbedne",
+    "customize": "Dostosuj"
+  },
+  "cookiePreferences": {
+    "title": "Preferencje plikow cookie",
+    "description": "Zarzadzaj swoimi preferencjami plikow cookie. Mozesz wlaczyc lub wylaczyc rozne kategorie plikow cookie ponizej.",
+    "essential": {
+      "title": "Niezbedne pliki cookie",
+      "description": "Wymagane do prawidlowego funkcjonowania strony. Te pliki cookie umozliwiaja podstawowe funkcje, takie jak bezpieczenstwo, zarzadzanie siecia i dostepnosc.",
+      "alwaysActive": "Zawsze aktywne"
+    },
+    "analytics": {
+      "title": "Analityczne pliki cookie",
+      "description": "Pomagaja nam zrozumiec, jak odwiedzajacy wchodza w interakcje z nasza strona, zbierajac i raportujac informacje anonimowo."
+    },
+    "marketing": {
+      "title": "Marketingowe pliki cookie",
+      "description": "Uzywane do sledzenia odwiedzajacych na stronach w celu wyswietlania odpowiednich reklam i zachecania ich do interakcji."
+    },
+    "acceptAll": "Akceptuj wszystkie",
+    "savePreferences": "Zapisz preferencje",
+    "cancel": "Anuluj"
+  },
+  "contact": {
+    "meta": {
+      "title": "Kontakt - WhiteBoar",
+      "description": "Skontaktuj sie z WhiteBoar. Jestesmy tutaj, aby pomoc w Twoich pytaniach i zapytaniach projektowych."
+    },
+    "title": "Kontakt",
+    "welcome": "Chetnie od Ciebie usłyszymy! Niezaleznie od tego, czy masz pytanie o nasze uslugi, potrzebujesz pomocy, czy chcesz omowic potencjalny projekt, skontaktuj sie z nami.",
+    "contactInfo": "Mozesz tez napisac bezposrednio na",
+    "form": {
+      "title": "Wyslij nam wiadomosc",
+      "nameLabel": "Imie i nazwisko",
+      "namePlaceholder": "Twoje imie i nazwisko",
+      "emailLabel": "Email",
+      "emailPlaceholder": "twoj@email.pl",
+      "phoneLabel": "Telefon",
+      "phonePlaceholder": "+48 123 456 789",
+      "detailsLabel": "Szczegoly",
+      "detailsPlaceholder": "Opowiedz nam o swoim zapytaniu lub projekcie...",
+      "submitButton": "Wyslij wiadomosc",
+      "submitting": "Wysylanie...",
+      "success": {
+        "title": "Dziekujemy!",
+        "message": "Otrzymalismy Twoja wiadomosc i odezwiemy sie w ciagu 2 dni roboczych."
+      },
+      "errors": {
+        "nameRequired": "Imie i nazwisko jest wymagane",
+        "nameTooShort": "Imie i nazwisko musi miec co najmniej 2 znaki",
+        "emailRequired": "Email jest wymagany",
+        "emailInvalid": "Prosze wprowadzic prawidlowy adres email",
+        "phoneRequired": "Telefon jest wymagany",
+        "phoneInvalid": "Prosze wprowadzic prawidlowy numer telefonu",
+        "detailsRequired": "Szczegoly sa wymagane",
+        "detailsTooShort": "Prosze podac wiecej szczegolow (co najmniej 15 znakow)",
+        "submitFailed": "Nie udalo sie wyslac wiadomosci. Sprobuj ponownie."
+      }
+    }
+  },
+  "laboratorio": {
+    "meta": {
+      "title": "Warsztaty - WhiteBoar",
+      "description": "Zarejestruj sie na nasze warsztaty i dowiedz sie, jak rozwijac swoj biznes online."
+    }
+  }
+}

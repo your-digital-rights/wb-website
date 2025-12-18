@@ -8,6 +8,7 @@ import { motion } from 'framer-motion'
 import { EmailVerification } from '@/components/onboarding/EmailVerification'
 import { useOnboardingStore } from '@/stores/onboarding'
 import { StepComponentProps } from './index'
+import { Locale } from '@/lib/i18n'
 
 export function Step2EmailVerification({ form, data, isLoading, error }: StepComponentProps) {
   const t = useTranslations('onboarding.steps.2')
@@ -18,7 +19,7 @@ export function Step2EmailVerification({ form, data, isLoading, error }: StepCom
   const hasAutoSentRef = useRef(false)
 
   const { verifyEmail, resendVerificationCode, formData, nextStep, validateStep } = useOnboardingStore()
-  const locale = (params?.locale ?? 'en') as string
+  const locale = (params?.locale ?? 'en') as Locale
 
   // Get email from Step 1 (with fallback for testing)
   const email = formData.email || 'john.doe@test.com'
@@ -30,7 +31,7 @@ export function Step2EmailVerification({ form, data, isLoading, error }: StepCom
       hasAutoSentRef.current = true
 
       // Send verification email automatically
-      resendVerificationCode(email, locale as 'en' | 'it')
+      resendVerificationCode(email, locale)
         .catch((err) => {
           console.error('Failed to auto-send verification email:', err)
           // Don't show error to user - they can manually resend
@@ -76,7 +77,7 @@ export function Step2EmailVerification({ form, data, isLoading, error }: StepCom
 
   const handleResendCode = async () => {
     try {
-      await resendVerificationCode(email, locale as 'en' | 'it')
+      await resendVerificationCode(email, locale)
     } catch (error) {
       console.error('Failed to resend verification code:', error)
       throw error // Let EmailVerification component handle the error

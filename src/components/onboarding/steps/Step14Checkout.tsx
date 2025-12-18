@@ -36,6 +36,7 @@ import {
 } from '@/data/european-languages'
 import { CheckoutSession } from '@/types/onboarding'
 import { trackPurchase } from '@/lib/analytics'
+import { Locale } from '@/lib/i18n'
 
 // Initialize Stripe
 const STRIPE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
@@ -122,7 +123,7 @@ function CheckoutForm({
   onZeroPaymentComplete
 }: CheckoutFormProps) {
   const t = useTranslations('onboarding.steps.14')
-  const locale = useLocale() as 'en' | 'it'
+  const locale = useLocale() as Locale
   const { control, watch } = form
 
   const [isProcessing, setIsProcessing] = useState(false)
@@ -1053,7 +1054,7 @@ export function Step14Checkout(props: StepComponentProps) {
 function CheckoutFormWrapper(props: CheckoutWrapperProps) {
   const { form, submissionId, sessionId } = props
   const t = useTranslations('onboarding.steps.14')
-  const locale = useLocale() as 'en' | 'it'
+  const locale = useLocale() as Locale
 
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [isLoadingSecret, setIsLoadingSecret] = useState(true)

@@ -106,6 +106,7 @@
   "pnpm": {
     "ignore-scripts": false,
     "ignoredBuiltDependencies": [
+      "@swc/core",
       "msw",
       "sharp",
       "supabase",

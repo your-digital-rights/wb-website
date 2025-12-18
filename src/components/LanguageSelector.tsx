@@ -23,8 +23,23 @@ export function LanguageSelector() {
     router.replace(pathname, { locale: newLocale })
   }
 
-  const getLocaleName = (locale: Locale) => {
-    return locale === 'en' ? t('english') : t('italian')
+  const getLocaleName = (loc: Locale) => {
+    switch (loc) {
+      case 'en': return t('english')
+      case 'it': return t('italian')
+      case 'pl': return t('polish')
+      default: return loc
+    }
+  }
+
+  const getFlagCode = (loc: Locale) => {
+    // Map locale codes to flag-icons country codes
+    switch (loc) {
+      case 'en': return 'us'
+      case 'it': return 'it'
+      case 'pl': return 'pl'
+      default: return loc
+    }
   }
 
   return (
@@ -45,7 +60,7 @@ export function LanguageSelector() {
               className="w-full justify-start"
               onClick={() => switchLocale(loc)}
             >
-              <span className={`fi fi-${loc === 'en' ? 'us' : loc} mr-2`} />
+              <span className={`fi fi-${getFlagCode(loc)} mr-2`} />
               {getLocaleName(loc)}
             </Button>
           ))}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { notFound } from 'next/navigation'
+import { Locale } from '@/lib/i18n'
 
 // Block access in production - this page is for development/testing only
 if (process.env.NODE_ENV === 'production') {
@@ -24,7 +25,7 @@ const emailTypes = [
 
 export default function TestEmailsPage() {
   const [email, setEmail] = useState('')
-  const [locale, setLocale] = useState<'en' | 'it'>('en')
+  const [locale, setLocale] = useState<Locale>('en')
   const [loading, setLoading] = useState<string | null>(null)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
@@ -92,11 +93,12 @@ export default function TestEmailsPage() {
               <select
                 id="locale"
                 value={locale}
-                onChange={(e) => setLocale(e.target.value as 'en' | 'it')}
+                onChange={(e) => setLocale(e.target.value as Locale)}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option value="en">English</option>
                 <option value="it">Italian</option>
+                <option value="pl">Polish</option>
               </select>
             </div>
           </div>

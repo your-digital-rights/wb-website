@@ -31,11 +31,9 @@ const phoneSchema = z.string()
   .regex(/^\+?\d{1,15}$/, 'Please enter a valid phone number')
   .min(1, 'Phone number is required')
 
-const italianVatSchema = z.string()
+// VAT number validation - accepts both Italian (IT + 11 digits) and Polish (PL + 10 digits)
+const vatNumberSchema = z.string()
   .transform((val) => val.toUpperCase())
-  .refine((val) => !val || val === '' || /^IT\d{11}$/.test(val), {
-    message: 'Please enter a valid Italian VAT number (IT followed by 11 digits)'
-  })
   .optional()
   .or(z.literal(''))
 
@@ -88,6 +86,10 @@ export const verificationCodeSchema = z.object({
 // =============================================================================
 // STEP 3: BUSINESS BASICS
 // =============================================================================
+
+// Supported business countries
+const businessCountrySchema = z.enum(['Italy', 'Poland']).default('Italy')
+
 export const step3Schema = z.object({
   businessName: z.string()
     .min(2, 'Business name must be at least 2 characters')
@@ -96,14 +98,58 @@ export const step3Schema = z.object({
   businessPhone: phoneSchema,
   businessStreet: z.string().min(1, 'Street address is required'),
   businessCity: z.string().min(1, 'City is required'),
-  businessProvince: z.string().min(1, 'Province is required'),
-  businessPostalCode: z.string()
-    .regex(/^\d{5}$/, 'Please enter a valid Italian postal code (5 digits)'),
-  businessCountry: z.string().default('Italy'),
+  businessProvince: z.string().min(1, 'Province/Voivodeship is required'),
+  businessPostalCode: z.string().min(1, 'Postal code is required'),
+  businessCountry: businessCountrySchema,
   businessPlaceId: z.string().optional(),
   industry: z.string().min(1, 'Please select an industry'),
   customIndustry: z.string().optional(),
-  vatNumber: italianVatSchema
+  vatNumber: vatNumberSchema
+}).superRefine((data, ctx) => {
+  // Country-conditional postal code validation
+  if (data.businessCountry === 'Italy') {
+    // Italian postal code: 5 digits
+    if (!/^\d{5}$/.test(data.businessPostalCode)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please enter a valid Italian postal code (5 digits)',
+        path: ['businessPostalCode']
+      })
+    }
+  } else if (data.businessCountry === 'Poland') {
+    // Polish postal code: XX-XXX format
+    if (!/^\d{2}-\d{3}$/.test(data.businessPostalCode)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Please enter a valid Polish postal code (XX-XXX format)',
+        path: ['businessPostalCode']
+      })
+    }
+  }
+
+  // Country-conditional VAT number validation (optional field)
+  if (data.vatNumber && data.vatNumber.trim() !== '') {
+    const vatUpper = data.vatNumber.toUpperCase()
+    if (data.businessCountry === 'Italy') {
+      // Italian VAT: IT + 11 digits
+      if (!/^IT\d{11}$/.test(vatUpper)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Please enter a valid Italian VAT number (IT followed by 11 digits)',
+          path: ['vatNumber']
+        })
+      }
+    } else if (data.businessCountry === 'Poland') {
+      // Polish NIP: PL + 10 digits
+      if (!/^PL\d{10}$/.test(vatUpper)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Please enter a valid Polish NIP number (PL followed by 10 digits)',
+          path: ['vatNumber']
+        })
+      }
+    }
+  }
 })
 
 // =============================================================================

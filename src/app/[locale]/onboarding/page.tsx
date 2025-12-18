@@ -10,12 +10,13 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useOnboardingStore } from '@/stores/onboarding'
 import { usePricing } from '@/hooks/usePricing'
+import { Locale } from '@/lib/i18n'
 
 export default function OnboardingWelcome() {
   const t = useTranslations('onboarding.welcome')
   const router = useRouter()
-  const params = useParams<{ locale?: 'en' | 'it' }>()
-  const locale = (params?.locale ?? 'en') as 'en' | 'it'
+  const params = useParams<{ locale?: Locale }>()
+  const locale = (params?.locale ?? 'en') as Locale
   const { initializeSession, loadExistingSession } = useOnboardingStore()
   const [mounted, setMounted] = useState(false)
   const { basePackagePrice } = usePricing()

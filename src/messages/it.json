@@ -11,7 +11,8 @@
     },
     "language": {
       "english": "Inglese",
-      "italian": "Italiano"
+      "italian": "Italiano",
+      "polish": "Polacco"
     }
   },
   "hero": {
@@ -304,9 +305,13 @@
             "label": "Provincia/Regione",
             "placeholder": "Inserisci provincia o regione"
           },
+          "voivodeship": {
+            "label": "Voivodato",
+            "placeholder": "Seleziona voivodato"
+          },
           "country": {
-            "label": "Paese",
-            "placeholder": "Inserisci paese"
+            "label": "Paese di attività",
+            "placeholder": "Seleziona paese"
           }
         },
         "dataUsage": {

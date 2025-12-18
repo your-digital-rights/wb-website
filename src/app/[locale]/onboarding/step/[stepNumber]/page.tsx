@@ -14,6 +14,7 @@ import { submitOnboarding } from '@/services/onboarding-client'
 import { getNextStep, getPreviousStep, calculateProgress } from '@/lib/step-navigation'
 import { OnboardingFormData, StepNumber } from '@/types/onboarding'
 import { trackBeginCheckout, trackOnboardingComplete } from '@/lib/analytics'
+import { Locale } from '@/lib/i18n'
 
 // Tell Next.js this is a fully dynamic route (no static generation)
 export const dynamic = 'force-dynamic'
@@ -28,6 +29,7 @@ export default function OnboardingStep() {
   const locale = (params?.locale ?? 'en') as string
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string>('')
+  const [detectedCountry, setDetectedCountry] = useState<'Italy' | 'Poland'>('Italy')
 
   const {
     currentStep,
@@ -60,14 +62,14 @@ export default function OnboardingStep() {
         } catch (error) {
           console.error('Failed to load session from URL:', error)
           // If loading session fails, create a new one
-          await initializeSession(locale as 'en' | 'it')
+          await initializeSession(locale as Locale)
         } finally {
           setIsLoading(false)
         }
       } else if (!hasExistingSession() && !sessionId) {
         try {
           setIsLoading(true)
-          await initializeSession(locale as 'en' | 'it')
+          await initializeSession(locale as Locale)
         } catch (error) {
           console.error('Failed to initialize session:', error)
           setError('Failed to initialize session. Please try again.')
@@ -110,6 +112,25 @@ export default function OnboardingStep() {
     }
   }, [stepNumber, sessionId])
 
+  // Fetch geolocation for default country (Step 3)
+  useEffect(() => {
+    const fetchGeolocation = async () => {
+      try {
+        const response = await fetch('/api/geolocation')
+        if (response.ok) {
+          const data = await response.json()
+          if (data.detectedCountry === 'Italy' || data.detectedCountry === 'Poland') {
+            setDetectedCountry(data.detectedCountry)
+          }
+        }
+      } catch (error) {
+        // Silently fail - default to Italy
+        console.debug('Geolocation detection failed, defaulting to Italy')
+      }
+    }
+    fetchGeolocation()
+  }, [])
+
   // Track if we're currently resetting form from store to prevent auto-save loop
   const isResettingRef = useRef(false)
 
@@ -138,7 +159,7 @@ export default function OnboardingStep() {
           businessCity: formData?.businessCity ?? '',
           businessProvince: formData?.businessProvince ?? '',
           businessPostalCode: formData?.businessPostalCode ?? '',
-          businessCountry: formData?.businessCountry ?? 'Italy',
+          businessCountry: formData?.businessCountry || 'Italy',
           businessPlaceId: formData?.businessPlaceId ?? '',
           industry: formData?.industry ?? '',
           vatNumber: formData?.vatNumber ?? ''
@@ -344,11 +365,7 @@ export default function OnboardingStep() {
       }
 
       // Update form data
-      // Special handling for Step 3: ensure businessCountry is always set to 'Italy'
-      const dataToSave = stepNumber === 3
-        ? { ...data, businessCountry: 'Italy' }
-        : data
-      updateFormData(dataToSave as any)
+      updateFormData(data as any)
 
       // Validate current step
       const isStepValid = await validateStep(stepNumber)
@@ -526,6 +543,7 @@ export default function OnboardingStep() {
         errors={errors}
         isLoading={isLoading}
         error={error}
+        {...(stepNumber === 3 ? { detectedCountry } : {})}
       />
     </StepTemplate>
   )

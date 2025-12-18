@@ -10,6 +10,7 @@ import {
   OnboardingSession,
   TOTAL_STEPS
 } from '@/types/onboarding'
+import { Locale } from '@/lib/i18n'
 import { generateUUID } from '@/lib/utils'
 
 /**
@@ -51,7 +52,7 @@ const initialFormData: Partial<OnboardingFormData> = {
   businessCity: '',
   businessProvince: '',
   businessPostalCode: '',
-  businessCountry: '',
+  businessCountry: 'Italy',
   businessPlaceId: undefined,
   industry: '',
   vatNumber: '',
@@ -399,7 +400,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
           },
 
           // Session Helper Functions for Page Components
-          initializeSession: async (locale: 'en' | 'it' = 'en') => {
+          initializeSession: async (locale: Locale = 'en') => {
             set({ isLoading: true, error: null })
             
             try {
@@ -741,7 +742,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
             }
           },
 
-          resendVerificationCode: async (email: string, locale: 'en' | 'it' = 'en'): Promise<void> => {
+          resendVerificationCode: async (email: string, locale: Locale = 'en'): Promise<void> => {
             const { sessionId, formData } = get()
             if (!sessionId) {
               throw new Error('No active session')

@@ -64,10 +64,12 @@ function pushToDataLayer(event: Record<string, unknown>, dedupeKey?: string): bo
 /**
  * Get current language from document
  */
-function getLanguage(): 'en' | 'it' {
+function getLanguage(): 'en' | 'it' | 'pl' {
   if (typeof document === 'undefined') return 'en'
   const lang = document.documentElement.lang
-  return lang === 'it' ? 'it' : 'en'
+  if (lang === 'it') return 'it'
+  if (lang === 'pl') return 'pl'
+  return 'en'
 }
 
 /**
