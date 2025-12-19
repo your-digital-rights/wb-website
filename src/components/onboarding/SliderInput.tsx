@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils'
 
 interface SliderOption {
   key: string
+  title?: string
   leftLabel: string
   rightLabel: string
   value: number
@@ -179,7 +180,7 @@ export function SliderInput({
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <h4 className="font-medium text-sm">
-                      {option.key.charAt(0).toUpperCase() + option.key.slice(1)}
+                      {option.title || option.key.charAt(0).toUpperCase() + option.key.slice(1)}
                     </h4>
                     <span className="text-xs text-muted-foreground font-mono">
                       {value}%
@@ -267,7 +268,7 @@ export function SliderInput({
 
       {/* Summary */}
       <Card className="p-4 bg-muted/50">
-        <h4 className="font-medium text-sm mb-3">Summary</h4>
+        <h4 className="font-medium text-sm mb-3">{t('summary')}</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {options.map(option => {
             const value = internalValues[option.key] ?? 50
@@ -277,7 +278,7 @@ export function SliderInput({
             return (
               <div key={option.key} className="flex items-center justify-between text-xs">
                 <span className="font-medium">
-                  {option.key.charAt(0).toUpperCase() + option.key.slice(1)}:
+                  {option.title || option.key.charAt(0).toUpperCase() + option.key.slice(1)}:
                 </span>
                 <span className="font-mono">
                   {isLeftLeaning ? option.leftLabel : option.rightLabel} ({strength.toFixed(0)}%)

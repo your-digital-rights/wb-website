@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useTranslations } from 'next-intl'
 import { Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
@@ -30,52 +30,24 @@ import { useOnboardingStore } from '@/stores/onboarding'
 // Website section type definition
 type WebsiteSectionOption = {
   id: string
-  label: string
-  description: string
   alwaysIncluded?: boolean
   essential?: boolean
 }
 
-// Website section options (in order of appearance)
+// Website section IDs (labels and descriptions come from translations)
 // Hero and Contact are always included and cannot be unchecked
-const websiteSections: WebsiteSectionOption[] = [
-  { id: 'hero', label: 'Hero / Introduction', description: 'A strong headline, short description, and call-to-action', alwaysIncluded: true },
-  { id: 'contact', label: 'Contact us', description: 'Contact information and form', alwaysIncluded: true },
-  { id: 'about', label: 'About / Story', description: 'Who you are, what makes your business unique', essential: false },
-  { id: 'portfolio', label: 'Portfolio / Gallery', description: 'Showcase your work', essential: false },
-  { id: 'services', label: 'Services / Products', description: 'Key offerings or areas of expertise', essential: false },
-  { id: 'testimonials', label: 'Testimonials / Reviews', description: 'Social proof from customers or partners', essential: false },
-  { id: 'events', label: 'Events', description: 'Upcoming events and activities', essential: false }
+const websiteSectionIds: WebsiteSectionOption[] = [
+  { id: 'hero', alwaysIncluded: true },
+  { id: 'contact', alwaysIncluded: true },
+  { id: 'about', essential: false },
+  { id: 'portfolio', essential: false },
+  { id: 'services', essential: false },
+  { id: 'testimonials', essential: false },
+  { id: 'events', essential: false }
 ]
 
-// Primary goal options (ordered alphabetically)
-const primaryGoalOptions = [
-  {
-    value: 'other',
-    label: 'Other',
-    description: 'Custom business objective or mixed goals'
-  },
-  {
-    value: 'phone-call',
-    label: 'Phone call',
-    description: 'Encourage visitors to call your business'
-  },
-  {
-    value: 'purchase',
-    label: 'Purchase product or service',
-    description: 'Drive direct sales and transactions'
-  },
-  {
-    value: 'contact-form',
-    label: 'Submit contact form',
-    description: 'Generate inquiries through contact forms'
-  },
-  {
-    value: 'visit-location',
-    label: 'Visit location',
-    description: 'Attract customers to your physical location'
-  }
-]
+// Primary goal option IDs (labels and descriptions come from translations)
+const primaryGoalIds = ['other', 'phone-call', 'purchase', 'contact-form', 'visit-location']
 
 export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponentProps) {
   const t = useTranslations('onboarding.steps.11')
@@ -92,6 +64,42 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
   const [productToDelete, setProductToDelete] = useState<string | null>(null)
   const { formData, addProduct, updateProduct, deleteProduct, reorderProducts } = useOnboardingStore()
   const products = formData.products || []
+
+  // Generate translated primary goal options
+  const primaryGoalOptions = useMemo(() =>
+    primaryGoalIds.map(id => ({
+      value: id,
+      label: t(`goal.options.${id}.label`),
+      description: t(`goal.options.${id}.description`)
+    }))
+  , [t])
+
+  // Generate translated website sections
+  const websiteSections = useMemo(() =>
+    websiteSectionIds.map(section => ({
+      ...section,
+      label: t(`sections.items.${section.id}.label`),
+      description: t(`sections.items.${section.id}.description`)
+    }))
+  , [t])
+
+  // Generate translated offering type options
+  const offeringTypeOptions = useMemo(() => [
+    { value: 'products', label: t('offerings.types.products.label'), description: t('offerings.types.products.description') },
+    { value: 'services', label: t('offerings.types.services.label'), description: t('offerings.types.services.description') },
+    { value: 'both', label: t('offerings.types.both.label'), description: t('offerings.types.both.description') }
+  ], [t])
+
+  // Translate validation error messages
+  const translateError = (errorKey: string | undefined): string | undefined => {
+    if (!errorKey) return undefined
+    // Check if it's a known validation key
+    const validationKeys = ['primaryGoalRequired', 'websiteSectionsMin']
+    if (validationKeys.includes(errorKey)) {
+      return t(`validation.${errorKey}`)
+    }
+    return errorKey
+  }
 
   const handleSectionChange = (sectionId: string, checked: boolean) => {
     // Prevent unchecking hero and contact (they're always included)
@@ -209,7 +217,7 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
                   options={primaryGoalOptions}
                   value={field.value}
                   onValueChange={field.onChange}
-                  error={(errors as any).primaryGoal?.message}
+                  error={translateError((errors as any).primaryGoal?.message)}
                   required
                   searchable
                   disabled={isLoading}
@@ -344,13 +352,9 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
 
                     return (
                       <div className="space-y-3">
-                        <Label className="text-sm font-medium">What do you offer?</Label>
+                        <Label className="text-sm font-medium">{t('offerings.typeLabel')}</Label>
                         <div className="grid grid-cols-3 gap-3">
-                          {[
-                            { value: 'products', label: 'Products', description: 'Physical or digital goods' },
-                            { value: 'services', label: 'Services', description: 'Consulting, support, maintenance' },
-                            { value: 'both', label: 'Both', description: 'Products and services' }
-                          ].map((option) => {
+                          {offeringTypeOptions.map((option) => {
                             const isSelected = currentValue === option.value
 
                             return (
@@ -544,14 +548,14 @@ export function Step11WebsiteStructure({ form, errors, isLoading }: StepComponen
       <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Product</AlertDialogTitle>
+            <AlertDialogTitle>{t('products.deleteConfirm.title')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this product? This action cannot be undone.
+              {t('products.deleteConfirm.description')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleDeleteCancel}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteConfirm}>Delete</AlertDialogAction>
+            <AlertDialogCancel onClick={handleDeleteCancel}>{t('products.cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm}>{t('products.confirm')}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

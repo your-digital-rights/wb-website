@@ -354,12 +354,18 @@ test.describe('Complete Onboarding Flow', () => {
     const businessStreetInput = page.locator('input[name="businessStreet"]');
     if (await businessStreetInput.isVisible()) {
       await businessStreetInput.fill(testDataForWorker.businessStreet);
-      // Dismiss autocomplete dropdown by blurring the input and clicking elsewhere
+      // Wait for autocomplete to show up and then dismiss it
+      await page.waitForTimeout(500);
+      // Focus on input and press Escape to close autocomplete (Escape handler requires focus)
+      await businessStreetInput.focus();
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(200);
+      // Blur and click outside
       await businessStreetInput.blur();
-      await page.waitForTimeout(500);
-      // Click on a safe area (the heading) to ensure dropdown closes
       await page.getByRole('heading', { name: /Business Details/ }).first().click();
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(300);
+      // Wait for any autocomplete options to disappear
+      await page.locator('[role="option"]').first().waitFor({ state: 'hidden', timeout: 3000 }).catch(() => {});
     } else {
       console.log('❌ businessStreet input not found');
     }
@@ -379,6 +385,9 @@ test.describe('Complete Onboarding Flow', () => {
     }
 
     // Province is now a dropdown - select from Italian regions
+    // Wait for autocomplete to be fully closed before interacting with province
+    await page.locator('[role="option"]').first().waitFor({ state: 'hidden', timeout: 2000 }).catch(() => {});
+
     const provinceDropdowns = await page.getByRole('combobox').all();
     let provinceSelected = false;
 
@@ -654,12 +663,13 @@ test.describe('Complete Onboarding Flow', () => {
     await expect(page.locator('h1')).toContainText(/Design Style|Style/i);
 
     // Select a design style - Step 8 uses radio buttons in a radiogroup
-    const radioButtons = page.locator('input[type="radio"], button[role="radio"]');
+    // Note: ImageGrid uses div[role="radio"] for valid HTML (no block elements in buttons)
+    const radioButtons = page.locator('input[type="radio"], button[role="radio"], div[role="radio"]');
     const radioButtonCount = await radioButtons.count();
     console.log(`  Found ${radioButtonCount} design style options`);
 
     // Verify that a design style is already selected (default is usually "Minimalist")
-    const checkedRadio = page.locator('input[type="radio"]:checked, button[role="radio"][aria-checked="true"]');
+    const checkedRadio = page.locator('input[type="radio"]:checked, button[role="radio"][aria-checked="true"], div[role="radio"][aria-checked="true"]');
     const checkedCount = await checkedRadio.count();
     console.log(`  Found ${checkedCount} selected design style(s)`);
 
@@ -720,12 +730,13 @@ test.describe('Complete Onboarding Flow', () => {
     await expect(page.locator('h1')).toContainText(/Image Style/i);
 
     // Select an image style - Step 9 uses radio buttons in a radiogroup
-    const imageRadioButtons = page.locator('input[type="radio"], button[role="radio"]');
+    // Note: ImageGrid uses div[role="radio"] for valid HTML (no block elements in buttons)
+    const imageRadioButtons = page.locator('input[type="radio"], button[role="radio"], div[role="radio"]');
     const imageRadioCount = await imageRadioButtons.count();
     console.log(`  Found ${imageRadioCount} image style options`);
 
     // Verify that an image style is already selected (default is usually "Photorealistic")
-    const checkedImageRadio = page.locator('input[type="radio"]:checked, button[role="radio"][aria-checked="true"]');
+    const checkedImageRadio = page.locator('input[type="radio"]:checked, button[role="radio"][aria-checked="true"], div[role="radio"][aria-checked="true"]');
     const checkedImageCount = await checkedImageRadio.count();
     console.log(`  Found ${checkedImageCount} selected image style(s)`);
 

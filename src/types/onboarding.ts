@@ -1,5 +1,7 @@
 // WhiteBoar Onboarding System - Core Type Definitions
 
+import { Locale } from '@/lib/i18n'
+
 // =============================================================================
 // FORM DATA TYPES - Represents the complete onboarding form structure
 // =============================================================================
@@ -181,7 +183,7 @@ export interface OnboardingSession {
   verificationLockedUntil?: string
   ipAddress?: string
   userAgent?: string
-  locale: 'en' | 'it'
+  locale: Locale
 }
 
 export interface OnboardingSubmission {
@@ -363,10 +365,10 @@ export interface OnboardingStore {
 
   // Email verification (Step 2)
   verifyEmail: (email: string, code: string) => Promise<boolean>
-  resendVerificationCode: (email: string, locale?: 'en' | 'it') => Promise<void>
+  resendVerificationCode: (email: string, locale?: Locale) => Promise<void>
 
   // Session helper functions for components
-  initializeSession: (locale?: 'en' | 'it') => Promise<OnboardingSession>
+  initializeSession: (locale?: Locale) => Promise<OnboardingSession>
   loadExistingSession: () => {
     id: string
     currentStep: number

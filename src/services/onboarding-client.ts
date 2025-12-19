@@ -7,6 +7,7 @@ import {
   UploadedFile
 } from '@/types/onboarding'
 import { generateUUID } from '@/lib/utils'
+import { Locale } from '@/lib/i18n'
 
 // Transform database response to client interface
 function transformSessionFromDB(dbSession: any): OnboardingSession {
@@ -38,7 +39,7 @@ export class OnboardingClientService {
    * Create a new empty onboarding session (for welcome page)
    */
   static async createSession(
-    locale: 'en' | 'it' = 'en'
+    locale: Locale = 'en'
   ): Promise<OnboardingSession> {
     return await circuitBreakers.sessionService.execute(async () => {
       const result = await retry.critical(async () => {
@@ -85,7 +86,7 @@ export class OnboardingClientService {
   static async createSessionWithEmail(
     email: string,
     name: string,
-    locale: 'en' | 'it' = 'en'
+    locale: Locale = 'en'
   ): Promise<OnboardingSession> {
     const cleanEmail = email.toLowerCase().trim()
     const expiresAt = new Date()
@@ -238,7 +239,7 @@ export type ApiResponse<T> = {
 export async function createOnboardingSession(
   email: string,
   name: string,
-  locale: 'en' | 'it' = 'en'
+  locale: Locale = 'en'
 ): Promise<ApiResponse<OnboardingSession>> {
   try {
     const session = await OnboardingClientService.createSessionWithEmail(email, name, locale)

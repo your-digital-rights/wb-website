@@ -457,17 +457,17 @@ export function AddressAutocomplete({
                     role="option"
                     aria-selected={selectedIndex === index}
                   >
-                    <div className="flex items-start gap-2">
+                    <span className="flex items-start gap-2">
                       <MapPin className="w-4 h-4 mt-0.5 text-muted-foreground flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-sm">
+                      <span className="flex-1 min-w-0">
+                        <span className="block font-medium text-sm">
                           {suggestion.structured_formatting.main_text}
-                        </div>
-                        <div className="text-xs text-muted-foreground truncate">
+                        </span>
+                        <span className="block text-xs text-muted-foreground truncate">
                           {suggestion.structured_formatting.secondary_text}
-                        </div>
-                      </div>
-                    </div>
+                        </span>
+                      </span>
+                    </span>
                   </button>
                 ))}
               </div>

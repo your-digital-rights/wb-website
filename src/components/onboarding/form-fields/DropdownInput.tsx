@@ -212,7 +212,7 @@ export const DropdownInput = forwardRef<HTMLButtonElement, DropdownInputProps>(
                 !selectedValues.length && "text-muted-foreground"
               )}
             >
-              <div className="flex flex-wrap items-center gap-1 flex-1 min-h-[24px]">
+              <span className="flex flex-wrap items-center gap-1 flex-1 min-h-[24px]">
                 {multiple && selectedValues.length > 0 ? (
                   // Multiple selection - show as tags
                   selectedLabels.map((label, index) => (
@@ -248,9 +248,9 @@ export const DropdownInput = forwardRef<HTMLButtonElement, DropdownInputProps>(
                     {displayValue()}
                   </span>
                 )}
-              </div>
-              
-              <div className="flex items-center gap-1 ml-2">
+              </span>
+
+              <span className="flex items-center gap-1 ml-2">
                 {/* Status Icons */}
                 {hasError && (
                   <AlertCircle className="w-4 h-4 text-destructive" />
@@ -258,7 +258,7 @@ export const DropdownInput = forwardRef<HTMLButtonElement, DropdownInputProps>(
                 {hasSuccess && (
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
                 )}
-                
+
                 {/* Clear Button */}
                 {canClear && (
                   <span
@@ -277,13 +277,13 @@ export const DropdownInput = forwardRef<HTMLButtonElement, DropdownInputProps>(
                     <X className="h-3 w-3" />
                   </span>
                 )}
-                
+
                 {/* Chevron */}
                 <ChevronDown className={cn(
                   "h-4 w-4 transition-transform",
                   open && "rotate-180"
                 )} />
-              </div>
+              </span>
             </Button>
           </PopoverTrigger>
           

@@ -14,7 +14,8 @@ declare const messages: {
     },
     "language": {
       "english": "English",
-      "italian": "Italian"
+      "italian": "Italian",
+      "polish": "Polish"
     }
   },
   "hero": {
@@ -100,6 +101,9 @@ declare const messages: {
     "stepCurrent": "Current step {step}",
     "stepUpcoming": "Upcoming step {step}",
     "previous": "Previous",
+    "footer": {
+      "secureSSL": "Secure & SSL Protected"
+    },
     "step1": {
       "title": "Fast & Simple",
       "description": "Perfect for small businesses who need a professional online presence quickly. Get a custom one-page website with branding in just 2 business days.",
@@ -266,7 +270,9 @@ declare const messages: {
           "vat": {
             "label": "VAT Number",
             "placeholder": "IT12345678901",
-            "hint": "Italian VAT number (optional)"
+            "placeholderPoland": "PL1234567890",
+            "hint": "Italian VAT number (optional)",
+            "hintPoland": "Polish NIP number (optional)"
           }
         },
         "contactInfo": {
@@ -307,9 +313,13 @@ declare const messages: {
             "label": "Province/Region",
             "placeholder": "Enter province or region"
           },
+          "voivodeship": {
+            "label": "Voivodeship",
+            "placeholder": "Select voivodeship"
+          },
           "country": {
-            "label": "Country",
-            "placeholder": "Enter country"
+            "label": "Business Country",
+            "placeholder": "Select country"
           }
         },
         "dataUsage": {
@@ -394,6 +404,7 @@ declare const messages: {
           "title": "Customer Profile",
           "required": "Required",
           "budget": {
+            "title": "Budget",
             "left": "Budget-Conscious",
             "right": "Premium-Focused",
             "description": "How price-sensitive are your customers?",
@@ -411,6 +422,7 @@ declare const messages: {
             }
           },
           "style": {
+            "title": "Style",
             "left": "Traditional",
             "right": "Modern",
             "description": "What design aesthetic do they prefer?",
@@ -428,6 +440,7 @@ declare const messages: {
             }
           },
           "motivation": {
+            "title": "Motivation",
             "left": "Practical",
             "right": "Aspirational",
             "description": "What drives their purchasing decisions?",
@@ -445,6 +458,7 @@ declare const messages: {
             }
           },
           "decision": {
+            "title": "Decision",
             "left": "Quick Decider",
             "right": "Careful Researcher",
             "description": "How do they make purchasing decisions?",
@@ -462,6 +476,7 @@ declare const messages: {
             }
           },
           "loyalty": {
+            "title": "Loyalty",
             "left": "Price Switcher",
             "right": "Brand Loyal",
             "description": "How loyal are they to brands?",
@@ -515,6 +530,10 @@ declare const messages: {
             "label": "What are the main needs customers have from your business?",
             "placeholder": "Describe the specific challenges your customers experience before they find your business...",
             "hint": "Focus on the problems you solve - this helps us craft compelling website messaging"
+          },
+          "validation": {
+            "minLength": "Please describe customer problems in at least 30 characters",
+            "maxLength": "Customer problems description cannot exceed 400 characters"
           }
         },
         "solutions": {
@@ -664,6 +683,68 @@ declare const messages: {
             "branding": "Consistency with your brand identity"
           }
         },
+        "styles": {
+          "minimalist": {
+            "title": "Minimalist",
+            "description": "Clean lines, plenty of whitespace, sophisticated simplicity",
+            "tags": {
+              "clean": "Clean",
+              "simple": "Simple",
+              "professional": "Professional",
+              "spacious": "Spacious"
+            }
+          },
+          "corporate": {
+            "title": "Corporate",
+            "description": "Business-focused design with trust-building elements",
+            "tags": {
+              "professional": "Professional",
+              "trustworthy": "Trustworthy",
+              "corporate": "Corporate",
+              "structured": "Structured"
+            }
+          },
+          "bold": {
+            "title": "Bold",
+            "description": "Dynamic layouts with vibrant colors and creative elements",
+            "tags": {
+              "dynamic": "Dynamic",
+              "vibrant": "Vibrant",
+              "artistic": "Artistic",
+              "expressive": "Expressive"
+            }
+          },
+          "playful": {
+            "title": "Playful",
+            "description": "Fun and engaging design with playful elements",
+            "tags": {
+              "fun": "Fun",
+              "engaging": "Engaging",
+              "friendly": "Friendly",
+              "creative": "Creative"
+            }
+          },
+          "editorial": {
+            "title": "Editorial",
+            "description": "Magazine-style layout with rich typography and content focus",
+            "tags": {
+              "editorial": "Editorial",
+              "typography": "Typography",
+              "content": "Content",
+              "reading": "Reading"
+            }
+          },
+          "retro": {
+            "title": "Retro",
+            "description": "Vintage-inspired design with nostalgic elements",
+            "tags": {
+              "retro": "Retro",
+              "nostalgic": "Nostalgic",
+              "classic": "Classic",
+              "unique": "Unique"
+            }
+          }
+        },
         "tips": {
           "title": "Choose a style that:",
           "authentic": "Feels authentic to your brand",
@@ -706,6 +787,68 @@ declare const messages: {
           "quality": "High-quality imagery that reflects your brand values",
           "relevance": "Images that support and enhance your message"
         },
+        "styles": {
+          "photorealistic": {
+            "title": "Photorealistic",
+            "description": "High-quality, professional photographs with clean composition",
+            "tags": {
+              "highQuality": "High-quality",
+              "professional": "Professional",
+              "clean": "Clean",
+              "authentic": "Authentic"
+            }
+          },
+          "flatIllustration": {
+            "title": "Flat Illustration",
+            "description": "Modern flat design illustrations with clean vector graphics",
+            "tags": {
+              "vector": "Vector",
+              "clean": "Clean",
+              "contemporary": "Contemporary",
+              "scalable": "Scalable"
+            }
+          },
+          "sketch": {
+            "title": "Sketch Style",
+            "description": "Artistic hand-drawn illustrations with personal, creative touch",
+            "tags": {
+              "artistic": "Artistic",
+              "personal": "Personal",
+              "creative": "Creative",
+              "unique": "Unique"
+            }
+          },
+          "3d": {
+            "title": "3D Rendered",
+            "description": "Modern 3D rendered graphics for dynamic visual impact",
+            "tags": {
+              "dynamic": "Dynamic",
+              "modern": "Modern",
+              "dimensional": "Dimensional",
+              "engaging": "Engaging"
+            }
+          },
+          "lineArt": {
+            "title": "Line Art",
+            "description": "Simple, clean line art with focus on essential elements only",
+            "tags": {
+              "simple": "Simple",
+              "clean": "Clean",
+              "focused": "Focused",
+              "elegant": "Elegant"
+            }
+          },
+          "collage": {
+            "title": "Collage Style",
+            "description": "Creative combination of elements for unique visual storytelling",
+            "tags": {
+              "creative": "Creative",
+              "versatile": "Versatile",
+              "artistic": "Artistic",
+              "storytelling": "Storytelling"
+            }
+          }
+        },
         "tips": {
           "title": "Choose images that:",
           "brand": "Align with your brand personality",
@@ -738,6 +881,10 @@ declare const messages: {
           "title": "Choose Your Color Palette",
           "required": "Required",
           "optional": "Optional"
+        },
+        "search": {
+          "placeholder": "Search colors, palettes, or styles...",
+          "results": "{count, plural, one {# palette found} other {# palettes found}}"
         },
         "psychology": {
           "title": "Color Psychology",
@@ -784,6 +931,28 @@ declare const messages: {
             "label": "What is your main goal for this website?",
             "placeholder": "Select your primary objective",
             "hint": "This will influence which sections we recommend and how we structure your content"
+          },
+          "options": {
+            "other": {
+              "label": "Other",
+              "description": "Custom business objective or mixed goals"
+            },
+            "phone-call": {
+              "label": "Phone call",
+              "description": "Encourage visitors to call your business"
+            },
+            "purchase": {
+              "label": "Purchase product or service",
+              "description": "Drive direct sales and transactions"
+            },
+            "contact-form": {
+              "label": "Submit contact form",
+              "description": "Generate inquiries through contact forms"
+            },
+            "visit-location": {
+              "label": "Visit location",
+              "description": "Attract customers to your physical location"
+            }
           }
         },
         "sections": {
@@ -793,11 +962,56 @@ declare const messages: {
           "recommended": {
             "title": "Recommended sections for",
             "badge": "Recommended"
+          },
+          "items": {
+            "hero": {
+              "label": "Hero / Introduction",
+              "description": "A strong headline, short description, and call-to-action"
+            },
+            "contact": {
+              "label": "Contact us",
+              "description": "Contact information and form"
+            },
+            "about": {
+              "label": "About / Story",
+              "description": "Who you are, what makes your business unique"
+            },
+            "portfolio": {
+              "label": "Portfolio / Gallery",
+              "description": "Showcase your work"
+            },
+            "services": {
+              "label": "Services / Products",
+              "description": "Key offerings or areas of expertise"
+            },
+            "testimonials": {
+              "label": "Testimonials / Reviews",
+              "description": "Social proof from customers or partners"
+            },
+            "events": {
+              "label": "Events",
+              "description": "Upcoming events and activities"
+            }
           }
         },
         "offerings": {
           "title": "Products & Services",
           "optional": "Optional",
+          "typeLabel": "What do you offer?",
+          "types": {
+            "products": {
+              "label": "Products",
+              "description": "Physical or digital goods"
+            },
+            "services": {
+              "label": "Services",
+              "description": "Consulting, support, maintenance"
+            },
+            "both": {
+              "label": "Both",
+              "description": "Products and services"
+            }
+          },
           "examples": {
             "title": "Examples of what you might offer:",
             "consulting": "Business consulting services",
@@ -834,6 +1048,10 @@ declare const messages: {
           "essential": "Include essential sections",
           "goal": "Align with your main goal",
           "simple": "Keep navigation simple"
+        },
+        "validation": {
+          "primaryGoalRequired": "Please select your main website goal",
+          "websiteSectionsMin": "Please select at least one website section"
         },
         "products": {
           "emptyState": "No products added yet",
@@ -1140,7 +1358,8 @@ declare const messages: {
     },
     "slider": {
       "reset": "Reset to center",
-      "required": "This field is required"
+      "required": "This field is required",
+      "summary": "Summary"
     },
     "imageGrid": {
       "premium": "Premium",
@@ -1539,6 +1758,12 @@ declare const messages: {
         "detailsTooShort": "Please provide more details (at least 15 characters)",
         "submitFailed": "Failed to send your message. Please try again."
       }
+    }
+  },
+  "laboratorio": {
+    "meta": {
+      "title": "Workshop - WhiteBoar",
+      "description": "Register for our workshop and learn how to grow your business online."
     }
   }
 };

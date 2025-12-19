@@ -14,6 +14,21 @@ export function Step6CustomerNeeds({ form, errors, isLoading }: StepComponentPro
   const t = useTranslations('onboarding.steps.6')
   const { control } = form
 
+  // Translate error messages from Zod schema
+  const getTranslatedError = (fieldError: { message?: string } | undefined): string | undefined => {
+    if (!fieldError?.message) return undefined
+
+    // Map Zod error messages to translated messages
+    if (fieldError.message.includes('at least 30 characters')) {
+      return t('problems.validation.minLength')
+    }
+    if (fieldError.message.includes('exceed 400 characters')) {
+      return t('problems.validation.maxLength')
+    }
+
+    return fieldError.message
+  }
+
   return (
     <div className="space-y-8">
       {/* Introduction */}
@@ -60,7 +75,7 @@ export function Step6CustomerNeeds({ form, errors, isLoading }: StepComponentPro
                     label={t('problems.input.label')}
                     placeholder={t('problems.input.placeholder')}
                     hint={t('problems.input.hint')}
-                    error={errors.customerProblems?.message}
+                    error={getTranslatedError(errors.customerProblems)}
                     required
                     disabled={isLoading}
                     maxLength={400}

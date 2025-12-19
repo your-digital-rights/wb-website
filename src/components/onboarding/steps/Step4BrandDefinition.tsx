@@ -87,7 +87,7 @@ export function Step4BrandDefinition({ form, errors, isLoading }: StepComponentP
           <CardContent className="pt-6 space-y-6">
             <div className="flex items-center gap-2">
               <Link className="w-5 h-5 text-primary" />
-              <h2 className="text-lg font-semibold text-foreground">Your competitors</h2>
+              <h2 className="text-lg font-semibold text-foreground">{t('competitors.title')}</h2>
               <Badge variant="outline" className="ml-auto">
                 {t('competitors.optional')}
               </Badge>
@@ -109,9 +109,9 @@ export function Step4BrandDefinition({ form, errors, isLoading }: StepComponentP
                       value: url,
                       order: index
                     }))}
-                    placeholder="https://competitor-website.com"
+                    placeholder={t('competitors.urls.placeholder')}
                     addButtonText={t('competitors.urls.addButton')}
-                    hint="Add up to 3 competitor websites to help us understand your market"
+                    hint={t('competitors.urls.hint')}
                     error={errors.competitorUrls?.message}
                     maxItems={3}
                     minItems={0}

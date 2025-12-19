@@ -2,6 +2,7 @@
   {
     "palette_name_en": "Fiery Ocean",
     "palette_name_it": "Oceano Ardente",
+    "palette_name_pl": "Ognisty Ocean",
     "main_colors_en": [
       "Cream",
       "Navy",
@@ -16,8 +17,16 @@
       "Rosso vivo",
       "Azzurro"
     ],
+    "main_colors_pl": [
+      "Kremowy",
+      "Granatowy",
+      "Ciemnoczerwony",
+      "Jaskrawoczerwony",
+      "Błękitny"
+    ],
     "description_en": "Bold reds with deep blues for a dramatic, high-impact brand presence.",
-    "description_it": "Rossi intensi con blu profondi per una presenza drammatica e d’impatto.",
+    "description_it": "Rossi intensi con blu profondi per una presenza drammatica e d'impatto.",
+    "description_pl": "Odważne czerwienie z głębokimi błękitami dla dramatycznej, wyrazistej obecności marki.",
     "colors": {
       "background": "FDF0D5",
       "primary": "003049",
@@ -30,7 +39,8 @@
   },
   {
     "palette_name_en": "Olive Garden Feast",
-    "palette_name_it": "Banchetto dell’Orto d’Olive",
+    "palette_name_it": "Banchetto dell'Orto d'Olive",
+    "palette_name_pl": "Uczta w Gaju Oliwnym",
     "main_colors_en": [
       "Beige",
       "Dark green",
@@ -45,8 +55,16 @@
       "Marrone",
       "Oliva dorato"
     ],
+    "main_colors_pl": [
+      "Beżowy",
+      "Ciemnozielony",
+      "Oliwkowy",
+      "Brązowy",
+      "Złota oliwka"
+    ],
     "description_en": "Rustic greens and warm browns that evoke natural, organic authenticity.",
     "description_it": "Verdi rustici e marroni caldi che evocano autenticità naturale e biologica.",
+    "description_pl": "Rustykalne zielenie i ciepłe brązy przywołujące naturalną, organiczną autentyczność.",
     "colors": {
       "background": "FEFAE0",
       "primary": "283618",
@@ -60,6 +78,7 @@
   {
     "palette_name_en": "Refreshing Summer Fun",
     "palette_name_it": "Divertimento Estivo Rinfrescante",
+    "palette_name_pl": "Orzeźwiająca Letnia Zabawa",
     "main_colors_en": [
       "Navy",
       "Yellow",
@@ -74,8 +93,16 @@
       "Arancione",
       "Verde acqua"
     ],
+    "main_colors_pl": [
+      "Granatowy",
+      "Żółty",
+      "Akwamaryna",
+      "Pomarańczowy",
+      "Morski"
+    ],
     "description_en": "Bright aqua and citrus tones for playful, energetic appeal.",
     "description_it": "Toni acquatici e agrumati vivaci per un fascino giocoso ed energico.",
+    "description_pl": "Jasne odcienie akwamaryny i cytrusów dla radosnego, energetycznego wyrazu.",
     "colors": {
       "background": "023047",
       "primary": "FFB703",
@@ -89,6 +116,7 @@
   {
     "palette_name_en": "Pastel Dreamland Adventure",
     "palette_name_it": "Avventura nel Paese dei Sogni Pastello",
+    "palette_name_pl": "Przygoda w Krainie Pastelowych Snów",
     "main_colors_en": [
       "Baby blue",
       "Indigo",
@@ -103,8 +131,16 @@
       "Rosa",
       "Rosa antico"
     ],
+    "main_colors_pl": [
+      "Błękit niemowlęcy",
+      "Indygo",
+      "Lawendowy",
+      "Różowy",
+      "Różany"
+    ],
     "description_en": "Soft pastel rainbow for whimsical, dreamy aesthetics.",
-    "description_it": "Arcobaleno pastello tenue per un’estetica fiabesca e sognante.",
+    "description_it": "Arcobaleno pastello tenue per un'estetica fiabesca e sognante.",
+    "description_pl": "Delikatna pastelowa tęcza dla bajkowej, sennej estetyki.",
     "colors": {
       "background": "BDE0FE",
       "primary": "5D5D90",
@@ -118,6 +154,7 @@
   {
     "palette_name_en": "Golden Summer Fields",
     "palette_name_it": "Campi Estivi Dorati",
+    "palette_name_pl": "Złote Letnie Pola",
     "main_colors_en": [
       "Golden beige",
       "Dark green",
@@ -132,8 +169,16 @@
       "Marrone dorato",
       "Crema"
     ],
+    "main_colors_pl": [
+      "Złoty beż",
+      "Ciemnozielony",
+      "Oliwkowy",
+      "Złoty brąz",
+      "Kremowy"
+    ],
     "description_en": "Gentle golden hues with earthy greens and neutrals for calm, sunny warmth.",
     "description_it": "Toni dorati delicati con verdi terrosi e neutri per un calore solare e rilassante.",
+    "description_pl": "Delikatne złote odcienie z ziemistymi zieleniami i neutralnymi tonami dla spokojnego, słonecznego ciepła.",
     "colors": {
       "background": "FEFAE0",
       "primary": "283618",
@@ -147,6 +192,7 @@
   {
     "palette_name_en": "Earthy Tones (soft)",
     "palette_name_it": "Toni Terrosi (morbidi)",
+    "palette_name_pl": "Ziemiste Tony (delikatne)",
     "main_colors_en": [
       "Cream",
       "Charcoal",
@@ -161,8 +207,16 @@
       "Rosa cipria",
       "Pietra"
     ],
+    "main_colors_pl": [
+      "Kremowy",
+      "Antracytowy",
+      "Szałwiowy",
+      "Pudrowy róż",
+      "Kamienny"
+    ],
     "description_en": "Muted earth tones for approachable, down-to-earth sophistication.",
     "description_it": "Toni terrosi attenuati per una raffinatezza accessibile e concreta.",
+    "description_pl": "Stonowane ziemiste tony dla przystępnej, przyziemnej elegancji.",
     "colors": {
       "background": "F7E1D7",
       "primary": "4A5759",
@@ -176,6 +230,7 @@
   {
     "palette_name_en": "Earthy Forest Hues",
     "palette_name_it": "Toni di Foresta Terrosa",
+    "palette_name_pl": "Ziemiste Odcienie Lasu",
     "main_colors_en": [
       "Sage",
       "Forest green",
@@ -190,8 +245,16 @@
       "Marrone legno",
       "Oliva"
     ],
+    "main_colors_pl": [
+      "Szałwiowy",
+      "Leśna zieleń",
+      "Mech",
+      "Drewniany brąz",
+      "Oliwkowy"
+    ],
     "description_en": "Deep greens and woodsy browns creating grounded, natural stability.",
     "description_it": "Verdi profondi e toni legnosi che creano stabilità naturale e radicata.",
+    "description_pl": "Głębokie zielenie i leśne brązy tworzące ugruntowaną, naturalną stabilność.",
     "colors": {
       "background": "DAD7CD",
       "primary": "344E41",
@@ -205,6 +268,7 @@
   {
     "palette_name_en": "Ocean Breeze",
     "palette_name_it": "Brezza Oceanica",
+    "palette_name_pl": "Morska Bryza",
     "main_colors_en": [
       "Navy",
       "Cyan",
@@ -219,8 +283,16 @@
       "Blu ghiaccio",
       "Azzurro"
     ],
+    "main_colors_pl": [
+      "Granatowy",
+      "Cyjan",
+      "Bladoniebieski",
+      "Lodowy błękit",
+      "Lazurowy"
+    ],
     "description_en": "Cool blues for fresh, trustworthy, oceanic calm.",
     "description_it": "Blu freddi per una calma oceanica fresca e affidabile.",
+    "description_pl": "Chłodne błękity dla świeżego, godnego zaufania, oceanicznego spokoju.",
     "colors": {
       "background": "03045E",
       "primary": "00B4D8",
@@ -234,6 +306,7 @@
   {
     "palette_name_en": "Deep Sea (blue)",
     "palette_name_it": "Mare Profondo (blu)",
+    "palette_name_pl": "Głębiny Morskie (niebieski)",
     "main_colors_en": [
       "Eggshell",
       "Midnight blue",
@@ -248,8 +321,16 @@
       "Blu acciaio",
       "Grigio freddo"
     ],
+    "main_colors_pl": [
+      "Skorupka jajka",
+      "Granat nocny",
+      "Ciemnoniebieski",
+      "Stalowy błękit",
+      "Chłodna szarość"
+    ],
     "description_en": "Dark navy with cool grays for sleek, professional confidence.",
-    "description_it": "Blu scuri con grigi freddi per un’eleganza professionale e sicura.",
+    "description_it": "Blu scuri con grigi freddi per un'eleganza professionale e sicura.",
+    "description_pl": "Ciemny granat z chłodnymi szarościami dla eleganckiej, profesjonalnej pewności.",
     "colors": {
       "background": "E0E1DD",
       "primary": "0D1B2A",
@@ -263,6 +344,7 @@
   {
     "palette_name_en": "Fiery Palette",
     "palette_name_it": "Tavolozza Ardente",
+    "palette_name_pl": "Ognista Paleta",
     "main_colors_en": [
       "White",
       "Maroon",
@@ -277,8 +359,16 @@
       "Arancione",
       "Ambra"
     ],
+    "main_colors_pl": [
+      "Biały",
+      "Bordowy",
+      "Karmazynowy",
+      "Pomarańczowy",
+      "Bursztynowy"
+    ],
     "description_en": "Hot reds and oranges for bold, high-energy creativity.",
     "description_it": "Rossi e arancioni accesi per una creatività audace e ad alta energia.",
+    "description_pl": "Gorące czerwienie i pomarańcze dla odważnej, pełnej energii kreatywności.",
     "colors": {
       "background": "FFFFFF",
       "primary": "5F0F40",
@@ -292,6 +382,7 @@
   {
     "palette_name_en": "Warm Neutral Tones",
     "palette_name_it": "Toni Neutri Caldi",
+    "palette_name_pl": "Ciepłe Neutralne Tony",
     "main_colors_en": [
       "Ivory",
       "Coffee brown",
@@ -306,8 +397,16 @@
       "Cuoio",
       "Grigio caldo"
     ],
+    "main_colors_pl": [
+      "Kość słoniowa",
+      "Kawowy brąz",
+      "Kasztanowy",
+      "Beżowy",
+      "Ciepła szarość"
+    ],
     "description_en": "Layered browns and olives for timeless, cozy reliability.",
-    "description_it": "Sovrapposizioni di marroni e oliva per un’affidabilità accogliente e senza tempo.",
+    "description_it": "Sovrapposizioni di marroni e oliva per un'affidabilità accogliente e senza tempo.",
+    "description_pl": "Warstwowe brązy i oliwki dla ponadczasowej, przytulnej niezawodności.",
     "colors": {
       "background": "EDEDE9",
       "primary": "582F0E",
@@ -321,6 +420,7 @@
   {
     "palette_name_en": "Warm Neutral Tones (bright)",
     "palette_name_it": "Toni Neutri Caldi (vivaci)",
+    "palette_name_pl": "Ciepłe Neutralne Tony (jasne)",
     "main_colors_en": [
       "Mint white",
       "Navy",
@@ -335,8 +435,16 @@
       "Rosso",
       "Blu acciaio"
     ],
+    "main_colors_pl": [
+      "Miętowa biel",
+      "Granatowy",
+      "Morski",
+      "Czerwony",
+      "Stalowy błękit"
+    ],
     "description_en": "Crisp neutrals with a bold accent red for modern vitality.",
     "description_it": "Neutri nitidi con un rosso deciso per una vitalità moderna.",
+    "description_pl": "Ostre neutralne tony z odważnym akcentem czerwieni dla nowoczesnej witalności.",
     "colors": {
       "background": "F1FAEE",
       "primary": "1D3557",
@@ -350,6 +458,7 @@
   {
     "palette_name_en": "Summer Ocean Breeze",
     "palette_name_it": "Brezza Oceanica Estiva",
+    "palette_name_pl": "Letnia Morska Bryza",
     "main_colors_en": [
       "Navy",
       "Beige",
@@ -364,8 +473,16 @@
       "Arancione",
       "Rosso"
     ],
+    "main_colors_pl": [
+      "Granatowy",
+      "Beżowy",
+      "Złoty",
+      "Pomarańczowy",
+      "Czerwony"
+    ],
     "description_en": "Coastal blues with sunny oranges for vibrant seaside energy.",
-    "description_it": "Blu costieri con arancioni solari per un’energia marina vibrante.",
+    "description_it": "Blu costieri con arancioni solari per un'energia marina vibrante.",
+    "description_pl": "Nadmorskie błękity ze słonecznymi pomarańczami dla tętniącej życiem energii wybrzeża.",
     "colors": {
       "background": "003049",
       "primary": "EAE2B7",
@@ -378,7 +495,8 @@
   },
   {
     "palette_name_en": "Warm Autumn Glow",
-    "palette_name_it": "Calore d’Autunno",
+    "palette_name_it": "Calore d'Autunno",
+    "palette_name_pl": "Ciepły Jesienny Blask",
     "main_colors_en": [
       "Burgundy",
       "Cream",
@@ -393,8 +511,16 @@
       "Corallo",
       "Rosa cipria"
     ],
+    "main_colors_pl": [
+      "Burgundowy",
+      "Kremowy",
+      "Różany",
+      "Koralowy",
+      "Różowy"
+    ],
     "description_en": "Warm pinks and corals for a soft, cozy, and welcoming charm.",
     "description_it": "Toni rosa caldi e corallo per un fascino morbido, accogliente e invitante.",
+    "description_pl": "Ciepłe róże i korale dla miękkiego, przytulnego i gościnnego uroku.",
     "colors": {
       "background": "6F1D1B",
       "primary": "FFE6A7",
@@ -408,6 +534,7 @@
   {
     "palette_name_en": "Soft Pink Delight",
     "palette_name_it": "Delizia Rosa Morbida",
+    "palette_name_pl": "Delikatna Różowa Rozkosz",
     "main_colors_en": [
       "Butter",
       "Deep brown",
@@ -422,8 +549,16 @@
       "Bronzo",
       "Cioccolato"
     ],
+    "main_colors_pl": [
+      "Maślany",
+      "Głęboki brąz",
+      "Karmelowy",
+      "Brązowy",
+      "Czekoladowy"
+    ],
     "description_en": "Deep browns with blush accents for comforting elegance.",
-    "description_it": "Marroni profondi con accenti rosa per un’eleganza rassicurante.",
+    "description_it": "Marroni profondi con accenti rosa per un'eleganza rassicurante.",
+    "description_pl": "Głębokie brązy z różowymi akcentami dla kojącej elegancji.",
     "colors": {
       "background": "FFE6A7",
       "primary": "6F1D1B",
@@ -436,7 +571,8 @@
   },
   {
     "palette_name_en": "Autumn Harvest (classic)",
-    "palette_name_it": "Raccolto d’Autunno (classico)",
+    "palette_name_it": "Raccolto d'Autunno (classico)",
+    "palette_name_pl": "Jesienne Zbiory (klasyczne)",
     "main_colors_en": [
       "Black",
       "White",
@@ -451,8 +587,16 @@
       "Oro",
       "Blu navy"
     ],
+    "main_colors_pl": [
+      "Czarny",
+      "Biały",
+      "Jasnoszary",
+      "Złoty",
+      "Granatowy"
+    ],
     "description_en": "Black, gold, and white contrast for strong, classic authority.",
-    "description_it": "Contrasto tra nero, oro e bianco per un’autorità forte e classica.",
+    "description_it": "Contrasto tra nero, oro e bianco per un'autorità forte e classica.",
+    "description_pl": "Kontrast czerni, złota i bieli dla silnego, klasycznego autorytetu.",
     "colors": {
       "background": "000000",
       "primary": "FFFFFF",
@@ -466,6 +610,7 @@
   {
     "palette_name_en": "Black & Gold Elegance",
     "palette_name_it": "Eleganza Nero & Oro",
+    "palette_name_pl": "Elegancja Czerni i Złota",
     "main_colors_en": [
       "Charcoal",
       "Champagne",
@@ -480,8 +625,16 @@
       "Avorio",
       "Oro"
     ],
+    "main_colors_pl": [
+      "Antracytowy",
+      "Szampański",
+      "Ciepły szary",
+      "Kość słoniowa",
+      "Złoty"
+    ],
     "description_en": "Subtle neutrals with golden undertones for refined luxury.",
     "description_it": "Neutri delicati con sottotoni dorati per un lusso raffinato.",
+    "description_pl": "Subtelne neutralne tony ze złotymi podtonami dla wyrafinowanego luksusu.",
     "colors": {
       "background": "1F1E1C",
       "primary": "FFD8A8",
@@ -495,6 +648,7 @@
   {
     "palette_name_en": "Soft Sand",
     "palette_name_it": "Sabbia Morbida",
+    "palette_name_pl": "Miękki Piasek",
     "main_colors_en": [
       "Cobalt",
       "Yellow",
@@ -509,8 +663,16 @@
       "Blu acciaio",
       "Nero"
     ],
+    "main_colors_pl": [
+      "Kobaltowy",
+      "Żółty",
+      "Złoty",
+      "Stalowy błękit",
+      "Czarny"
+    ],
     "description_en": "Strong navy with golden accents for trustworthy energy.",
-    "description_it": "Blu intensi con accenti dorati per un’energia affidabile.",
+    "description_it": "Blu intensi con accenti dorati per un'energia affidabile.",
+    "description_pl": "Silny granat ze złotymi akcentami dla godnej zaufania energii.",
     "colors": {
       "background": "001D3D",
       "primary": "FFD60A",
@@ -524,6 +686,7 @@
   {
     "palette_name_en": "Golden Twilight",
     "palette_name_it": "Crepuscolo Dorato",
+    "palette_name_pl": "Złoty Zmierzch",
     "main_colors_en": [
       "Black blue",
       "Gold",
@@ -538,8 +701,16 @@
       "Verde acqua",
       "Verde petrolio"
     ],
+    "main_colors_pl": [
+      "Czarny błękit",
+      "Złoty",
+      "Morska piana",
+      "Morski",
+      "Głęboki morski"
+    ],
     "description_en": "Jewel-like blend of teals and golds for rich storytelling.",
     "description_it": "Miscela preziosa di verdi acqua e ori per un racconto ricco.",
+    "description_pl": "Klejnotowa mieszanka morskich zieleni i złota dla bogatego przekazu.",
     "colors": {
       "background": "001219",
       "primary": "E9D8A6",
@@ -553,6 +724,7 @@
   {
     "palette_name_en": "Ocean Sunset",
     "palette_name_it": "Tramonto Oceanico",
+    "palette_name_pl": "Oceaniczny Zachód Słońca",
     "main_colors_en": [
       "Off-white",
       "Charcoal",
@@ -567,8 +739,16 @@
       "Arancione bruciato",
       "Tortora"
     ],
+    "main_colors_pl": [
+      "Złamana biel",
+      "Antracytowy",
+      "Szarobrązowy",
+      "Spalony pomarańcz",
+      "Ciepły szary"
+    ],
     "description_en": "Soft grays for sleek, minimal professionalism.",
     "description_it": "Grigi morbidi per un minimalismo professionale e pulito.",
+    "description_pl": "Miękkie szarości dla eleganckiego, minimalistycznego profesjonalizmu.",
     "colors": {
       "background": "F8F9FA",
       "primary": "252422",
@@ -582,6 +762,7 @@
   {
     "palette_name_en": "Light Steel",
     "palette_name_it": "Acciaio Leggero",
+    "palette_name_pl": "Lekka Stal",
     "main_colors_en": [
       "Steel blue",
       "Butter",
@@ -596,8 +777,16 @@
       "Borgogna",
       "Mattone"
     ],
+    "main_colors_pl": [
+      "Stalowy błękit",
+      "Maślany",
+      "Pomarańczowy",
+      "Bordowy",
+      "Ceglasty"
+    ],
     "description_en": "Steel blue with fiery accents for a balance of strength and passion.",
     "description_it": "Blu acciaio con accenti caldi per un equilibrio tra forza e passione.",
+    "description_pl": "Stalowy błękit z ognistymi akcentami dla równowagi siły i pasji.",
     "colors": {
       "background": "335C67",
       "primary": "FFF3B0",
@@ -611,6 +800,7 @@
   {
     "palette_name_en": "Dark Sunset",
     "palette_name_it": "Tramonto Scuro",
+    "palette_name_pl": "Ciemny Zachód Słońca",
     "main_colors_en": [
       "Indigo",
       "Cream",
@@ -625,8 +815,16 @@
       "Sabbia",
       "Salvia"
     ],
+    "main_colors_pl": [
+      "Indygo",
+      "Kremowy",
+      "Terakota",
+      "Piaskowy",
+      "Szałwiowy"
+    ],
     "description_en": "Muted oranges and teals for warm, modern sophistication.",
     "description_it": "Arancioni e verdi acqua attenuati per una sofisticazione calda e moderna.",
+    "description_pl": "Stonowane pomarańcze i morskie zielenie dla ciepłej, nowoczesnej elegancji.",
     "colors": {
       "background": "3D405B",
       "primary": "F4F1DE",
@@ -640,6 +838,7 @@
   {
     "palette_name_en": "Neutral Harmony Bliss",
     "palette_name_it": "Armonia Neutrale Gioiosa",
+    "palette_name_pl": "Błoga Neutralna Harmonia",
     "main_colors_en": [
       "Lime",
       "Sky blue",
@@ -654,8 +853,16 @@
       "Rosa",
       "Giallo"
     ],
+    "main_colors_pl": [
+      "Limonkowy",
+      "Błękitny",
+      "Brzoskwiniowy",
+      "Różowy",
+      "Żółty"
+    ],
     "description_en": "Playful candy-like tones for cheerful, creative brands.",
     "description_it": "Toni zuccherini e giocosi per brand allegri e creativi.",
+    "description_pl": "Zabawne cukierkowe tony dla radosnych, kreatywnych marek.",
     "colors": {
       "background": "E9FF70",
       "primary": "70D6FF",
@@ -669,6 +876,7 @@
   {
     "palette_name_en": "Pastel Rainbow",
     "palette_name_it": "Arcobaleno Pastello",
+    "palette_name_pl": "Pastelowa Tęcza",
     "main_colors_en": [
       "Maroon",
       "Crimson",
@@ -683,8 +891,16 @@
       "Rosso sangue",
       "Nero"
     ],
+    "main_colors_pl": [
+      "Ciemnobordowy",
+      "Karmazynowy",
+      "Burgundowy",
+      "Krwistoczerwony",
+      "Czarny"
+    ],
     "description_en": "Dark red gradations for moody, dramatic intensity.",
-    "description_it": "Gradazioni di rosso scuro per un’intensità cupa e drammatica.",
+    "description_it": "Gradazioni di rosso scuro per un'intensità cupa e drammatica.",
+    "description_pl": "Ciemne czerwone gradacje dla nastrojowej, dramatycznej intensywności.",
     "colors": {
       "background": "38040E",
       "primary": "AD2831",
@@ -698,6 +914,7 @@
   {
     "palette_name_en": "Crimson Hues",
     "palette_name_it": "Sfumature Cremisi",
+    "palette_name_pl": "Karmazynowe Odcienie",
     "main_colors_en": [
       "Ivory",
       "Indigo",
@@ -712,8 +929,16 @@
       "Malva",
       "Rosa antico"
     ],
+    "main_colors_pl": [
+      "Kość słoniowa",
+      "Indygo",
+      "Śliwkowy",
+      "Liliowy",
+      "Różany"
+    ],
     "description_en": "Deep plums and muted roses for romantic professionalism.",
     "description_it": "Prugne profonde e rose attenuate per un romanticismo professionale.",
+    "description_pl": "Głębokie śliwki i stonowane róże dla romantycznego profesjonalizmu.",
     "colors": {
       "background": "F2E9E4",
       "primary": "22223B",
@@ -727,6 +952,7 @@
   {
     "palette_name_en": "Soft Lavender",
     "palette_name_it": "Lavanda Morbida",
+    "palette_name_pl": "Delikatna Lawenda",
     "main_colors_en": [
       "Mint",
       "Dusty mauve",
@@ -741,8 +967,16 @@
       "Pesca",
       "Crema"
     ],
+    "main_colors_pl": [
+      "Miętowy",
+      "Pudrowy lila",
+      "Różowy",
+      "Brzoskwiniowy",
+      "Kremowy"
+    ],
     "description_en": "Gentle lavenders and pinks for feminine, calming comfort.",
     "description_it": "Lilla e rosa delicati per un comfort femminile e rilassante.",
+    "description_pl": "Delikatne lawendy i róże dla kobiecego, kojącego komfortu.",
     "colors": {
       "background": "D8E2DC",
       "primary": "9D8189",
@@ -756,6 +990,7 @@
   {
     "palette_name_en": "Peachy Delight",
     "palette_name_it": "Delizia alla Pesca",
+    "palette_name_pl": "Brzoskwiniowa Rozkosz",
     "main_colors_en": [
       "Ivory",
       "Teal",
@@ -770,8 +1005,16 @@
       "Corallo",
       "Pesca"
     ],
+    "main_colors_pl": [
+      "Kość słoniowa",
+      "Morski",
+      "Akwamaryna",
+      "Koralowy",
+      "Brzoskwiniowy"
+    ],
     "description_en": "Soft peaches and aquas for refreshing, friendly charm.",
     "description_it": "Pesca e acquamarina delicate per un fascino fresco e amichevole.",
+    "description_pl": "Delikatne brzoskwinie i akwamaryny dla orzeźwiającego, przyjaznego uroku.",
     "colors": {
       "background": "EDF6F9",
       "primary": "006D77",
@@ -785,6 +1028,7 @@
   {
     "palette_name_en": "Ocean Pearl Delight",
     "palette_name_it": "Delizia Perla Oceanica",
+    "palette_name_pl": "Oceaniczna Perłowa Rozkosz",
     "main_colors_en": [
       "Ivory",
       "Chestnut",
@@ -799,8 +1043,16 @@
       "Caramello",
       "Sabbia"
     ],
+    "main_colors_pl": [
+      "Kość słoniowa",
+      "Kasztanowy",
+      "Jasny beż",
+      "Karmelowy",
+      "Piaskowy"
+    ],
     "description_en": "Warm tans and browns for earthy, timeless elegance.",
-    "description_it": "Toni caldi del cuoio e marroni per un’eleganza terrena e senza tempo.",
+    "description_it": "Toni caldi del cuoio e marroni per un'eleganza terrena e senza tempo.",
+    "description_pl": "Ciepłe beże i brązy dla ziemistej, ponadczasowej elegancji.",
     "colors": {
       "background": "EDE0D4",
       "primary": "7F5539",
@@ -813,7 +1065,8 @@
   },
   {
     "palette_name_en": "Autumn Harvest (fresh)",
-    "palette_name_it": "Raccolto d’Autunno (fresco)",
+    "palette_name_it": "Raccolto d'Autunno (fresco)",
+    "palette_name_pl": "Jesienne Zbiory (świeże)",
     "main_colors_en": [
       "Ivory",
       "Forest green",
@@ -828,8 +1081,16 @@
       "Rosso mattone",
       "Lime"
     ],
+    "main_colors_pl": [
+      "Kość słoniowa",
+      "Leśna zieleń",
+      "Zieleń liści",
+      "Ceglastoczerwony",
+      "Limonkowy"
+    ],
     "description_en": "Fresh greens with warm red for natural yet bold branding.",
-    "description_it": "Verdi freschi con un rosso caldo per un’identità naturale ma decisa.",
+    "description_it": "Verdi freschi con un rosso caldo per un'identità naturale ma decisa.",
+    "description_pl": "Świeże zielenie z ciepłą czerwienią dla naturalnego, ale odważnego brandingu.",
     "colors": {
       "background": "F2E8CF",
       "primary": "386641",
@@ -843,6 +1104,7 @@
   {
     "palette_name_en": "Fresh Greens",
     "palette_name_it": "Verdi Freschi",
+    "palette_name_pl": "Świeże Zielenie",
     "main_colors_en": [
       "Rose",
       "Indigo",
@@ -857,8 +1119,16 @@
       "Lilla",
       "Lavanda"
     ],
+    "main_colors_pl": [
+      "Różany",
+      "Indygo",
+      "Fioletowy",
+      "Liliowy",
+      "Lawendowy"
+    ],
     "description_en": "Purples with gentle pinks for creative sophistication.",
     "description_it": "Viola con rosa delicati per una sofisticazione creativa.",
+    "description_pl": "Fiolety z delikatnymi różami dla kreatywnej elegancji.",
     "colors": {
       "background": "E0B1CB",
       "primary": "231942",
@@ -872,6 +1142,7 @@
   {
     "palette_name_en": "Purple Dream",
     "palette_name_it": "Sogno Viola",
+    "palette_name_pl": "Fioletowy Sen",
     "main_colors_en": [
       "Ivory",
       "Charcoal",
@@ -886,8 +1157,16 @@
       "Rosso",
       "Cremisi"
     ],
+    "main_colors_pl": [
+      "Kość słoniowa",
+      "Antracytowy",
+      "Stalowy",
+      "Czerwony",
+      "Karmazynowy"
+    ],
     "description_en": "Cool grays with sharp red accents for striking authority.",
-    "description_it": "Grigi freddi con accenti rossi decisi per un’autorità incisiva.",
+    "description_it": "Grigi freddi con accenti rossi decisi per un'autorità incisiva.",
+    "description_pl": "Chłodne szarości z ostrymi czerwonymi akcentami dla wyrazistego autorytetu.",
     "colors": {
       "background": "EDF2F4",
       "primary": "2B2D42",
@@ -901,6 +1180,7 @@
   {
     "palette_name_en": "Cool Coastal Vibes",
     "palette_name_it": "Vibrazioni Costiere Fresche",
+    "palette_name_pl": "Chłodne Nadmorskie Wibracje",
     "main_colors_en": [
       "Deep green",
       "Pale yellow-green",
@@ -915,8 +1195,16 @@
       "Muschio",
       "Verde foresta"
     ],
+    "main_colors_pl": [
+      "Głęboka zieleń",
+      "Bladożółtozielony",
+      "Limonkowy",
+      "Mech",
+      "Leśna zieleń"
+    ],
     "description_en": "Bright coastal rainbow for youthful, energetic dynamism.",
     "description_it": "Arcobaleno brillante e costiero per un dinamismo giovane ed energico.",
+    "description_pl": "Jasna nadmorska tęcza dla młodzieńczego, energetycznego dynamizmu.",
     "colors": {
       "background": "132A13",
       "primary": "ECF39E",
@@ -930,6 +1218,7 @@
   {
     "palette_name_en": "Candy Pop",
     "palette_name_it": "Caramella Pop",
+    "palette_name_pl": "Cukierkowy Pop",
     "main_colors_en": [
       "Deep violet",
       "Hot pink",
@@ -944,8 +1233,16 @@
       "Giallo",
       "Viola"
     ],
+    "main_colors_pl": [
+      "Głęboki fiolet",
+      "Ostry róż",
+      "Cyjan",
+      "Żółty",
+      "Fioletowy"
+    ],
     "description_en": "Neon pinks and blues on a dark base for playful, eye-catching energy.",
-    "description_it": "Rosa e blu neon su base scura per un’energia giocosa e accattivante.",
+    "description_it": "Rosa e blu neon su base scura per un'energia giocosa e accattivante.",
+    "description_pl": "Neonowe róże i błękity na ciemnej bazie dla zabawnej, przyciągającej wzrok energii.",
     "colors": {
       "background": "1E1B47",
       "primary": "F72585",
@@ -959,6 +1256,7 @@
   {
     "palette_name_en": "Leafy Green Garden",
     "palette_name_it": "Giardino Foglioso",
+    "palette_name_pl": "Liściasty Zielony Ogród",
     "main_colors_en": [
       "Cream",
       "Charcoal",
@@ -973,8 +1271,16 @@
       "Arancione bruciato",
       "Tortora"
     ],
+    "main_colors_pl": [
+      "Kremowy",
+      "Antracytowy",
+      "Szarobrązowy",
+      "Spalony pomarańcz",
+      "Ciepły szary"
+    ],
     "description_en": "Neutral creams with earthy browns for rustic authenticity.",
-    "description_it": "Creme neutre con marroni terrosi per un’autenticità rustica.",
+    "description_it": "Creme neutre con marroni terrosi per un'autenticità rustica.",
+    "description_pl": "Neutralne kremy z ziemistymi brązami dla rustykalnej autentyczności.",
     "colors": {
       "background": "FFFCF2",
       "primary": "252422",
@@ -988,6 +1294,7 @@
   {
     "palette_name_en": "Rustic Charm",
     "palette_name_it": "Fascino Rustico",
+    "palette_name_pl": "Rustykalny Urok",
     "main_colors_en": [
       "Teal",
       "Gold",
@@ -1002,8 +1309,16 @@
       "Corallo",
       "Arancione"
     ],
+    "main_colors_pl": [
+      "Morski",
+      "Złoty",
+      "Turkusowy",
+      "Koralowy",
+      "Pomarańczowy"
+    ],
     "description_en": "Teals and oranges for adventurous, welcoming warmth.",
     "description_it": "Verdi acqua e arancioni per un calore accogliente e avventuroso.",
+    "description_pl": "Morskie zielenie i pomarańcze dla pełnego przygód, gościnnego ciepła.",
     "colors": {
       "background": "264653",
       "primary": "E9C46A",
@@ -1017,6 +1332,7 @@
   {
     "palette_name_en": "Sunny Beach Day",
     "palette_name_it": "Giornata di Spiaggia Soleggiata",
+    "palette_name_pl": "Słoneczny Dzień na Plaży",
     "main_colors_en": [
       "Sage",
       "Slate",
@@ -1031,8 +1347,16 @@
       "Verde mare",
       "Grigio piombo"
     ],
+    "main_colors_pl": [
+      "Szałwiowy",
+      "Łupkowy",
+      "Morski",
+      "Morska zieleń",
+      "Stalowoszary"
+    ],
     "description_en": "Muted sea greens for calm, coastal relaxation.",
     "description_it": "Verdi marini attenuati per un relax costiero e calmo.",
+    "description_pl": "Stonowane morskie zielenie dla spokojnego, nadmorskiego relaksu.",
     "colors": {
       "background": "CAD2C5",
       "primary": "2F3E46",
@@ -1046,6 +1370,7 @@
   {
     "palette_name_en": "Earthy Green",
     "palette_name_it": "Verde Terroso",
+    "palette_name_pl": "Ziemista Zieleń",
     "main_colors_en": [
       "White",
       "Deep green",
@@ -1060,8 +1385,16 @@
       "Verde",
       "Lime"
     ],
+    "main_colors_pl": [
+      "Biały",
+      "Głęboka zieleń",
+      "Ciemnozielony",
+      "Zielony",
+      "Limonkowy"
+    ],
     "description_en": "Lush greens for fresh, eco-driven energy and vitality.",
     "description_it": "Verdi rigogliosi per energia e vitalità a trazione ecologica.",
+    "description_pl": "Bujne zielenie dla świeżej, ekologicznej energii i witalności.",
     "colors": {
       "background": "FFFFFF",
       "primary": "004B23",
@@ -1075,6 +1408,7 @@
   {
     "palette_name_en": "Bright Green",
     "palette_name_it": "Verde Brillante",
+    "palette_name_pl": "Jasna Zieleń",
     "main_colors_en": [
       "White",
       "Indigo",
@@ -1089,8 +1423,16 @@
       "Viola",
       "Blu violaceo"
     ],
+    "main_colors_pl": [
+      "Biały",
+      "Indygo",
+      "Fioletowy",
+      "Purpurowy",
+      "Fioletowoniebieski"
+    ],
     "description_en": "Deep purples with bright highlights for bold, futuristic flair.",
     "description_it": "Viola profondi con bagliori luminosi per un tocco audace e futuristico.",
+    "description_pl": "Głębokie fiolety z jasnymi akcentami dla odważnego, futurystycznego stylu.",
     "colors": {
       "background": "FFFFFF",
       "primary": "10002B",
@@ -1104,6 +1446,7 @@
   {
     "palette_name_en": "Vivid Nightfall",
     "palette_name_it": "Crepuscolo Vivido",
+    "palette_name_pl": "Żywy Zmrok",
     "main_colors_en": [
       "Sage",
       "Olive",
@@ -1118,8 +1461,16 @@
       "Arancione bruciato",
       "Pesca"
     ],
+    "main_colors_pl": [
+      "Szałwiowy",
+      "Oliwkowy",
+      "Pomarańczowy",
+      "Spalony pomarańcz",
+      "Brzoskwiniowy"
+    ],
     "description_en": "Warm golds and fiery oranges for glowing nighttime energy.",
-    "description_it": "Oro caldo e arancioni vividi per un’energia notturna luminosa.",
+    "description_it": "Oro caldo e arancioni vividi per un'energia notturna luminosa.",
+    "description_pl": "Ciepłe złota i ogniste pomarańcze dla świetlistej nocnej energii.",
     "colors": {
       "background": "BABD8D",
       "primary": "7C6A0A",
@@ -1133,6 +1484,7 @@
   {
     "palette_name_en": "Golden Glow",
     "palette_name_it": "Bagliore Dorato",
+    "palette_name_pl": "Złota Poświata",
     "main_colors_en": [
       "Ivory",
       "Brown",
@@ -1147,8 +1499,16 @@
       "Oliva",
       "Pistacchio"
     ],
+    "main_colors_pl": [
+      "Kość słoniowa",
+      "Brązowy",
+      "Jasny beż",
+      "Oliwkowy",
+      "Pistacjowy"
+    ],
     "description_en": "Subtle golds and tans for understated elegance and warmth.",
-    "description_it": "Oro tenue e cuoio per un’eleganza discreta e calda.",
+    "description_it": "Oro tenue e cuoio per un'eleganza discreta e calda.",
+    "description_pl": "Subtelne złota i beże dla stonowanej elegancji i ciepła.",
     "colors": {
       "background": "F0EAD2",
       "primary": "6C584C",
@@ -1162,6 +1522,7 @@
   {
     "palette_name_en": "Earthy Tones (vivid)",
     "palette_name_it": "Toni Terrosi (vividi)",
+    "palette_name_pl": "Ziemiste Tony (żywe)",
     "main_colors_en": [
       "White",
       "Purple",
@@ -1176,8 +1537,16 @@
       "Magenta",
       "Rosa"
     ],
+    "main_colors_pl": [
+      "Biały",
+      "Fioletowy",
+      "Indygo",
+      "Magenta",
+      "Różowy"
+    ],
     "description_en": "Vivid jewel tones for bold, eclectic creativity.",
     "description_it": "Toni gioiello vividi per una creatività audace ed eclettica.",
+    "description_pl": "Żywe klejnotowe tony dla odważnej, eklektycznej kreatywności.",
     "colors": {
       "background": "FFFFFF",
       "primary": "480CA8",
@@ -1191,6 +1560,7 @@
   {
     "palette_name_en": "Purple Raindrops",
     "palette_name_it": "Gocce di Viola",
+    "palette_name_pl": "Fioletowe Krople Deszczu",
     "main_colors_en": [
       "Pale blue",
       "Lavender blue",
@@ -1205,8 +1575,16 @@
       "Pervinca",
       "Azzurro polvere"
     ],
+    "main_colors_pl": [
+      "Bladoniebieski",
+      "Lawendowy błękit",
+      "Chabrowy",
+      "Barwinek",
+      "Pudrowy błękit"
+    ],
     "description_en": "Gentle pastel blues for airy, calming freshness.",
     "description_it": "Azzurri pastello delicati per una freschezza ariosa e calmante.",
+    "description_pl": "Delikatne pastelowe błękity dla lekkiej, kojącej świeżości.",
     "colors": {
       "background": "EDF2FB",
       "primary": "C1D3FE",
@@ -1220,6 +1598,7 @@
   {
     "palette_name_en": "Blue Serenity",
     "palette_name_it": "Serenità Blu",
+    "palette_name_pl": "Błękitny Spokój",
     "main_colors_en": [
       "Navy",
       "Cyan",
@@ -1234,8 +1613,16 @@
       "Azzurro",
       "Blu di Prussia"
     ],
+    "main_colors_pl": [
+      "Granatowy",
+      "Cyjan",
+      "Błękit nieba",
+      "Lazurowy",
+      "Błękit pruski"
+    ],
     "description_en": "Layered ocean blues for trust, calm, and expansive clarity.",
     "description_it": "Strati di blu oceanici per fiducia, calma e chiarezza ampia.",
+    "description_pl": "Warstwowe oceaniczne błękity dla zaufania, spokoju i rozległej jasności.",
     "colors": {
       "background": "03045E",
       "primary": "00B4D8",
@@ -1249,6 +1636,7 @@
   {
     "palette_name_en": "Ocean Blue Serenity",
     "palette_name_it": "Serenità Blu Oceano",
+    "palette_name_pl": "Oceaniczny Błękitny Spokój",
     "main_colors_en": [
       "Peach",
       "Burgundy",
@@ -1263,8 +1651,16 @@
       "Corallo",
       "Rosa"
     ],
+    "main_colors_pl": [
+      "Brzoskwiniowy",
+      "Burgundowy",
+      "Palisandrowy",
+      "Koralowy",
+      "Różowy"
+    ],
     "description_en": "Coral pinks with deep maroons for warm, romantic intensity.",
-    "description_it": "Rosa corallo con bordeaux profondi per un’intensità calda e romantica.",
+    "description_it": "Rosa corallo con bordeaux profondi per un'intensità calda e romantica.",
+    "description_pl": "Koralowe róże z głębokimi bordowymi dla ciepłej, romantycznej intensywności.",
     "colors": {
       "background": "F9DBBD",
       "primary": "450920",
@@ -1278,6 +1674,7 @@
   {
     "palette_name_en": "Bold Berry",
     "palette_name_it": "Bacca Decisa",
+    "palette_name_pl": "Odważna Jagoda",
     "main_colors_en": [
       "Cream",
       "Midnight blue",
@@ -1292,8 +1689,16 @@
       "Ardesia",
       "Blu acciaio"
     ],
+    "main_colors_pl": [
+      "Kremowy",
+      "Granat nocny",
+      "Granatowy",
+      "Łupkowy",
+      "Stalowy błękit"
+    ],
     "description_en": "Bold berry blues with cream for trustworthy sophistication.",
     "description_it": "Blu bacca decisi con crema per una raffinatezza affidabile.",
+    "description_pl": "Odważne jagodowe błękity z kremem dla godnej zaufania elegancji.",
     "colors": {
       "background": "F0EBD8",
       "primary": "0D1321",
@@ -1307,6 +1712,7 @@
   {
     "palette_name_en": "Deep Sea (neutral)",
     "palette_name_it": "Mare Profondo (neutro)",
+    "palette_name_pl": "Głębiny Morskie (neutralne)",
     "main_colors_en": [
       "Off-white",
       "Eggplant",
@@ -1321,8 +1727,16 @@
       "Tortora",
       "Panna"
     ],
+    "main_colors_pl": [
+      "Złamana biel",
+      "Bakłażanowy",
+      "Antracytowy",
+      "Ciepły szary",
+      "Skorupka jajka"
+    ],
     "description_en": "Neutral grays with soft taupes for minimal, modern calm.",
     "description_it": "Grigi neutri con tortora morbidi per una calma moderna e minimale.",
+    "description_pl": "Neutralne szarości z miękkimi ciepłymi szarymi dla minimalistycznego, nowoczesnego spokoju.",
     "colors": {
       "background": "F1F0EA",
       "primary": "2D232E",
@@ -1336,6 +1750,7 @@
   {
     "palette_name_en": "Monochrome Chic",
     "palette_name_it": "Chic Monocromatico",
+    "palette_name_pl": "Monochromatyczny Szyk",
     "main_colors_en": [
       "Peach",
       "Coral",
@@ -1350,8 +1765,16 @@
       "Salmone chiaro",
       "Albicocca"
     ],
+    "main_colors_pl": [
+      "Brzoskwiniowy",
+      "Koralowy",
+      "Brzoskwiniowy róż",
+      "Jasny łosoś",
+      "Morelowy"
+    ],
     "description_en": "Warm pink monochrome for stylish, feminine branding.",
     "description_it": "Monocromia rosa calda per un branding femminile e alla moda.",
+    "description_pl": "Ciepła różowa monochromatyczność dla stylowego, kobiecego brandingu.",
     "colors": {
       "background": "FFDAB9",
       "primary": "F08080",
@@ -1365,6 +1788,7 @@
   {
     "palette_name_en": "Peach Sorbet",
     "palette_name_it": "Sorbetto alla Pesca",
+    "palette_name_pl": "Brzoskwiniowy Sorbet",
     "main_colors_en": [
       "Navy",
       "Raspberry",
@@ -1379,8 +1803,16 @@
       "Menta",
       "Verde acqua"
     ],
+    "main_colors_pl": [
+      "Granatowy",
+      "Malinowy",
+      "Żółty",
+      "Miętowy",
+      "Morski"
+    ],
     "description_en": "Bright tropical mix for playful, adventurous energy.",
     "description_it": "Mix tropicale brillante per un'energia giocosa e avventurosa.",
+    "description_pl": "Jasna tropikalna mieszanka dla zabawnej, pełnej przygód energii.",
     "colors": {
       "background": "073B4C",
       "primary": "EF476F",
@@ -1394,6 +1826,7 @@
   {
     "palette_name_en": "Monochrome Grayscale",
     "palette_name_it": "Monocromatico Grigio",
+    "palette_name_pl": "Monochromatyczna Szarość",
     "main_colors_en": [
       "White",
       "Black",
@@ -1410,8 +1843,17 @@
       "Grigio chiaro",
       "Argento"
     ],
+    "main_colors_pl": [
+      "Biały",
+      "Czarny",
+      "Ciemnoszary",
+      "Szary",
+      "Jasnoszary",
+      "Srebrny"
+    ],
     "description_en": "Pure grayscale palette for timeless, minimal elegance and versatility.",
     "description_it": "Tavolozza monocromatica pura per un'eleganza minimalista e versatile senza tempo.",
+    "description_pl": "Czysta paleta szarości dla ponadczasowej, minimalistycznej elegancji i wszechstronności.",
     "colors": {
       "background": "FFFFFF",
       "primary": "000000",
@@ -1426,6 +1868,7 @@
   {
     "palette_name_en": "Peach Fuzz Pop",
     "palette_name_it": "Effetto Pesca Frizzante",
+    "palette_name_pl": "Brzoskwiniowy Błysk",
     "main_colors_en": [
       "Peach",
       "Maroon",
@@ -1440,8 +1883,16 @@
       "Arancione bruciato",
       "Rosa scuro"
     ],
+    "main_colors_pl": [
+      "Brzoskwiniowy",
+      "Bordowy",
+      "Koralowy",
+      "Spalony pomarańcz",
+      "Ciemny róż"
+    ],
     "description_en": "Soft peach base with bold coral and orange accents, balanced by a touch of deep pink for a modern, energetic vibe.",
-    "description_it": "Base pesca delicata con accenti vivaci corallo e arancione bilanciati da un tocco di rosa intenso, per un’atmosfera moderna ed energica.",
+    "description_it": "Base pesca delicata con accenti vivaci corallo e arancione bilanciati da un tocco di rosa intenso, per un'atmosfera moderna ed energica.",
+    "description_pl": "Delikatna brzoskwiniowa baza z odważnymi koralowymi i pomarańczowymi akcentami, zrównoważona odrobiną głębokiego różu dla nowoczesnej, energetycznej atmosfery.",
     "colors": {
       "background": "FFEDE4",
       "primary": "802A2A",
@@ -1455,6 +1906,7 @@
   {
     "palette_name_en": "Color Me Coral",
     "palette_name_it": "Tutto Corallo",
+    "palette_name_pl": "Pomaluj Mnie Koralem",
     "main_colors_en": [
       "Blush",
       "Burnt orange",
@@ -1469,8 +1921,16 @@
       "Magenta",
       "Rosa"
     ],
+    "main_colors_pl": [
+      "Rumieniec",
+      "Spalony pomarańcz",
+      "Pudrowy róż",
+      "Magenta",
+      "Różowy"
+    ],
     "description_en": "A blend of mature pinks and burnt orange, with a vibrant magenta accent for a warm yet playful look.",
     "description_it": "Un mix di rosa maturi e arancione bruciato, con un vivace accento magenta per un look caldo ma giocoso.",
+    "description_pl": "Mieszanka dojrzałych różów i spalonego pomarańczu, z żywym akcentem magenty dla ciepłego, ale zabawnego wyglądu.",
     "colors": {
       "background": "FFF8F5",
       "primary": "C14A09",
@@ -1484,6 +1944,7 @@
   {
     "palette_name_en": "Lavender Haze",
     "palette_name_it": "Foschia di Lavanda",
+    "palette_name_pl": "Lawendowa Mgła",
     "main_colors_en": [
       "Mint gray",
       "Deep violet",
@@ -1498,8 +1959,16 @@
       "Verde foresta",
       "Menta"
     ],
+    "main_colors_pl": [
+      "Miętowa szarość",
+      "Głęboki fiolet",
+      "Lawendowy",
+      "Leśna zieleń",
+      "Miętowy"
+    ],
     "description_en": "Soft purples pair with fresh green for a soothing, dreamy palette reminiscent of spring.",
     "description_it": "Toni di viola delicati si abbinano a un verde fresco per una palette rilassante e da sogno che ricorda la primavera.",
+    "description_pl": "Delikatne fiolety w parze ze świeżą zielenią dla kojącej, sennej palety przypominającej wiosnę.",
     "colors": {
       "background": "EDF7EF",
       "primary": "4E2A84",
@@ -1513,6 +1982,7 @@
   {
     "palette_name_en": "Blue Nova",
     "palette_name_it": "Blu Nova",
+    "palette_name_pl": "Błękitna Nova",
     "main_colors_en": [
       "Cream",
       "Starry blue",
@@ -1527,8 +1997,16 @@
       "Arancione rustico",
       "Azzurro cielo"
     ],
+    "main_colors_pl": [
+      "Kremowy",
+      "Gwiaździsty błękit",
+      "Ciepły szary",
+      "Rustykalny pomarańcz",
+      "Błękit nieba"
+    ],
     "description_en": "Starry blues balanced by soft neutrals, with a rustic orange accent adding warmth.",
     "description_it": "Blu stellari bilanciati da neutri delicati, con un accento arancione rustico ad aggiungere calore.",
+    "description_pl": "Gwiaździste błękity zrównoważone miękkimi neutralnymi tonami, z rustykalnym pomarańczowym akcentem dodającym ciepła.",
     "colors": {
       "background": "F5F3EF",
       "primary": "2F3E7C",
@@ -1542,6 +2020,7 @@
   {
     "palette_name_en": "Spring Forward",
     "palette_name_it": "Balzo Verso la Primavera",
+    "palette_name_pl": "Wiosenny Krok",
     "main_colors_en": [
       "Ivory",
       "Emerald",
@@ -1556,8 +2035,16 @@
       "Marrone",
       "Verde pallido"
     ],
+    "main_colors_pl": [
+      "Kość słoniowa",
+      "Szmaragdowy",
+      "Oliwkowy",
+      "Brązowy",
+      "Bladozielony"
+    ],
     "description_en": "Golden yellows, soft greens, and a deep emerald create a fresh springtime feel balanced by creamy neutrals.",
     "description_it": "Gialli dorati, verdi delicati e un verde smeraldo profondo creano un fresco clima primaverile, bilanciato da neutri cremosi.",
+    "description_pl": "Złote żółcie, miękkie zielenie i głęboki szmaragd tworzą świeży wiosenny klimat zrównoważony kremowymi neutralnymi tonami.",
     "colors": {
       "background": "FEFDF6",
       "primary": "054A29",
@@ -1571,6 +2058,7 @@
   {
     "palette_name_en": "Millennial Pink",
     "palette_name_it": "Rosa Millennial",
+    "palette_name_pl": "Różowy Millennialski",
     "main_colors_en": [
       "Blush pink",
       "Plum",
@@ -1585,8 +2073,16 @@
       "Verde acqua",
       "Crema al burro"
     ],
+    "main_colors_pl": [
+      "Pudrowy róż",
+      "Śliwkowy",
+      "Różany",
+      "Morski",
+      "Maślana śmietanka"
+    ],
     "description_en": "A medley of pink hues with a hint of teal for a fun yet elegant feminine palette.",
     "description_it": "Una miscela di tonalità rosa con un tocco di verde acqua per una palette femminile divertente e al contempo elegante.",
+    "description_pl": "Mieszanka różowych odcieni z odrobiną morskiego zielonego dla zabawnej, ale eleganckiej kobiecej palety.",
     "colors": {
       "background": "FFFAF5",
       "primary": "9C3F72",
@@ -1600,6 +2096,7 @@
   {
     "palette_name_en": "Feeling Fresh",
     "palette_name_it": "Sensazione di Freschezza",
+    "palette_name_pl": "Uczucie Świeżości",
     "main_colors_en": [
       "Light gray",
       "Forest green",
@@ -1614,8 +2111,16 @@
       "Marrone miele",
       "Nebbia"
     ],
+    "main_colors_pl": [
+      "Jasnoszary",
+      "Leśna zieleń",
+      "Niebieskoszary",
+      "Miodowy brąz",
+      "Mglisty"
+    ],
     "description_en": "Vibrant forest green pairs with soft grays, grounded by a warm honey-brown accent for an invigorating yet stable palette.",
     "description_it": "Un vivace verde foresta si abbina a grigi delicati, radicato da un accento marrone miele caldo per una palette rinvigorente ma equilibrata.",
+    "description_pl": "Żywa leśna zieleń w parze z miękkimi szarościami, ugruntowana ciepłym miodowo-brązowym akcentem dla ożywczej, ale stabilnej palety.",
     "colors": {
       "background": "F5F5F4",
       "primary": "145C2E",
@@ -1629,6 +2134,7 @@
   {
     "palette_name_en": "Tones on Tones",
     "palette_name_it": "Tonalità su Tonalità",
+    "palette_name_pl": "Tony na Tonach",
     "main_colors_en": [
       "Ivory",
       "Umber",
@@ -1643,8 +2149,16 @@
       "Terracotta",
       "Beige"
     ],
+    "main_colors_pl": [
+      "Kość słoniowa",
+      "Umbra",
+      "Kasztanowy",
+      "Terakota",
+      "Beżowy"
+    ],
     "description_en": "A layered neutral palette using varying shades of warm tan and brown for a sophisticated, monochromatic look.",
     "description_it": "Una palette neutra stratificata che utilizza diverse sfumature di marrone caldo per un look sofisticato e monocromatico.",
+    "description_pl": "Warstwowa neutralna paleta wykorzystująca różne odcienie ciepłego beżu i brązu dla wyrafinowanego, monochromatycznego wyglądu.",
     "colors": {
       "background": "F9F5F0",
       "primary": "4B3A30",
@@ -1658,6 +2172,7 @@
   {
     "palette_name_en": "Nautical Prep",
     "palette_name_it": "Stile Nautico",
+    "palette_name_pl": "Żeglarski Styl",
     "main_colors_en": [
       "Cream",
       "Charcoal blue",
@@ -1672,8 +2187,16 @@
       "Blu polvere",
       "Sabbia"
     ],
+    "main_colors_pl": [
+      "Kremowy",
+      "Antracytowy błękit",
+      "Oceaniczny błękit",
+      "Pudrowy błękit",
+      "Piaskowy"
+    ],
     "description_en": "Soft cream and deep ocean blue evoke a classic nautical vibe, anchored by a strong charcoal primary for a polished, preppy feel.",
-    "description_it": "Una morbida crema e un blu oceano intenso evocano un classico stile nautico, ancorato da un forte colore antracite primario per un’atmosfera curata e preppy.",
+    "description_it": "Una morbida crema e un blu oceano intenso evocano un classico stile nautico, ancorato da un forte colore antracite primario per un'atmosfera curata e preppy.",
+    "description_pl": "Miękki krem i głęboki oceaniczny błękit przywołują klasyczny żeglarski klimat, zakotwiczony silnym antracytowym kolorem głównym dla dopracowanego, preppy stylu.",
     "colors": {
       "background": "F7F3EC",
       "primary": "4A4E59",
@@ -1687,6 +2210,7 @@
   {
     "palette_name_en": "Study Hard",
     "palette_name_it": "Studio Intenso",
+    "palette_name_pl": "Pilna Nauka",
     "main_colors_en": [
       "Tan",
       "Dark brown",
@@ -1701,8 +2225,16 @@
       "Noce",
       "Cachi"
     ],
+    "main_colors_pl": [
+      "Jasny beż",
+      "Ciemny brąz",
+      "Czekoladowy",
+      "Orzechowy",
+      "Khaki"
+    ],
     "description_en": "An array of warm browns creates an academic, grounded feel. Best used with a light tan base instead of stark white for a cozy effect.",
-    "description_it": "Una gamma di marroni caldi crea un’atmosfera accademica e solida. Da usare preferibilmente con una base beige chiaro invece del bianco puro per un effetto accogliente.",
+    "description_it": "Una gamma di marroni caldi crea un'atmosfera accademica e solida. Da usare preferibilmente con una base beige chiaro invece del bianco puro per un effetto accogliente.",
+    "description_pl": "Gama ciepłych brązów tworzy akademicką, ugruntowaną atmosferę. Najlepiej używać z jasnobeżową bazą zamiast czystej bieli dla przytulnego efektu.",
     "colors": {
       "background": "ECE1D3",
       "primary": "3B2F2F",
@@ -1716,6 +2248,7 @@
   {
     "palette_name_en": "Spiced Autumn",
     "palette_name_it": "Autunno Speziato",
+    "palette_name_pl": "Przyprawiona Jesień",
     "main_colors_en": [
       "Apricot",
       "Bordeaux",
@@ -1730,8 +2263,16 @@
       "Cremisi",
       "Crema"
     ],
+    "main_colors_pl": [
+      "Morelowy",
+      "Bordowy",
+      "Paprykowy",
+      "Karmazynowy",
+      "Kremowy"
+    ],
     "description_en": "Soft pink and rich spice tones (saffron, chili, paprika) blend for a warm palette with balanced depth. A bright crimson accent adds lively energy.",
     "description_it": "Toni rosa tenui e ricchi toni speziati (zafferano, peperoncino, paprica) si fondono per una palette calda e bilanciata in profondità. Un vivace accento cremisi aggiunge energia.",
+    "description_pl": "Miękkie róże i bogate korzenne tony (szafran, chili, papryka) łączą się w ciepłą paletę z wyważoną głębią. Jasny karmazynowy akcent dodaje żywej energii.",
     "colors": {
       "background": "F6E4D6",
       "primary": "8B2E2E",
@@ -1745,6 +2286,7 @@
   {
     "palette_name_en": "Spring Bloom",
     "palette_name_it": "Fioritura Primaverile",
+    "palette_name_pl": "Wiosenne Kwitnienie",
     "main_colors_en": [
       "Lavender",
       "Leaf green",
@@ -1759,8 +2301,16 @@
       "Mandarino",
       "Pesca"
     ],
+    "main_colors_pl": [
+      "Lawendowy",
+      "Zieleń liści",
+      "Śliwkowy",
+      "Mandarynkowy",
+      "Brzoskwiniowy"
+    ],
     "description_en": "A fresh spring palette combining soft lavender and minty green with a pop of tangerine. Light pastels and a bright accent capture the feeling of new blooms.",
     "description_it": "Una fresca palette primaverile che unisce un lavanda delicato e un verde menta con un tocco di mandarino a contrasto. Pastelli chiari e un accento vivace catturano la sensazione di nuove fioriture.",
+    "description_pl": "Świeża wiosenna paleta łącząca delikatną lawendę i miętową zieleń z akcentem mandarynki. Jasne pastele i żywy akcent oddają uczucie nowych rozkwitów.",
     "colors": {
       "background": "F4F0FB",
       "primary": "2B6B3D",
@@ -1774,6 +2324,7 @@
   {
     "palette_name_en": "Country Club Chic",
     "palette_name_it": "Chic da Country Club",
+    "palette_name_pl": "Elegancja Country Club",
     "main_colors_en": [
       "Cream",
       "Oak green",
@@ -1788,8 +2339,16 @@
       "Blu polvere",
       "Pietra"
     ],
+    "main_colors_pl": [
+      "Kremowy",
+      "Dębowa zieleń",
+      "Ciepły szary",
+      "Pudrowy błękit",
+      "Kamienny"
+    ],
     "description_en": "Sophisticated neutrals (taupes and browns) get a pop of country club style with a rich oak green and a powdery blue accent, evoking an English countryside elegance.",
-    "description_it": "Neutri sofisticati (taupe e marroni) sono ravvivati dallo stile country club con un ricco verde quercia e un accento blu polvere, evocando un’eleganza da campagna inglese.",
+    "description_it": "Neutri sofisticati (taupe e marroni) sono ravvivati dallo stile country club con un ricco verde quercia e un accento blu polvere, evocando un'eleganza da campagna inglese.",
+    "description_pl": "Wyrafinowane neutralne tony (ciepłe szarości i brązy) zyskują charakter country club dzięki bogatej dębowej zieleni i pudrowemu błękitnemu akcentowi, przywołując elegancję angielskiej wsi.",
     "colors": {
       "background": "F2EDE3",
       "primary": "254D32",
@@ -1803,6 +2362,7 @@
   {
     "palette_name_en": "Palm Beach Chic",
     "palette_name_it": "Chic da Palm Beach",
+    "palette_name_pl": "Elegancja Palm Beach",
     "main_colors_en": [
       "Seafoam",
       "Chocolate",
@@ -1817,8 +2377,16 @@
       "Rosa cipria",
       "Alabastro"
     ],
+    "main_colors_pl": [
+      "Morska piana",
+      "Czekoladowy",
+      "Sosnowa zieleń",
+      "Różowy pudrowy",
+      "Alabastrowy"
+    ],
     "description_en": "Soft tropical greens form the base of this classy palette, accented by a rosy pink and grounded with warm neutrals, embodying an elegant coastal vibe.",
-    "description_it": "Morbidi verdi tropicali formano la base di questa palette raffinata, arricchita da un rosa cipria e radicata da neutri caldi, per un’atmosfera costiera elegante.",
+    "description_it": "Morbidi verdi tropicali formano la base di questa palette raffinata, arricchita da un rosa cipria e radicata da neutri caldi, per un'atmosfera costiera elegante.",
+    "description_pl": "Miękkie tropikalne zielenie tworzą bazę tej wytwornej palety, akcentowane różowym pudrem i ugruntowane ciepłymi neutralnymi tonami, ucieleśniając elegancki nadmorski klimat.",
     "colors": {
       "background": "E1ECE4",
       "primary": "4B3621",
@@ -1832,6 +2400,7 @@
   {
     "palette_name_en": "Upward Sky",
     "palette_name_it": "Ascesa Celeste",
+    "palette_name_pl": "Ku Niebu",
     "main_colors_en": [
       "Cream",
       "Navy",
@@ -1846,8 +2415,16 @@
       "Albicocca",
       "Avena"
     ],
+    "main_colors_pl": [
+      "Kremowy",
+      "Granatowy",
+      "Błękit nieba",
+      "Morelowy",
+      "Owsiany"
+    ],
     "description_en": "Delicate sky blues are paired with a deeper navy and grounded by creamy whites, while a touch of warm apricot adds an inviting highlight.",
     "description_it": "Delicati azzurri del cielo si abbinano a un blu marino più profondo e sono bilanciati da bianchi cremosi, con un tocco di albicocca calda ad aggiungere un accento accogliente.",
+    "description_pl": "Delikatne błękity nieba w parze z głębszym granatem i ugruntowane kremowymi bielami, z odrobiną ciepłego morelu dodającą gościnnego akcentu.",
     "colors": {
       "background": "FBF7EF",
       "primary": "1F4E79",
@@ -1861,6 +2438,7 @@
   {
     "palette_name_en": "Warm Earth",
     "palette_name_it": "Terra Calda",
+    "palette_name_pl": "Ciepła Ziemia",
     "main_colors_en": [
       "Sand",
       "Olive brown",
@@ -1875,8 +2453,16 @@
       "Senape",
       "Grigio beige"
     ],
+    "main_colors_pl": [
+      "Piaskowy",
+      "Oliwkowo-brązowy",
+      "Gliniany",
+      "Musztardowy",
+      "Szarobeżowy"
+    ],
     "description_en": "Rich olive and clay tones blend with soft sand neutrals for a palette that's both earthy and comforting.",
     "description_it": "Ricche tonalità oliva e argilla si fondono con neutri color sabbia per una palette al tempo stesso terrosa e accogliente.",
+    "description_pl": "Bogate oliwkowe i gliniane tony mieszają się z miękkimi piaskowymi neutralnymi dla palety, która jest zarówno ziemista, jak i kojąca.",
     "colors": {
       "background": "F3EEE8",
       "primary": "5C5438",
@@ -1890,6 +2476,7 @@
   {
     "palette_name_en": "Italian Countryside",
     "palette_name_it": "Campagna Italiana",
+    "palette_name_pl": "Włoska Wieś",
     "main_colors_en": [
       "Ivory",
       "Burgundy",
@@ -1904,8 +2491,16 @@
       "Blu mezzanotte",
       "Grigio beige"
     ],
+    "main_colors_pl": [
+      "Kość słoniowa",
+      "Burgundowy",
+      "Mokka",
+      "Granat nocny",
+      "Szarobeżowy"
+    ],
     "description_en": "A decadent palette featuring deep burgundy and midnight blue contrasted against airy neutrals, whisking you away to an Italian villa.",
     "description_it": "Una palette sontuosa con un bordeaux profondo e un blu mezzanotte a contrasto su neutri ariosi, che ti trasporta in una villa nella campagna italiana.",
+    "description_pl": "Dekadencka paleta z głębokim burgundem i nocnym granatem skontrastowanymi z lekkimi neutralnymi tonami, przenosząca do włoskiej willi.",
     "colors": {
       "background": "F5F3F0",
       "primary": "4B0E26",
@@ -1919,6 +2514,7 @@
   {
     "palette_name_en": "Cyberpunk Neon",
     "palette_name_it": "Neon Cyberpunk",
+    "palette_name_pl": "Cyberpunkowy Neon",
     "main_colors_en": [
       "Black",
       "Neon green",
@@ -1933,8 +2529,16 @@
       "Blu neon",
       "Grafite"
     ],
+    "main_colors_pl": [
+      "Czarny",
+      "Neonowa zieleń",
+      "Neonowy róż",
+      "Neonowy błękit",
+      "Grafitowy"
+    ],
     "description_en": "High-contrast neon magenta, cyan, and green on a pure black background for a futuristic, attention-grabbing style.",
     "description_it": "Neon magenta, ciano e verde ad alto contrasto su sfondo nero puro per uno stile futuristico e accattivante.",
+    "description_pl": "Wysokokontrastowe neonowe magenta, cyjan i zieleń na czystym czarnym tle dla futurystycznego, przyciągającego uwagę stylu.",
     "colors": {
       "background": "000000",
       "primary": "39FF14",
@@ -1948,6 +2552,7 @@
   {
     "palette_name_en": "Black & Gold",
     "palette_name_it": "Nero e Oro",
+    "palette_name_pl": "Czerń i Złoto",
     "main_colors_en": [
       "Black",
       "White",
@@ -1962,8 +2567,16 @@
       "Grigio chiaro",
       "Grigio scuro"
     ],
+    "main_colors_pl": [
+      "Czarny",
+      "Biały",
+      "Złoty",
+      "Jasnoszary",
+      "Ciemnoszary"
+    ],
     "description_en": "Dramatic black and white with golden accents for a classic, high-contrast look.",
     "description_it": "Drammatica combinazione di nero e bianco con accenti dorati per un look classico ad alto contrasto.",
+    "description_pl": "Dramatyczna czerń i biel ze złotymi akcentami dla klasycznego, wysokokontrastowego wyglądu.",
     "colors": {
       "background": "000000",
       "primary": "FFFFFF",
@@ -1977,6 +2590,7 @@
   {
     "palette_name_en": "Mint Chocolate",
     "palette_name_it": "Menta e Cioccolato",
+    "palette_name_pl": "Mięta i Czekolada",
     "main_colors_en": [
       "Mint",
       "Dark brown",
@@ -1991,8 +2605,16 @@
       "Crema",
       "Schiuma di mare"
     ],
+    "main_colors_pl": [
+      "Miętowy",
+      "Ciemny brąz",
+      "Karmelowy",
+      "Kremowy",
+      "Morska piana"
+    ],
     "description_en": "Cool minty greens paired with rich chocolate browns and a touch of creamy vanilla – a sweet, inviting combination.",
     "description_it": "Freschi verdi menta abbinati a ricchi marroni cioccolato e un tocco di crema vaniglia – una combinazione dolce e invitante.",
+    "description_pl": "Chłodne miętowe zielenie w parze z bogatymi czekoladowymi brązami i odrobiną kremowej wanilii – słodka, zachęcająca kombinacja.",
     "colors": {
       "background": "E0FFF5",
       "primary": "3F292B",
@@ -2006,6 +2628,7 @@
   {
     "palette_name_en": "Berry Burst",
     "palette_name_it": "Esplosione di Bacche",
+    "palette_name_pl": "Eksplozja Jagód",
     "main_colors_en": [
       "Blush",
       "Eggplant",
@@ -2020,8 +2643,16 @@
       "Rosa lampone",
       "Lavanda"
     ],
+    "main_colors_pl": [
+      "Rumieniec",
+      "Bakłażanowy",
+      "Śliwkowy",
+      "Jagodowy róż",
+      "Lawendowy"
+    ],
     "description_en": "A light base with deep berry and plum tones, accented by bright fuchsia – energetic yet elegant.",
     "description_it": "Base chiara con tonalità di bacche e prugna profonde, accentuate da fucsia brillante – energico e al contempo elegante.",
+    "description_pl": "Jasna baza z głębokimi jagodowymi i śliwkowymi tonami, akcentowana jasną fuksją – energetyczna, ale elegancka.",
     "colors": {
       "background": "FFF7F9",
       "primary": "4B2142",
@@ -2035,6 +2666,7 @@
   {
     "palette_name_en": "Serene Spa",
     "palette_name_it": "Spa Sereno",
+    "palette_name_pl": "Spokojne Spa",
     "main_colors_en": [
       "Ice blue",
       "Slate blue",
@@ -2049,8 +2681,16 @@
       "Verde mare",
       "Bianco"
     ],
+    "main_colors_pl": [
+      "Lodowy błękit",
+      "Łupkowy błękit",
+      "Szara morska",
+      "Morska zieleń",
+      "Biały"
+    ],
     "description_en": "Tranquil blues and greens create a soothing spa-like palette, with slate and seafoam balanced by crisp white.",
     "description_it": "Blu e verdi tranquilli creano una palette rilassante da spa, con ardesia e verde mare bilanciati da un bianco nitido.",
+    "description_pl": "Spokojne błękity i zielenie tworzą kojącą paletę w stylu spa, z łupkowym i morską zielenią zrównoważonymi świeżą bielą.",
     "colors": {
       "background": "EFF8FA",
       "primary": "4D637A",
@@ -2064,6 +2704,7 @@
   {
     "palette_name_en": "Energy Burst",
     "palette_name_it": "Esplosione di Energia",
+    "palette_name_pl": "Wybuch Energii",
     "main_colors_en": [
       "Charcoal",
       "Orange",
@@ -2078,8 +2719,16 @@
       "Grigio scuro",
       "Giallo"
     ],
+    "main_colors_pl": [
+      "Antracytowy",
+      "Pomarańczowy",
+      "Jasnoszary",
+      "Ciemnoszary",
+      "Żółty"
+    ],
     "description_en": "A dark modern base energized by a burst of bright orange and yellow, tempered with sleek grays for balance.",
     "description_it": "Una base moderna scura energizzata da un'esplosione di arancione e giallo brillante, temperata da grigi eleganti per equilibrio.",
+    "description_pl": "Ciemna nowoczesna baza ożywiona wybuchem jasnego pomarańczu i żółci, stonowana eleganckimi szarościami dla równowagi.",
     "colors": {
       "background": "1E1E1E",
       "primary": "F46036",
@@ -2093,6 +2742,7 @@
   {
     "palette_name_en": "Citrus Splash",
     "palette_name_it": "Schizzo Agrumato",
+    "palette_name_pl": "Cytrusowy Plusk",
     "main_colors_en": [
       "White",
       "Pine",
@@ -2107,8 +2757,16 @@
       "Limone",
       "Verde menta"
     ],
+    "main_colors_pl": [
+      "Biały",
+      "Sosnowy",
+      "Pomarańczowy",
+      "Cytrynowy",
+      "Miętowa zieleń"
+    ],
     "description_en": "Bright citrus hues – zesty orange and lemon – pop against clean white and deep green for a fresh, lively look.",
     "description_it": "Vivaci tonalità agrumate – arancione e limone frizzanti – risaltano su bianco pulito e verde intenso per un look fresco e vivace.",
+    "description_pl": "Jasne cytrusowe odcienie – żywy pomarańcz i cytryna – wyróżniają się na czystej bieli i głębokiej zieleni dla świeżego, żywego wyglądu.",
     "colors": {
       "background": "FFFFFF",
       "primary": "1B3A30",
@@ -2122,6 +2780,7 @@
   {
     "palette_name_en": "Sunset Boulevard",
     "palette_name_it": "Viale al Tramonto",
+    "palette_name_pl": "Bulwar Zachodzącego Słońca",
     "main_colors_en": [
       "Purple",
       "Petal pink",
@@ -2136,8 +2795,16 @@
       "Magenta",
       "Melanzana"
     ],
+    "main_colors_pl": [
+      "Fioletowy",
+      "Płatkowy róż",
+      "Pomarańczowy",
+      "Magenta",
+      "Bakłażanowy"
+    ],
     "description_en": "Dramatic sunset tones of vivid orange and pink set against a deep purple sky, evoking an evening urban skyline.",
     "description_it": "Drammatici toni da tramonto con arancione e rosa vividi su un cielo viola profondo, che evocano un profilo urbano serale.",
+    "description_pl": "Dramatyczne tony zachodu słońca z żywym pomarańczem i różem na tle głębokiego fioletowego nieba, przywołując wieczorną miejską panoramę.",
     "colors": {
       "background": "2E1B4B",
       "primary": "FEC5E5",
@@ -2151,6 +2818,7 @@
   {
     "palette_name_en": "Midnight Teal",
     "palette_name_it": "Verde Petrolio Notturno",
+    "palette_name_pl": "Nocny Morski",
     "main_colors_en": [
       "Dark teal",
       "Aqua",
@@ -2165,8 +2833,16 @@
       "Turchese",
       "Verde acqua"
     ],
+    "main_colors_pl": [
+      "Ciemny morski",
+      "Akwamaryna",
+      "Koralowy róż",
+      "Turkusowy",
+      "Morski"
+    ],
     "description_en": "A rich teal night sky brightened by soft aqua and coral highlights, creating a balanced mix of cool and warm tones.",
     "description_it": "Un ricco cielo notturno color verde petrolio illuminato da delicati riflessi acquamarina e corallo, per un mix equilibrato di toni freddi e caldi.",
+    "description_pl": "Bogate nocne niebo w kolorze morskim rozjaśnione delikatnymi akwamarynowymi i koralowymi akcentami, tworzące zrównoważoną mieszankę chłodnych i ciepłych tonów.",
     "colors": {
       "background": "012F34",
       "primary": "A0E7E5",
@@ -2180,6 +2856,7 @@
   {
     "palette_name_en": "Pink Lemonade",
     "palette_name_it": "Limonata Rosa",
+    "palette_name_pl": "Różowa Lemoniada",
     "main_colors_en": [
       "Lemon",
       "Deep pink",
@@ -2194,8 +2871,16 @@
       "Verde smeraldo",
       "Crema"
     ],
+    "main_colors_pl": [
+      "Cytrynowy",
+      "Głęboki róż",
+      "Magenta",
+      "Szmaragdowa zieleń",
+      "Kremowy"
+    ],
     "description_en": "Sunny lemon yellow mixed with bold berry pinks and a hint of green, like a refreshing glass of pink lemonade on a summer day.",
     "description_it": "Un giallo limone solare mescolato a decisi rosa frutti di bosco e un tocco di verde, come un rinfrescante bicchiere di limonata rosa in un giorno d'estate.",
+    "description_pl": "Słoneczny cytrynowy żółty zmieszany z odważnymi jagodowymi różami i odrobiną zieleni, jak orzeźwiający kieliszek różowej lemoniady w letni dzień.",
     "colors": {
       "background": "FFF9C4",
       "primary": "800253",
@@ -2209,6 +2894,7 @@
   {
     "palette_name_en": "Graphite & Lime",
     "palette_name_it": "Grafite e Lime",
+    "palette_name_pl": "Grafit i Limonka",
     "main_colors_en": [
       "Graphite",
       "White",
@@ -2223,8 +2909,16 @@
       "Blu elettrico",
       "Grigio"
     ],
+    "main_colors_pl": [
+      "Grafitowy",
+      "Biały",
+      "Limonkowy",
+      "Elektryczny błękit",
+      "Szary"
+    ],
     "description_en": "Dark graphite paired with neon lime and cyan accents for an ultra-modern, techy aesthetic with high contrast.",
     "description_it": "Grafite scuro abbinato ad accenti lime e ciano neon per un'estetica ultra moderna e tecnologica ad alto contrasto.",
+    "description_pl": "Ciemny grafit w parze z neonową limonką i cyjanu akcentami dla ultranowoczesnej, technologicznej estetyki z wysokim kontrastem.",
     "colors": {
       "background": "1C1C1C",
       "primary": "FFFFFF",
@@ -2238,6 +2932,7 @@
   {
     "palette_name_en": "Desert Oasis",
     "palette_name_it": "Oasi nel Deserto",
+    "palette_name_pl": "Pustynna Oaza",
     "main_colors_en": [
       "Sand",
       "Coffee brown",
@@ -2252,8 +2947,16 @@
       "Turchese",
       "Cuoio chiaro"
     ],
+    "main_colors_pl": [
+      "Piaskowy",
+      "Kawowy brąz",
+      "Wielbłądzi",
+      "Turkusowy",
+      "Jasny beż"
+    ],
     "description_en": "Warm desert sands and browns with a splash of turquoise – evoking sun-soaked adobe and a cool oasis under the sky.",
-    "description_it": "Calde sabbie e toni bruni del deserto con un tocco di turchese – che evocano l’adobe baciato dal sole e una fresca oasi sotto il cielo.",
+    "description_it": "Calde sabbie e toni bruni del deserto con un tocco di turchese – che evocano l'adobe baciato dal sole e una fresca oasi sotto il cielo.",
+    "description_pl": "Ciepłe pustynne piaski i brązy z odrobiną turkusu – przywołujące nasłonecznione adobe i chłodną oazę pod niebem.",
     "colors": {
       "background": "F4EFEA",
       "primary": "66462A",

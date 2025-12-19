@@ -18,9 +18,11 @@
 import { test, expect, Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import path from 'path'
+import { cleanupTestSession } from '../helpers/seed-step14-session'
 
 // Helper: Seed session through Step 10 and navigate to Step 11
-async function seedSessionThroughStep10(page: Page) {
+// Returns the sessionId for cleanup
+async function seedSessionThroughStep10(page: Page): Promise<string> {
   const baseUrl = (process.env.BASE_URL && process.env.BASE_URL.trim().length > 0)
     ? process.env.BASE_URL.replace(/\/$/, '')
     : 'http://localhost:3783'
@@ -80,16 +82,27 @@ async function seedSessionThroughStep10(page: Page) {
 
   // Wait for the step heading to appear - "Website Structure" is the main page title
   await expect(page.getByRole('heading', { name: 'Website Structure', level: 1 })).toBeVisible()
+
+  return data.sessionId
 }
 
 test.describe('Step 11: Enhanced Products & Services Entry', () => {
+  // Track sessionId for cleanup
+  let sessionId: string
   // Run tests serially to avoid race conditions with database/API resources in CI
   test.describe.configure({ mode: 'serial' })
   test.setTimeout(120000)
 
   test.beforeEach(async ({ page }) => {
     // Seed session directly without navigating to /onboarding first
-    await seedSessionThroughStep10(page)
+    sessionId = await seedSessionThroughStep10(page)
+  })
+
+  test.afterEach(async () => {
+    // Clean up test session from Supabase
+    if (sessionId) {
+      await cleanupTestSession(sessionId)
+    }
   })
 
   test('Complete product management flow (all 10 phases)', async ({ page }) => {
@@ -373,8 +386,9 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       await expect(page.getByRole('alertdialog')).toContainText('Delete Product')
       await expect(page.getByRole('alertdialog')).toContainText('Are you sure you want to delete this product?')
 
-      // Click the Delete button in the confirmation dialog
-      await page.getByRole('alertdialog').getByRole('button', { name: 'Delete' }).click()
+      // Click the Confirm button in the confirmation dialog
+      // Note: The button uses t('products.confirm') which translates to "Confirm"
+      await page.getByRole('alertdialog').getByRole('button', { name: 'Confirm' }).click()
 
       // Wait for product to be removed from list
       await expect(page.getByText('Content Writing')).not.toBeVisible()

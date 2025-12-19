@@ -2,6 +2,7 @@ import { Resend } from 'resend'
 import { OnboardingFormData, EmailVerificationResponse } from '@/types/onboarding'
 import { CustomSoftwareFormData } from '@/types/custom-software'
 import { ContactFormData } from '@/types/contact'
+import { Locale } from '@/lib/i18n'
 
 // =============================================================================
 // RESEND EMAIL SERVICE CONFIGURATION
@@ -57,11 +58,13 @@ export class EmailService {
     email: string,
     name: string,
     verificationCode: string,
-    locale: 'en' | 'it' = 'en'
+    locale: Locale = 'en'
   ): Promise<EmailVerificationResponse> {
     try {
-      const subject = locale === 'it' 
+      const subject = locale === 'it'
         ? 'Codice di verifica WhiteBoar'
+        : locale === 'pl'
+        ? 'Kod weryfikacyjny WhiteBoar'
         : 'WhiteBoar Verification Code'
 
       const htmlContent = this.generateVerificationEmailHTML(
@@ -157,11 +160,13 @@ export class EmailService {
   static async sendCompletionConfirmation(
     email: string,
     businessName: string,
-    locale: 'en' | 'it' = 'en'
+    locale: Locale = 'en'
   ): Promise<boolean> {
     try {
       const subject = locale === 'it'
         ? `Grazie ${businessName}! La tua richiesta è stata ricevuta`
+        : locale === 'pl'
+        ? `Dziekujemy ${businessName}! Twoje zamowienie zostalo odebrane`
         : `Thank you ${businessName}! Your request has been received`
 
       const htmlContent = this.generateCompletionEmailHTML(businessName, locale)
@@ -257,11 +262,13 @@ export class EmailService {
     email: string,
     businessName: string,
     previewUrl: string,
-    locale: 'en' | 'it' = 'en'
+    locale: Locale = 'en'
   ): Promise<boolean> {
     try {
       const subject = locale === 'it'
         ? `${businessName} - La tua anteprima è pronta!`
+        : locale === 'pl'
+        ? `${businessName} - Twoj podglad jest gotowy!`
         : `${businessName} - Your preview is ready!`
 
       const htmlContent = this.generatePreviewEmailHTML(businessName, previewUrl, locale)
@@ -311,11 +318,13 @@ export class EmailService {
     name: string,
     sessionId: string,
     currentStep: number,
-    locale: 'en' | 'it' = 'en'
+    locale: Locale = 'en'
   ): Promise<boolean> {
     try {
       const subject = locale === 'it'
         ? 'Non perdere la tua creazione WhiteBoar'
+        : locale === 'pl'
+        ? 'Nie strać swojej kreacji WhiteBoar'
         : "Don't lose your WhiteBoar creation"
 
       const recoveryUrl = `${APP_URL}/onboarding?sessionId=${sessionId}`
@@ -367,7 +376,7 @@ export class EmailService {
   /**
    * Generate common email header with WhiteBoar logo
    */
-  private static generateEmailHeader(locale: 'en' | 'it' = 'en'): string {
+  private static generateEmailHeader(locale: Locale = 'en'): string {
     const logoUrl = `${APP_URL}/images/logo-whiteboar-black.png`
 
     return `
@@ -380,12 +389,17 @@ export class EmailService {
   /**
    * Generate common email footer with branding
    */
-  private static generateEmailFooter(locale: 'en' | 'it' = 'en'): string {
+  private static generateEmailFooter(locale: Locale = 'en'): string {
     const content = locale === 'it' ? {
       support: 'Hai bisogno di aiuto?',
       contactUs: 'Contattaci',
       copyright: '© 2025 WhiteBoar. Tutti i diritti riservati.',
       unsubscribe: 'Non vuoi più ricevere queste email?'
+    } : locale === 'pl' ? {
+      support: 'Potrzebujesz pomocy?',
+      contactUs: 'Skontaktuj sie z nami',
+      copyright: '© 2025 WhiteBoar. Wszelkie prawa zastrzezone.',
+      unsubscribe: 'Nie chcesz otrzymywac tych emaili?'
     } : {
       support: 'Need help?',
       contactUs: 'Contact us',
@@ -409,7 +423,7 @@ export class EmailService {
   private static generateVerificationEmailHTML(
     name: string,
     code: string,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     const content = locale === 'it' ? {
       greeting: `Ciao ${name},`,
@@ -420,6 +434,15 @@ export class EmailService {
       support: 'Hai bisogno di aiuto?',
       contactUs: 'Contattaci',
       thanks: 'Grazie,<br>Il team WhiteBoar'
+    } : locale === 'pl' ? {
+      greeting: `Czesc ${name},`,
+      message: 'Oto Twoj kod weryfikacyjny do kontynuowania tworzenia strony WhiteBoar:',
+      codeLabel: 'Twoj kod:',
+      instructions: 'Wpisz ten kod na stronie weryfikacji, aby kontynuowac.',
+      expires: 'Ten kod wygasa za 15 minut.',
+      support: 'Potrzebujesz pomocy?',
+      contactUs: 'Skontaktuj sie z nami',
+      thanks: 'Dziekujemy,<br>Zespol WhiteBoar'
     } : {
       greeting: `Hello ${name},`,
       message: 'Here\'s your verification code to continue creating your WhiteBoar website:',
@@ -437,7 +460,7 @@ export class EmailService {
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>${locale === 'it' ? 'Codice di verifica WhiteBoar' : 'WhiteBoar Verification Code'}</title>
+          <title>${locale === 'it' ? 'Codice di verifica WhiteBoar' : locale === 'pl' ? 'Kod weryfikacyjny WhiteBoar' : 'WhiteBoar Verification Code'}</title>
           <style>
             body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; background-color: #f4f4f4; }
             .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -477,7 +500,7 @@ export class EmailService {
 
   private static generateCompletionEmailHTML(
     businessName: string,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     const content = locale === 'it' ? {
       title: 'Richiesta Ricevuta!',
@@ -488,6 +511,15 @@ export class EmailService {
       payment: 'Il pagamento sarà richiesto solo dopo aver approvato l\'anteprima.',
       questions: 'Hai domande? Siamo qui per aiutarti.',
       thanks: 'Grazie per aver scelto WhiteBoar!'
+    } : locale === 'pl' ? {
+      title: 'Zamowienie otrzymane!',
+      greeting: `Czesc ${businessName}!`,
+      message: 'Otrzymalismy Twoje zamowienie na tworzenie strony internetowej. Nasz zespol rozpocznie prace nad Twoim spersonalizowanym podgladem.',
+      timeline: 'Twoj podglad bedzie gotowy w ciagu <strong>5 dni roboczych</strong>.',
+      notification: 'Wyslesz Ci email, gdy bedzie gotowy do przejrzenia.',
+      payment: 'Platnosc zostanie poproszona tylko po zatwierdzeniu podgladu.',
+      questions: 'Masz pytania? Jestesmy tutaj, aby pomoc.',
+      thanks: 'Dziekujemy za wybranie WhiteBoar!'
     } : {
       title: 'Request Received!',
       greeting: `Hello ${businessName}!`,
@@ -634,7 +666,7 @@ export class EmailService {
   private static generateVerificationEmailText(
     name: string,
     code: string,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     return locale === 'it' 
       ? `Ciao ${name},\n\nEcco il tuo codice di verifica WhiteBoar: ${code}\n\nInserisci questo codice per continuare la creazione del tuo sito web.\n\nIl codice scade tra 15 minuti.\n\nHai bisogno di aiuto? Contattaci: ${SUPPORT_EMAIL}\n\nGrazie,\nIl team WhiteBoar`
@@ -643,7 +675,7 @@ export class EmailService {
 
   private static generateCompletionEmailText(
     businessName: string,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     return locale === 'it'
       ? `Ciao ${businessName}!\n\nAbbiamo ricevuto la tua richiesta per la creazione del sito web.\n\nLa tua anteprima sarà pronta in 5 giorni lavorativi. Ti invieremo un'email quando sarà pronta.\n\nIl pagamento sarà richiesto solo dopo aver approvato l'anteprima.\n\nHai domande? Contattaci: ${SUPPORT_EMAIL}\n\nGrazie per aver scelto WhiteBoar!`
@@ -660,7 +692,7 @@ export class EmailService {
   private static generatePreviewEmailHTML(
     businessName: string,
     previewUrl: string,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     const content = locale === 'it' ? {
       title: 'La tua anteprima è pronta!',
@@ -711,7 +743,7 @@ export class EmailService {
   private static generatePreviewEmailText(
     businessName: string,
     previewUrl: string,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     return locale === 'it'
       ? `Ciao ${businessName}!\n\nLa tua anteprima è pronta: ${previewUrl}\n\nSe ti piace, potrai procedere con il pagamento. Se non sei soddisfatto, non paghi nulla.\n\nGrazie!`
@@ -722,7 +754,7 @@ export class EmailService {
     name: string,
     recoveryUrl: string,
     currentStep: number,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     const content = locale === 'it' ? {
       title: 'Non perdere la tua creazione',
@@ -774,7 +806,7 @@ export class EmailService {
     name: string,
     recoveryUrl: string,
     currentStep: number,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     return locale === 'it'
       ? `Ciao ${name},\n\nHai iniziato a creare il tuo sito WhiteBoar ma non hai completato il processo. Sei arrivato al passo ${currentStep} di 12.\n\nContinua qui: ${recoveryUrl}\n\nLa tua sessione scadrà presto - completa ora per non perdere i progressi!`
@@ -866,11 +898,13 @@ export class EmailService {
     businessName: string,
     amount: number,
     currency: string,
-    locale: 'en' | 'it' = 'en'
+    locale: Locale = 'en'
   ): Promise<boolean> {
     try {
       const subject = locale === 'it'
         ? 'Il tuo nuovo sito web è in arrivo'
+        : locale === 'pl'
+        ? 'Twoja nowa strona internetowa jest w drodze'
         : 'Your new website is on its way'
 
       const htmlContent = this.generatePaymentSuccessHTML(
@@ -930,11 +964,13 @@ export class EmailService {
   static async sendCancellationConfirmation(
     email: string,
     businessName: string,
-    locale: 'en' | 'it' = 'en'
+    locale: Locale = 'en'
   ): Promise<boolean> {
     try {
       const subject = locale === 'it'
         ? 'Il tuo abbonamento è stato cancellato'
+        : locale === 'pl'
+        ? 'Twoja subskrypcja zostala anulowana'
         : 'Your subscription has been cancelled'
 
       const htmlContent = this.generateCancellationConfirmationHTML(
@@ -1053,11 +1089,13 @@ export class EmailService {
    */
   static async sendCustomSoftwareInquiry(
     formData: CustomSoftwareFormData,
-    locale: 'en' | 'it' = 'en'
+    locale: Locale = 'en'
   ): Promise<boolean> {
     try {
       const subject = locale === 'it'
         ? `Nuova Richiesta Software Personalizzato: ${formData.name}`
+        : locale === 'pl'
+        ? `Nowe zapytanie o oprogramowanie: ${formData.name}`
         : `New Custom Software Inquiry: ${formData.name}`
 
       const htmlContent = this.generateCustomSoftwareInquiryHTML(formData, locale)
@@ -1103,11 +1141,13 @@ export class EmailService {
    */
   static async sendContactInquiry(
     formData: ContactFormData,
-    locale: 'en' | 'it' = 'en'
+    locale: Locale = 'en'
   ): Promise<boolean> {
     try {
       const subject = locale === 'it'
         ? `Nuovo Messaggio di Contatto: ${formData.name}`
+        : locale === 'pl'
+        ? `Nowa wiadomosc kontaktowa: ${formData.name}`
         : `New Contact Message: ${formData.name}`
 
       const htmlContent = this.generateContactInquiryHTML(formData, locale)
@@ -1303,7 +1343,7 @@ Payment received at ${new Date().toLocaleString('en-US')}
     businessName: string,
     amount: number,
     currency: string,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     const formattedAmount = (amount / 100).toFixed(2)
     const shareUrl = encodeURIComponent(APP_URL)
@@ -1510,7 +1550,7 @@ Payment received at ${new Date().toLocaleString('en-US')}
     businessName: string,
     amount: number,
     currency: string,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     const formattedAmount = (amount / 100).toFixed(2)
     const shareUrl = APP_URL
@@ -1572,7 +1612,7 @@ ${APP_URL}
 
   private static generateCustomSoftwareInquiryHTML(
     formData: CustomSoftwareFormData,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     const content = locale === 'it' ? {
       title: 'Nuova Richiesta Software Personalizzato',
@@ -1668,7 +1708,7 @@ ${APP_URL}
 
   private static generateCustomSoftwareInquiryText(
     formData: CustomSoftwareFormData,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     const content = locale === 'it' ? {
       title: 'Nuova Richiesta Software Personalizzato',
@@ -1717,7 +1757,7 @@ ${new Date().toLocaleString(locale === 'it' ? 'it-IT' : 'en-US')}
 
   private static generateContactInquiryHTML(
     formData: ContactFormData,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     const content = locale === 'it' ? {
       title: 'Nuovo Messaggio di Contatto',
@@ -1813,7 +1853,7 @@ ${new Date().toLocaleString(locale === 'it' ? 'it-IT' : 'en-US')}
 
   private static generateContactInquiryText(
     formData: ContactFormData,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     const content = locale === 'it' ? {
       title: 'Nuovo Messaggio di Contatto',
@@ -1862,7 +1902,7 @@ ${new Date().toLocaleString(locale === 'it' ? 'it-IT' : 'en-US')}
 
   private static generateCancellationConfirmationHTML(
     businessName: string,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     const content = locale === 'it' ? {
       title: 'Abbonamento Cancellato',
@@ -2010,7 +2050,7 @@ ${new Date().toLocaleString(locale === 'it' ? 'it-IT' : 'en-US')}
 
   private static generateCancellationConfirmationText(
     businessName: string,
-    locale: 'en' | 'it'
+    locale: Locale
   ): string {
     const content = locale === 'it' ? {
       header: 'IL TUO ABBONAMENTO È STATO CANCELLATO',
@@ -2210,7 +2250,7 @@ export async function sendVerificationEmail(
   email: string,
   name: string,
   code: string,
-  locale: 'en' | 'it' = 'en'
+  locale: Locale = 'en'
 ): Promise<boolean> {
   const result = await EmailService.sendVerificationEmail(email, name, code, locale)
   return result.success && result.data?.sent === true
@@ -2222,7 +2262,7 @@ export async function sendVerificationEmail(
 export async function sendCompletionNotifications(
   formData: OnboardingFormData,
   submissionId: string,
-  locale: 'en' | 'it' = 'en'
+  locale: Locale = 'en'
 ): Promise<{ userNotified: boolean; adminNotified: boolean }> {
   const [userResult, adminResult] = await Promise.all([
     EmailService.sendCompletionConfirmation(formData.email, formData.businessName, locale),

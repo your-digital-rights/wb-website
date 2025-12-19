@@ -12,10 +12,11 @@ import { CheckCircle2, Loader2 } from "lucide-react"
 import { CustomSoftwareFormData, CustomSoftwareFormErrors, CustomSoftwareFormState } from "@/types/custom-software"
 import { fadeInUp } from "../../context/design-system/motion/variants"
 import { trackGenerateLead } from "@/lib/analytics"
+import { Locale } from "@/lib/i18n"
 
 export function CustomSoftwareForm() {
   const t = useTranslations('customSoftware.form')
-  const locale = useLocale() as 'en' | 'it'
+  const locale = useLocale() as Locale
   const shouldReduce = useReducedMotion()
 
   const variants = shouldReduce ? {} : {

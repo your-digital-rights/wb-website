@@ -76,6 +76,8 @@ This document outlines the upcoming migration plan for Step 14 (Stripe checkout)
   - Few full-stack tests hitting real Stripe (smoke coverage).
   - Majority of scenarios stub `/api/stripe/checkout` to validate UI-only flows (error states, form validation, translations).
   - All specs use fixtures to set cookie consent and seed sessions to avoid state leakage.
+- **CI Stripe Tooling**
+  - In CI, run Stripe CLI with webhook forwarding and use Stripe Test Clocks to exercise renewal/past_due/cancellation time travel in automated suites.
 - **Stripe Tooling**
   - Use Stripe CLI to replay webhooks locally and validate signature handling.
   - Use Stripe Test Clocks for subscription/schedule time-travel (renewals, proration) without long waits.
@@ -87,6 +89,8 @@ This document outlines the upcoming migration plan for Step 14 (Stripe checkout)
     5. Test failed payment scenarios, past_due transitions, and cancellation flows
 - **Mock Data**
   - Provide JSON fixtures for pricing summaries so designers/devs can iterate quickly without Stripe.
+- **Telemetry Decision**
+  - Use existing Supabase analytics events and structured logging; no additional third-party logging/metrics stack is introduced for this iteration.
 
 ### Operational Requirements
 - **Environment Variables**:
@@ -96,7 +100,6 @@ This document outlines the upcoming migration plan for Step 14 (Stripe checkout)
   - `STRIPE_BASE_PACKAGE_LOOKUP_KEY` - Price lookup key (e.g., 'monthly_base_plan') instead of hardcoded price ID
   - `STRIPE_LANGUAGE_ADDON_LOOKUP_KEY` - Language add-on lookup key (e.g., 'language_addon')
   - Controller fetches prices by lookup key for environment portability (works across test/live automatically)
-  - Feature flags for gradual rollout (`PAYMENT_CONTROLLER_V2`)
 - **Data Retention & Compliance**:
   - GDPR-compliant customer data handling (right to be forgotten, data export)
   - Stripe customer data synced with Supabase for deletion requests
@@ -110,11 +113,13 @@ This document outlines the upcoming migration plan for Step 14 (Stripe checkout)
   - Capturing `Stripe-Request-Id` and `event.id` for support/debug and replaying via Stripe CLI.
   - Handling customer data deletion requests (GDPR compliance).
 - Update CI to run new integration suite plus reduced set of Playwright specs (with Stripe mocked by default).
+- **Rollout Decision**
+  - No feature flag; the new controller path replaces the legacy browser-led orchestration. Rollout control happens via deploy cadence and environment configuration, not conditional runtime flags.
 
 ### Migration Requirements
-- Deliver controller behind feature flag (`PAYMENT_CONTROLLER_V2`).
-- Support dual mode (legacy client orchestration and new controller) until rollout complete.
-- Backfill any missing data columns (e.g., `stripe_subscription_schedule_id`) before enabling the flag globally.
+- Deliver controller as the default path (no `PAYMENT_CONTROLLER_V2` flag).
+- Deprecate/remove legacy client orchestration after new controller is stable; no dual-mode long term.
+- Backfill any missing data columns (e.g., `stripe_subscription_schedule_id`) before enabling the controller in production environments.
 
 ## Goals
 

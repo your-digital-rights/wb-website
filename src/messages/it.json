@@ -11,7 +11,8 @@
     },
     "language": {
       "english": "Inglese",
-      "italian": "Italiano"
+      "italian": "Italiano",
+      "polish": "Polacco"
     }
   },
   "hero": {
@@ -157,6 +158,9 @@
     "of": "di",
     "next": "Avanti",
     "previous": "Indietro",
+    "footer": {
+      "secureSSL": "Sicuro e protetto SSL"
+    },
     "progressLabel": "Passaggio {step} di {total}",
     "stepCompleted": "Passaggio {step} completato",
     "stepCurrent": "Passaggio attuale {step}",
@@ -263,7 +267,9 @@
           "vat": {
             "label": "Partita IVA",
             "placeholder": "IT12345678901",
-            "hint": "Partita IVA italiana (facoltativo)"
+            "placeholderPoland": "PL1234567890",
+            "hint": "Partita IVA italiana (facoltativo)",
+            "hintPoland": "NIP polacco (facoltativo)"
           }
         },
         "contactInfo": {
@@ -304,9 +310,13 @@
             "label": "Provincia/Regione",
             "placeholder": "Inserisci provincia o regione"
           },
+          "voivodeship": {
+            "label": "Voivodato",
+            "placeholder": "Seleziona voivodato"
+          },
           "country": {
-            "label": "Paese",
-            "placeholder": "Inserisci paese"
+            "label": "Paese di attività",
+            "placeholder": "Seleziona paese"
           }
         },
         "dataUsage": {
@@ -391,6 +401,7 @@
           "title": "Profilo Cliente",
           "required": "Richiesto",
           "budget": {
+            "title": "Budget",
             "left": "Attento al Budget",
             "right": "Orientato al Premium",
             "description": "Quanto sono sensibili al prezzo i tuoi clienti?",
@@ -408,6 +419,7 @@
             }
           },
           "style": {
+            "title": "Stile",
             "left": "Tradizionale",
             "right": "Moderno",
             "description": "Quale estetica di design preferiscono?",
@@ -425,6 +437,7 @@
             }
           },
           "motivation": {
+            "title": "Motivazione",
             "left": "Pratico",
             "right": "Aspirazionale",
             "description": "Cosa guida le loro decisioni di acquisto?",
@@ -442,6 +455,7 @@
             }
           },
           "decision": {
+            "title": "Decisione",
             "left": "Decisore Rapido",
             "right": "Ricercatore Attento",
             "description": "Come prendono le decisioni di acquisto?",
@@ -459,6 +473,7 @@
             }
           },
           "loyalty": {
+            "title": "Fedeltà",
             "left": "Cambia per il Prezzo",
             "right": "Fedele al Brand",
             "description": "Quanto sono fedeli ai brand?",
@@ -512,6 +527,10 @@
             "label": "Quali sono le principali esigenze che i clienti hanno dalla tua attività?",
             "placeholder": "Descrivi le sfide specifiche che i tuoi clienti sperimentano prima di trovare la tua attività...",
             "hint": "Concentrati sui problemi che risolvi - questo ci aiuta a creare messaggi convincenti per il sito web"
+          },
+          "validation": {
+            "minLength": "Descrivi i problemi dei clienti in almeno 30 caratteri",
+            "maxLength": "La descrizione dei problemi dei clienti non può superare 400 caratteri"
           }
         },
         "solutions": {
@@ -661,6 +680,68 @@
             "branding": "Coerenza con l'identità del tuo brand"
           }
         },
+        "styles": {
+          "minimalist": {
+            "title": "Minimalista",
+            "description": "Linee pulite, molto spazio bianco, semplicità sofisticata",
+            "tags": {
+              "clean": "Pulito",
+              "simple": "Semplice",
+              "professional": "Professionale",
+              "spacious": "Spazioso"
+            }
+          },
+          "corporate": {
+            "title": "Aziendale",
+            "description": "Design orientato al business con elementi che costruiscono fiducia",
+            "tags": {
+              "professional": "Professionale",
+              "trustworthy": "Affidabile",
+              "corporate": "Aziendale",
+              "structured": "Strutturato"
+            }
+          },
+          "bold": {
+            "title": "Audace",
+            "description": "Layout dinamici con colori vivaci ed elementi creativi",
+            "tags": {
+              "dynamic": "Dinamico",
+              "vibrant": "Vivace",
+              "artistic": "Artistico",
+              "expressive": "Espressivo"
+            }
+          },
+          "playful": {
+            "title": "Giocoso",
+            "description": "Design divertente e coinvolgente con elementi giocosi",
+            "tags": {
+              "fun": "Divertente",
+              "engaging": "Coinvolgente",
+              "friendly": "Amichevole",
+              "creative": "Creativo"
+            }
+          },
+          "editorial": {
+            "title": "Editoriale",
+            "description": "Layout stile magazine con tipografia ricca e focus sui contenuti",
+            "tags": {
+              "editorial": "Editoriale",
+              "typography": "Tipografia",
+              "content": "Contenuti",
+              "reading": "Lettura"
+            }
+          },
+          "retro": {
+            "title": "Retrò",
+            "description": "Design ispirato al vintage con elementi nostalgici",
+            "tags": {
+              "retro": "Retrò",
+              "nostalgic": "Nostalgico",
+              "classic": "Classico",
+              "unique": "Unico"
+            }
+          }
+        },
         "tips": {
           "title": "Scegli uno stile che:",
           "authentic": "Si senta autentico per il tuo brand",
@@ -703,6 +784,68 @@
           "quality": "Immagini di alta qualità che riflettono i valori del tuo brand",
           "relevance": "Immagini che supportano e migliorano il tuo messaggio"
         },
+        "styles": {
+          "photorealistic": {
+            "title": "Fotorealistico",
+            "description": "Fotografie professionali di alta qualità con composizione pulita",
+            "tags": {
+              "highQuality": "Alta qualità",
+              "professional": "Professionale",
+              "clean": "Pulito",
+              "authentic": "Autentico"
+            }
+          },
+          "flatIllustration": {
+            "title": "Illustrazione Piatta",
+            "description": "Illustrazioni moderne in stile flat con grafica vettoriale pulita",
+            "tags": {
+              "vector": "Vettoriale",
+              "clean": "Pulito",
+              "contemporary": "Contemporaneo",
+              "scalable": "Scalabile"
+            }
+          },
+          "sketch": {
+            "title": "Stile Schizzo",
+            "description": "Illustrazioni artistiche disegnate a mano con tocco personale e creativo",
+            "tags": {
+              "artistic": "Artistico",
+              "personal": "Personale",
+              "creative": "Creativo",
+              "unique": "Unico"
+            }
+          },
+          "3d": {
+            "title": "Rendering 3D",
+            "description": "Grafica 3D moderna renderizzata per impatto visivo dinamico",
+            "tags": {
+              "dynamic": "Dinamico",
+              "modern": "Moderno",
+              "dimensional": "Dimensionale",
+              "engaging": "Coinvolgente"
+            }
+          },
+          "lineArt": {
+            "title": "Line Art",
+            "description": "Line art semplice e pulita con focus sugli elementi essenziali",
+            "tags": {
+              "simple": "Semplice",
+              "clean": "Pulito",
+              "focused": "Focalizzato",
+              "elegant": "Elegante"
+            }
+          },
+          "collage": {
+            "title": "Stile Collage",
+            "description": "Combinazione creativa di elementi per uno storytelling visivo unico",
+            "tags": {
+              "creative": "Creativo",
+              "versatile": "Versatile",
+              "artistic": "Artistico",
+              "storytelling": "Narrativo"
+            }
+          }
+        },
         "tips": {
           "title": "Scegli immagini che:",
           "brand": "Si allineano con la personalità del tuo brand",
@@ -735,6 +878,10 @@
           "title": "Scegli la Tua Palette di Colori",
           "required": "Richiesto",
           "optional": "Opzionale"
+        },
+        "search": {
+          "placeholder": "Cerca colori, palette o stili...",
+          "results": "{count, plural, one {# palette trovata} other {# palette trovate}}"
         },
         "psychology": {
           "title": "Psicologia dei Colori",
@@ -781,6 +928,28 @@
             "label": "Qual è il tuo obiettivo principale per questo sito web?",
             "placeholder": "Seleziona il tuo obiettivo primario",
             "hint": "Questo influenzerà quali sezioni raccomandiamo e come strutturiamo i tuoi contenuti"
+          },
+          "options": {
+            "other": {
+              "label": "Altro",
+              "description": "Obiettivo aziendale personalizzato o obiettivi misti"
+            },
+            "phone-call": {
+              "label": "Telefonata",
+              "description": "Incoraggiare i visitatori a chiamare la tua attività"
+            },
+            "purchase": {
+              "label": "Acquisto prodotto o servizio",
+              "description": "Stimolare vendite dirette e transazioni"
+            },
+            "contact-form": {
+              "label": "Invio modulo di contatto",
+              "description": "Generare richieste tramite moduli di contatto"
+            },
+            "visit-location": {
+              "label": "Visita in sede",
+              "description": "Attirare clienti nella tua sede fisica"
+            }
           }
         },
         "sections": {
@@ -790,11 +959,56 @@
           "recommended": {
             "title": "Sezioni raccomandate per",
             "badge": "Raccomandato"
+          },
+          "items": {
+            "hero": {
+              "label": "Hero / Introduzione",
+              "description": "Un titolo forte, breve descrizione e call-to-action"
+            },
+            "contact": {
+              "label": "Contattaci",
+              "description": "Informazioni di contatto e modulo"
+            },
+            "about": {
+              "label": "Chi siamo / Storia",
+              "description": "Chi sei, cosa rende unica la tua attività"
+            },
+            "portfolio": {
+              "label": "Portfolio / Galleria",
+              "description": "Mostra i tuoi lavori"
+            },
+            "services": {
+              "label": "Servizi / Prodotti",
+              "description": "Offerte chiave o aree di competenza"
+            },
+            "testimonials": {
+              "label": "Testimonianze / Recensioni",
+              "description": "Prova sociale da clienti o partner"
+            },
+            "events": {
+              "label": "Eventi",
+              "description": "Eventi e attività in programma"
+            }
           }
         },
         "offerings": {
           "title": "Prodotti e Servizi",
           "optional": "Facoltativo",
+          "typeLabel": "Cosa offri?",
+          "types": {
+            "products": {
+              "label": "Prodotti",
+              "description": "Beni fisici o digitali"
+            },
+            "services": {
+              "label": "Servizi",
+              "description": "Consulenza, supporto, manutenzione"
+            },
+            "both": {
+              "label": "Entrambi",
+              "description": "Prodotti e servizi"
+            }
+          },
           "examples": {
             "title": "Esempi di ciò che potresti offrire:",
             "consulting": "Servizi di consulenza aziendale",
@@ -831,6 +1045,10 @@
           "essential": "Includi sezioni essenziali",
           "goal": "Allinea con il tuo obiettivo principale",
           "simple": "Mantieni la navigazione semplice"
+        },
+        "validation": {
+          "primaryGoalRequired": "Seleziona l'obiettivo principale del tuo sito web",
+          "websiteSectionsMin": "Seleziona almeno una sezione del sito web"
         },
         "products": {
           "emptyState": "Nessun prodotto aggiunto ancora",
@@ -1137,7 +1355,8 @@
     },
     "slider": {
       "reset": "Reimposta al centro",
-      "required": "Questo campo è obbligatorio"
+      "required": "Questo campo è obbligatorio",
+      "summary": "Riepilogo"
     },
     "imageGrid": {
       "premium": "Premium",
@@ -1536,6 +1755,12 @@
         "detailsTooShort": "Fornisci maggiori dettagli (almeno 15 caratteri)",
         "submitFailed": "Invio del messaggio non riuscito. Riprova."
       }
+    }
+  },
+  "laboratorio": {
+    "meta": {
+      "title": "Workshop - WhiteBoar",
+      "description": "Registrati al nostro workshop e scopri come far crescere la tua attività online."
     }
   }
 }

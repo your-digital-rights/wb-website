@@ -1,5 +1,5 @@
 import { supabase, createServiceClient, typedSupabase } from '@/lib/supabase'
-import { 
+import {
   OnboardingSession,
   OnboardingSubmission,
   OnboardingFormData,
@@ -9,6 +9,7 @@ import {
   UploadedFile,
   ApiResponse
 } from '@/types/onboarding'
+import { Locale } from '@/lib/i18n'
 
 // =============================================================================
 // ONBOARDING SERVICE CLASS
@@ -26,7 +27,7 @@ export class OnboardingService {
   static async createSession(
     email: string,
     name: string,
-    locale: 'en' | 'it' = 'en'
+    locale: Locale = 'en'
   ): Promise<OnboardingSession> {
     try {
       const sessionData = {
@@ -69,7 +70,7 @@ export class OnboardingService {
   static async createSessionWithEmail(
     email: string,
     name: string,
-    locale: 'en' | 'it' = 'en'
+    locale: Locale = 'en'
   ): Promise<OnboardingSession> {
     try {
       const sessionData = {
@@ -718,9 +719,9 @@ export class OnboardingService {
  * Initialize a new onboarding session
  */
 export async function initializeOnboarding(
-  email: string, 
-  name: string, 
-  locale: 'en' | 'it' = 'en'
+  email: string,
+  name: string,
+  locale: Locale = 'en'
 ): Promise<ApiResponse<OnboardingSession>> {
   try {
     const session = await OnboardingService.createSession(email, name, locale)

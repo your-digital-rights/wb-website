@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo } from 'react'
 import { useTranslations } from 'next-intl'
 import { Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
@@ -10,67 +11,97 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { StepComponentProps } from './index'
 
-// Design style options with sample images
-const designStyleOptions = [
-  {
-    id: 'minimalist',
-    title: 'Minimalist',
-    description: 'Clean lines, plenty of whitespace, sophisticated simplicity',
-    imageUrl: '/images/onboarding/website-minimalist.png',
-    category: 'Minimalist',
-    tags: ['Clean', 'Simple', 'Professional', 'Spacious'],
-    premium: false
-  },
-  {
-    id: 'corporate',
-    title: 'Corporate',
-    description: 'Business-focused design with trust-building elements',
-    imageUrl: '/images/onboarding/website-corporate.png',
-    category: 'Corporate',
-    tags: ['Professional', 'Trustworthy', 'Corporate', 'Structured'],
-    premium: false
-  },
-  {
-    id: 'bold',
-    title: 'Bold',
-    description: 'Dynamic layouts with vibrant colors and creative elements',
-    imageUrl: '/images/onboarding/website-bold.png',
-    category: 'Bold',
-    tags: ['Dynamic', 'Vibrant', 'Artistic', 'Expressive'],
-    premium: false
-  },
-  {
-    id: 'playful',
-    title: 'Playful',
-    description: 'Fun and engaging design with playful elements',
-    imageUrl: '/images/onboarding/website-playful.png',
-    category: 'Playful',
-    tags: ['Fun', 'Engaging', 'Friendly', 'Creative'],
-    premium: false
-  },
-  {
-    id: 'editorial',
-    title: 'Editorial',
-    description: 'Magazine-style layout with rich typography and content focus',
-    imageUrl: '/images/onboarding/website-editorial.png',
-    category: 'Editorial',
-    tags: ['Editorial', 'Typography', 'Content', 'Reading'],
-    premium: false
-  },
-  {
-    id: 'retro',
-    title: 'Retro',
-    description: 'Vintage-inspired design with nostalgic elements',
-    imageUrl: '/images/onboarding/website-retro.png',
-    category: 'Retro',
-    tags: ['Retro', 'Nostalgic', 'Classic', 'Unique'],
-    premium: false
-  }
-]
-
 export function Step8DesignStyle({ form, errors, isLoading }: StepComponentProps) {
   const t = useTranslations('onboarding.steps.8')
   const { control } = form
+
+  // Design style options with translated content
+  const designStyleOptions = useMemo(() => [
+    {
+      id: 'minimalist',
+      title: t('styles.minimalist.title'),
+      description: t('styles.minimalist.description'),
+      imageUrl: '/images/onboarding/website-minimalist.png',
+      category: t('styles.minimalist.title'),
+      tags: [
+        t('styles.minimalist.tags.clean'),
+        t('styles.minimalist.tags.simple'),
+        t('styles.minimalist.tags.professional'),
+        t('styles.minimalist.tags.spacious')
+      ],
+      premium: false
+    },
+    {
+      id: 'corporate',
+      title: t('styles.corporate.title'),
+      description: t('styles.corporate.description'),
+      imageUrl: '/images/onboarding/website-corporate.png',
+      category: t('styles.corporate.title'),
+      tags: [
+        t('styles.corporate.tags.professional'),
+        t('styles.corporate.tags.trustworthy'),
+        t('styles.corporate.tags.corporate'),
+        t('styles.corporate.tags.structured')
+      ],
+      premium: false
+    },
+    {
+      id: 'bold',
+      title: t('styles.bold.title'),
+      description: t('styles.bold.description'),
+      imageUrl: '/images/onboarding/website-bold.png',
+      category: t('styles.bold.title'),
+      tags: [
+        t('styles.bold.tags.dynamic'),
+        t('styles.bold.tags.vibrant'),
+        t('styles.bold.tags.artistic'),
+        t('styles.bold.tags.expressive')
+      ],
+      premium: false
+    },
+    {
+      id: 'playful',
+      title: t('styles.playful.title'),
+      description: t('styles.playful.description'),
+      imageUrl: '/images/onboarding/website-playful.png',
+      category: t('styles.playful.title'),
+      tags: [
+        t('styles.playful.tags.fun'),
+        t('styles.playful.tags.engaging'),
+        t('styles.playful.tags.friendly'),
+        t('styles.playful.tags.creative')
+      ],
+      premium: false
+    },
+    {
+      id: 'editorial',
+      title: t('styles.editorial.title'),
+      description: t('styles.editorial.description'),
+      imageUrl: '/images/onboarding/website-editorial.png',
+      category: t('styles.editorial.title'),
+      tags: [
+        t('styles.editorial.tags.editorial'),
+        t('styles.editorial.tags.typography'),
+        t('styles.editorial.tags.content'),
+        t('styles.editorial.tags.reading')
+      ],
+      premium: false
+    },
+    {
+      id: 'retro',
+      title: t('styles.retro.title'),
+      description: t('styles.retro.description'),
+      imageUrl: '/images/onboarding/website-retro.png',
+      category: t('styles.retro.title'),
+      tags: [
+        t('styles.retro.tags.retro'),
+        t('styles.retro.tags.nostalgic'),
+        t('styles.retro.tags.classic'),
+        t('styles.retro.tags.unique')
+      ],
+      premium: false
+    }
+  ], [t])
 
   return (
     <div className="space-y-8">
