@@ -450,7 +450,11 @@ export interface PaymentDetails {
   stripe_customer_id: string
   stripe_subscription_id: string
   stripe_subscription_schedule_id: string // Schedule enforcing 12-month commitment
+  stripe_invoice_id?: string
   payment_amount: number // in cents
+  payment_summary?: Record<string, any>
+  payment_tax_amount?: number // in cents
+  payment_tax_currency?: string
   currency: string // always 'EUR'
   discount_code?: string
   discount_amount?: number // in cents

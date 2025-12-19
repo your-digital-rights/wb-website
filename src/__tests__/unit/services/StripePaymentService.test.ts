@@ -14,7 +14,8 @@ describe('StripePaymentService', () => {
     mockStripe = {
       customers: {
         list: jest.fn(),
-        create: jest.fn()
+        create: jest.fn(),
+        update: jest.fn()
       },
       promotionCodes: {
         list: jest.fn()
@@ -62,6 +63,13 @@ describe('StripePaymentService', () => {
         email: 'test@example.com',
         limit: 1
       })
+      expect(mockStripe.customers.update).toHaveBeenCalledWith('cus_existing123', {
+        metadata: {
+          ...(existingCustomer.metadata || {}),
+          session_id: 'session123',
+          signup_source: 'web_onboarding'
+        }
+      })
       expect(mockStripe.customers.create).not.toHaveBeenCalled()
     })
 
@@ -88,7 +96,10 @@ describe('StripePaymentService', () => {
       expect(mockStripe.customers.create).toHaveBeenCalledWith({
         email: 'new@example.com',
         name: 'New Customer',
-        metadata: { session_id: 'session123' }
+        metadata: {
+          session_id: 'session123',
+          signup_source: 'web_onboarding'
+        }
       })
     })
 

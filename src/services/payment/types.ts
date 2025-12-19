@@ -40,6 +40,11 @@ export interface CheckoutSessionResult {
   invoiceId?: string | null
   customerId?: string
   subscriptionId?: string
+  subscriptionScheduleId?: string
+  paymentIntentId?: string | null
+  pricingSummary?: PricingSummary
+  taxAmount?: number
+  taxCurrency?: string
   invoiceTotal?: number
   invoiceDiscount?: number
   couponId?: string | null
@@ -47,6 +52,27 @@ export interface CheckoutSessionResult {
     code: string
     message: string
   }
+}
+
+export interface PricingLineItem {
+  id: string
+  description: string
+  amount: number
+  originalAmount: number
+  quantity: number
+  discountAmount: number
+  isRecurring: boolean
+}
+
+export interface PricingSummary {
+  subtotal: number
+  total: number
+  discountAmount: number
+  recurringAmount: number
+  recurringDiscount: number
+  taxAmount: number
+  currency: string
+  lineItems: PricingLineItem[]
 }
 
 // =============================================================================

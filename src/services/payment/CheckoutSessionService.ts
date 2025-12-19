@@ -11,6 +11,7 @@ import {
   SubmissionValidationResult,
   CustomerInfo,
   CheckoutSessionResult,
+  PricingSummary,
   RateLimitResult
 } from './types'
 import Stripe from 'stripe'
@@ -439,12 +440,20 @@ export class CheckoutSessionService {
         ...(subscription.metadata || {}),
         submission_id: submissionId,
         session_id: submission.session_id,
+        additional_languages: languagesToUse.join(','),
+        commitment_months: '12',
         ...(validatedCoupon ? { discount_code: validatedCoupon.id } : {})
       }
 
       try {
         await stripe.subscriptions.update(subscription.id, {
-          metadata: subscriptionMetadata
+          metadata: subscriptionMetadata,
+          payment_settings: {
+            save_default_payment_method: 'on_subscription'
+          },
+          automatic_tax: {
+            enabled: true
+          }
         })
       } catch (metadataError) {
         console.error('Failed to update subscription metadata:', metadataError)
@@ -479,6 +488,10 @@ export class CheckoutSessionService {
           stripe_subscription_id: subscription.id,
           stripe_subscription_schedule_id: schedule.id,
           stripe_payment_id: addOnResult.paymentIntentId || null,
+          stripe_invoice_id: addOnResult.invoiceId || null,
+          payment_summary: addOnResult.pricingSummary || null,
+          payment_tax_amount: addOnResult.taxAmount ?? null,
+          payment_tax_currency: addOnResult.taxCurrency ?? null,
           form_data: submission.form_data,
           updated_at: new Date().toISOString()
         })
@@ -510,6 +523,11 @@ export class CheckoutSessionService {
         invoiceId: addOnResult.invoiceId,
         customerId: customer.id,
         subscriptionId: subscription.id,
+        subscriptionScheduleId: schedule.id,
+        paymentIntentId: addOnResult.paymentIntentId ?? null,
+        pricingSummary: addOnResult.pricingSummary,
+        taxAmount: addOnResult.taxAmount,
+        taxCurrency: addOnResult.taxCurrency,
         invoiceTotal: addOnResult.invoiceTotal,
         invoiceDiscount: addOnResult.invoiceDiscount,
         couponId: validatedCoupon?.id ?? null
@@ -563,6 +581,9 @@ export class CheckoutSessionService {
     invoiceTotal: number
     invoiceDiscount: number
     paymentIntentId?: string | null
+    pricingSummary?: PricingSummary
+    taxAmount?: number
+    taxCurrency?: string
   }> {
     const stripe = this.stripeService.getStripeInstance()
 
@@ -626,7 +647,8 @@ export class CheckoutSessionService {
       await stripe.invoices.update(invoiceId, {
         metadata: {
           submission_id: submissionId,
-          session_id: sessionId
+          session_id: sessionId,
+          is_initial_payment: 'true'
         }
       })
     } catch (invoiceMetadataError) {
@@ -639,6 +661,12 @@ export class CheckoutSessionService {
     const finalizedInvoice = await stripe.invoices.finalizeInvoice(invoiceId, {
       expand: ['confirmation_secret', 'payments', 'total_discount_amounts']
     })
+
+    const expandedInvoice = await stripe.invoices.retrieve(finalizedInvoice.id, {
+      expand: ['lines.data.price.product', 'lines.data.discounts', 'total_discount_amounts', 'payments']
+    })
+    const pricingSummary = this.buildPricingSummary(expandedInvoice)
+    const taxAmount = pricingSummary.taxAmount
 
     console.log('[CheckoutSessionService] finalized invoice', {
       invoiceId: finalizedInvoice.id,
@@ -700,7 +728,10 @@ export class CheckoutSessionService {
         invoiceId: invoiceIdValue,
         invoiceTotal: 0,
         invoiceDiscount: (finalizedInvoice.total_discount_amounts || []).reduce((sum, d) => sum + d.amount, 0),
-        paymentIntentId: null  // No PaymentIntent for $0 invoices
+        paymentIntentId: setupIntent.id,
+        pricingSummary,
+        taxAmount,
+        taxCurrency: expandedInvoice.currency
       }
     }
 
@@ -716,7 +747,8 @@ export class CheckoutSessionService {
       await stripe.paymentIntents.update(paymentIntentId, {
         metadata: {
           submission_id: submissionId,
-          session_id: sessionId
+          session_id: sessionId,
+          invoice_id: invoiceId
         }
       })
     }
@@ -746,7 +778,46 @@ export class CheckoutSessionService {
       invoiceId: invoiceIdValue,
       invoiceTotal: finalizedInvoice.total ?? 0,
       invoiceDiscount: (finalizedInvoice.total_discount_amounts || []).reduce((sum, d) => sum + d.amount, 0),
-      paymentIntentId: paymentIntentId || null
+      paymentIntentId: paymentIntentId || null,
+      pricingSummary,
+      taxAmount,
+      taxCurrency: expandedInvoice.currency
+    }
+  }
+
+  private buildPricingSummary(invoice: Stripe.Invoice): PricingSummary {
+    const lineItems = (invoice.lines?.data || []).map((line) => {
+      const discountAmount = (line.discount_amounts || []).reduce((sum, discount) => sum + discount.amount, 0)
+      const amount = line.amount ?? 0
+      return {
+        id: line.id,
+        description: line.description || 'Line item',
+        amount,
+        originalAmount: amount + discountAmount,
+        quantity: line.quantity ?? 1,
+        discountAmount,
+        isRecurring: Boolean(line.subscription)
+      }
+    })
+
+    const recurringAmount = lineItems
+      .filter((item) => item.isRecurring)
+      .reduce((sum, item) => sum + item.amount, 0)
+    const recurringDiscount = lineItems
+      .filter((item) => item.isRecurring)
+      .reduce((sum, item) => sum + item.discountAmount, 0)
+
+    const taxAmount = ((invoice as any).total_tax_amounts || []).reduce((sum: number, tax: { amount: number }) => sum + tax.amount, 0)
+
+    return {
+      subtotal: invoice.subtotal ?? 0,
+      total: invoice.total ?? 0,
+      discountAmount: ((invoice as any).total_discount_amounts || []).reduce((sum: number, discount: { amount: number }) => sum + discount.amount, 0),
+      recurringAmount,
+      recurringDiscount,
+      taxAmount,
+      currency: invoice.currency ?? 'eur',
+      lineItems
     }
   }
 }

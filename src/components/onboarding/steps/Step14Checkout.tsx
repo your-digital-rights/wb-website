@@ -34,23 +34,12 @@ import {
   EUROPEAN_LANGUAGES,
   getLanguageName
 } from '@/data/european-languages'
-import { CheckoutSession } from '@/types/onboarding'
 import { trackPurchase } from '@/lib/analytics'
 import { Locale } from '@/lib/i18n'
 
 // Initialize Stripe
 const STRIPE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 const stripePromise = loadStripe(STRIPE_KEY)
-
-interface DiscountMeta {
-  code: string
-  couponId?: string
-  promotionCodeId?: string
-  enteredCode?: string
-  duration?: 'once' | 'forever' | 'repeating'
-  durationInMonths?: number
-  preview?: DiscountValidation['preview']
-}
 
 interface CheckoutFormLineItem {
   id: string
@@ -62,6 +51,17 @@ interface CheckoutFormLineItem {
   isRecurring: boolean
 }
 
+interface PricingSummary {
+  subtotal: number
+  total: number
+  discountAmount: number
+  recurringAmount: number
+  recurringDiscount: number
+  taxAmount: number
+  currency: string
+  lineItems: CheckoutFormLineItem[]
+}
+
 interface DiscountValidation {
   status: 'valid' | 'invalid'
   code?: string
@@ -70,14 +70,7 @@ interface DiscountValidation {
   enteredCode?: string
   duration?: 'once' | 'forever' | 'repeating'
   durationInMonths?: number
-  preview?: {
-    subtotal: number
-    discountAmount: number
-    total: number
-    recurringAmount: number
-    recurringDiscount: number
-    lineItems: CheckoutFormLineItem[]
-  }
+  preview?: PricingSummary
   error?: string
 }
 
@@ -94,12 +87,14 @@ interface CheckoutFormProps extends CheckoutWrapperProps {
   clientSecret: string | null
   stripe: Stripe | null
   elements: StripeElements | null
+  pricingSummary: PricingSummary | null
   discountValidation: DiscountValidation | null
+  isVerifyingDiscount: boolean
   setDiscountValidation: (validation: DiscountValidation | null) => void
-  onDiscountApplied: (discount: DiscountMeta) => void
   onDiscountCleared: () => void
   onLanguagesChange: (languages: string[]) => void
   onZeroPaymentComplete: () => void
+  onVerifyDiscount: (code: string) => Promise<void>
 }
 
 function CheckoutForm({
@@ -115,12 +110,14 @@ function CheckoutForm({
   clientSecret,
   stripe,
   elements,
+  pricingSummary,
   discountValidation,
+  isVerifyingDiscount,
   setDiscountValidation,
-  onDiscountApplied,
   onDiscountCleared,
   onLanguagesChange,
-  onZeroPaymentComplete
+  onZeroPaymentComplete,
+  onVerifyDiscount
 }: CheckoutFormProps) {
   const t = useTranslations('onboarding.steps.14')
   const locale = useLocale() as Locale
@@ -128,34 +125,7 @@ function CheckoutForm({
 
   const [isProcessing, setIsProcessing] = useState(false)
   const [paymentError, setPaymentError] = useState<string | null>(null)
-  const [isVerifyingDiscount, setIsVerifyingDiscount] = useState(false)
   const lastInstrumentedClientSecretRef = useRef<string | null>(null)
-
-  // Stripe prices from API
-  const [prices, setPrices] = useState<{
-    basePackage: number   // euros
-    languageAddOn: number // euros
-  } | null>(null)
-
-  // Base invoice preview (without discount)
-  interface LineItem {
-    id: string
-    description: string
-    amount: number          // cents
-    originalAmount: number  // cents
-    quantity: number
-    discountAmount: number  // cents
-    isRecurring: boolean
-  }
-
-  const [pricePreview, setPricePreview] = useState<{
-    subtotal: number
-    total: number
-    discountAmount: number
-    recurringAmount: number
-    recurringDiscount: number
-    lineItems: LineItem[]
-  } | null>(null)
 
   // Discount validation state
   // Watch form values for reactive updates
@@ -177,15 +147,12 @@ function CheckoutForm({
     onLanguagesChange(Array.isArray(selectedLanguages) ? selectedLanguages : [])
   }, [selectedLanguages, onLanguagesChange])
 
-  // Use active preview (with discount if valid, otherwise base preview)
-  const activePreview = pricePreview
-
-  // ALL pricing from Stripe - ZERO calculations
-  const totalDueToday = activePreview ? activePreview.total / 100 : 0
-  const discountAmount = activePreview ? activePreview.discountAmount / 100 : 0
-  const recurringMonthlyPrice = activePreview ? activePreview.recurringAmount / 100 : 0
-  const subtotal = activePreview ? activePreview.subtotal / 100 : 0
-  const lineItems = activePreview?.lineItems || []
+  // ALL pricing from Stripe controller response
+  const totalDueToday = pricingSummary ? pricingSummary.total / 100 : 0
+  const discountAmount = pricingSummary ? pricingSummary.discountAmount / 100 : 0
+  const recurringMonthlyPrice = pricingSummary ? pricingSummary.recurringAmount / 100 : 0
+  const subtotal = pricingSummary ? pricingSummary.subtotal / 100 : 0
+  const lineItems = pricingSummary?.lineItems || []
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -256,10 +223,6 @@ function CheckoutForm({
   // For 100% discount: paymentRequired=true (collecting payment method for future billing)
   // So we need to show payment form even when totalDueToday=0
   const effectiveNoPayment = noPaymentDue && !paymentRequired
-
-  // Fallback prices (only for display before API loads)
-  const basePackageFallback = prices?.basePackage || 0
-  const languageAddonFallback = prices?.languageAddOn || 0
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -386,76 +349,8 @@ function CheckoutForm({
     }
 
     try {
-      setIsVerifyingDiscount(true)
       setDiscountValidation(null)
-
-      // Fetch CSRF token first
-      const csrfResponse = await fetch(`/api/csrf-token?sessionId=${sessionId}`)
-      const csrfData = await csrfResponse.json()
-
-      if (!csrfResponse.ok || !csrfData.success) {
-        throw new Error('Failed to get CSRF token')
-      }
-
-      // Create AbortController with 10-minute timeout (600000ms)
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 600000)
-
-      const response = await fetch('/api/stripe/validate-discount', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfData.token,
-          ...(process.env.NODE_ENV !== 'production' ? { 'X-Test-Mode': 'true' } : {})
-        },
-        body: JSON.stringify({
-          discountCode: code,
-          sessionId: sessionId,
-          additionalLanguages: Array.isArray(selectedLanguages) ? selectedLanguages : []
-        }),
-        signal: controller.signal
-      })
-
-      clearTimeout(timeoutId)
-
-      const data = await response.json()
-
-      if (!response.ok || !data.success) {
-        setDiscountValidation({
-          status: 'invalid',
-          error: data.error?.message || t('discount.invalidCode')
-        })
-        onDiscountCleared()
-        return
-      }
-
-      // Valid discount code - store preview data
-      const discountMeta: DiscountMeta = {
-        code: data.data.code,
-        couponId: data.data.couponId ?? undefined,
-        promotionCodeId: data.data.promotionCodeId ?? undefined,
-        enteredCode: data.data.enteredCode ?? data.data.code,
-        duration: data.data.duration,
-        durationInMonths: data.data.durationInMonths
-      }
-
-      setDiscountValidation({
-        status: 'valid',
-        code: discountMeta.code,
-        couponId: discountMeta.couponId,
-        promotionCodeId: discountMeta.promotionCodeId,
-        enteredCode: discountMeta.enteredCode,
-        duration: discountMeta.duration,
-        durationInMonths: discountMeta.durationInMonths,
-        preview: data.data.preview
-      })
-      setPricePreview(data.data.preview)
-      if (typeof window !== 'undefined') {
-        ;(window as any).__wb_lastDiscountPreview = data.data.preview
-      }
-
-      onDiscountApplied({ ...discountMeta, preview: data.data.preview })
-
+      await onVerifyDiscount(code)
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
         setDiscountValidation({
@@ -469,73 +364,8 @@ function CheckoutForm({
         })
       }
       onDiscountCleared()
-    } finally {
-      setIsVerifyingDiscount(false)
     }
   }
-
-  // Fetch prices from Stripe on mount
-  useEffect(() => {
-    async function fetchPrices() {
-      try {
-        const response = await fetch('/api/stripe/prices')
-        const data = await response.json()
-        if (data.success) {
-          setPrices({
-            basePackage: data.data.basePackage.amount / 100,
-            languageAddOn: data.data.languageAddOn.amount / 100
-          })
-        }
-      } catch (error) {
-        console.error('Failed to fetch prices:', error)
-      }
-    }
-    fetchPrices()
-  }, [])
-
-  // Fetch invoice preview from Stripe when prices load or languages change
-  useEffect(() => {
-    async function fetchPreview() {
-      try {
-        const csrfResponse = await fetch(`/api/csrf-token?sessionId=${sessionId}`)
-        const csrfData = await csrfResponse.json()
-
-        if (!csrfResponse.ok || !csrfData.success) {
-          console.error('Failed to get CSRF token')
-          return
-        }
-
-        const response = await fetch('/api/stripe/preview-invoice', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': csrfData.token,
-            ...(process.env.NODE_ENV !== 'production' ? { 'X-Test-Mode': 'true' } : {})
-          },
-          body: JSON.stringify({
-            sessionId,
-            additionalLanguages: selectedLanguages,
-            discountCode: activeDiscountCode
-          })
-        })
-
-        const data = await response.json()
-        if (data.success) {
-          setPricePreview(data.data.preview)
-          if (typeof window !== 'undefined') {
-            ;(window as any).__wb_lastDiscountPreview = data.data.preview
-          }
-        }
-      } catch (error) {
-        console.error('Failed to fetch preview:', error)
-      }
-    }
-
-    // Only fetch preview after prices loaded
-    if (prices) {
-      fetchPreview()
-    }
-  }, [sessionId, selectedLanguages, prices, activeDiscountCode])
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
@@ -587,7 +417,7 @@ function CheckoutForm({
                 </div>
               </div>
               <p className="font-semibold">
-                €{recurringMonthlyPrice > 0 ? recurringMonthlyPrice.toFixed(2) : basePackageFallback}
+                €{recurringMonthlyPrice > 0 ? recurringMonthlyPrice.toFixed(2) : '0.00'}
               </p>
             </div>
 
@@ -620,7 +450,7 @@ function CheckoutForm({
                           <span className="text-muted-foreground">
                             {getLanguageName(code, locale)}
                           </span>
-                          <span>€{languageAddonFallback}</span>
+                          <span>€0.00</span>
                         </div>
                       ))
                     )}
@@ -1063,6 +893,8 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
   const [hasZeroPayment, setHasZeroPayment] = useState(false)
   const [activeDiscountCode, setActiveDiscountCode] = useState<string | null>(null)
   const [discountValidation, setDiscountValidation] = useState<DiscountValidation | null>(null)
+  const [pricingSummary, setPricingSummary] = useState<PricingSummary | null>(null)
+  const [isVerifyingDiscount, setIsVerifyingDiscount] = useState(false)
   const [stripeAppearance, setStripeAppearance] = useState<Appearance>()
 
   const languagesRef = useRef<string[]>([])
@@ -1115,7 +947,11 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
       setClientSecret(lastPaymentRequiredRef.current ? lastClientSecretRef.current : null)
       setIsLoadingSecret(false)
       setError(null)
-      return
+      return {
+        success: true,
+        summary: pricingSummary ?? undefined,
+        appliedDiscountCode: discountCode ?? null
+      }
     }
 
     setIsLoadingSecret(true)
@@ -1142,7 +978,7 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
         throw new Error('Failed to get CSRF token')
       }
 
-      const response = await fetch('/api/stripe/create-checkout-session', {
+      const response = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1150,12 +986,10 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
           ...(process.env.NODE_ENV !== 'production' ? { 'X-Test-Mode': 'true' } : {})
         },
         body: JSON.stringify({
-          submission_id: submissionId,
-          session_id: csrfTargetId,
+          submissionId,
+          sessionId: csrfTargetId,
           additionalLanguages: normalizedLanguages,
-          discountCode: discountCode ?? undefined,
-          successUrl: `${window.location.origin}/${locale}/onboarding/thank-you`,
-          cancelUrl: `${window.location.origin}/${locale}/onboarding/step/14`
+          discountCode: discountCode ?? undefined
         }),
         signal: controller.signal
       })
@@ -1175,6 +1009,14 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
       }
 
       if (!response.ok || !data.success) {
+        const errorCode = data?.error?.code
+        if (errorCode === 'INVALID_DISCOUNT_CODE') {
+          return {
+            success: false,
+            errorCode,
+            errorMessage: data?.error?.message
+          }
+        }
         throw new Error(data.error?.message || 'Failed to create checkout session')
       }
 
@@ -1193,14 +1035,23 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
       const requiresPayment = data.data.paymentRequired !== false
       setPaymentRequired(requiresPayment)
       setHasZeroPayment(!requiresPayment)
+      if (data.data.summary) {
+        setPricingSummary(data.data.summary as PricingSummary)
+        if (typeof window !== 'undefined') {
+          ;(window as any).__wb_lastDiscountPreview = data.data.summary
+        }
+        if (data.data.summary.total <= 0) {
+          setHasZeroPayment(true)
+        }
+      }
 
       if (typeof window !== 'undefined') {
         ;(window as any).__wb_lastCheckoutState = {
           requestKey,
           requiresPayment,
-          invoiceTotal: data.data.invoiceTotal,
-          invoiceDiscount: data.data.invoiceDiscount,
-          couponId: data.data.couponId
+          invoiceTotal: data.data.summary?.total,
+          invoiceDiscount: data.data.summary?.discountAmount,
+          couponId: discountCode ?? null
         }
       }
 
@@ -1219,6 +1070,12 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
       lastRequestKeyRef.current = requestKey
       lastPaymentRequiredRef.current = requiresPayment
       hasInitializedPaymentRef.current = true
+
+      return {
+        success: true,
+        summary: data.data.summary as PricingSummary | undefined,
+        appliedDiscountCode: discountCode ?? null
+      }
     } catch (err) {
       if (!(err instanceof DOMException && err.name === 'AbortError')) {
         console.error('Failed to fetch client secret:', err)
@@ -1232,28 +1089,36 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
         setIsLoadingSecret(false)
       }
     }
-  }, [submissionId, sessionId, locale, form])
+  }, [submissionId, sessionId, locale, form, pricingSummary])
 
-  const handleDiscountApplied = useCallback((discount: DiscountMeta) => {
-    if (typeof window !== 'undefined') {
-      ;(window as any).__wb_lastDiscountMeta = discount
-    }
-    const appliedCode = discount.enteredCode ?? discount.code
+  const handleVerifyDiscount = useCallback(async (code: string) => {
+    setIsVerifyingDiscount(true)
+    setDiscountValidation(null)
 
-    if (discountCodeRef.current === appliedCode) {
-      setActiveDiscountCode(appliedCode)
-      if (discount.preview) {
-        setHasZeroPayment(discount.preview.total <= 0)
+    const response = await refreshPaymentIntent({ discountCode: code })
+    if (response?.success) {
+      setActiveDiscountCode(code)
+      setDiscountValidation({
+        status: 'valid',
+        code,
+        preview: response.summary
+      })
+      if (response.summary) {
+        setHasZeroPayment(response.summary.total <= 0)
       }
-      return
+    } else {
+      setActiveDiscountCode(null)
+      setDiscountValidation({
+        status: 'invalid',
+        error: response?.errorMessage || t('discount.invalidCode')
+      })
+      if (typeof window !== 'undefined') {
+        ;(window as any).__wb_lastDiscountMeta = null
+      }
     }
 
-    setActiveDiscountCode(appliedCode)
-    if (discount.preview) {
-      setHasZeroPayment(discount.preview.total <= 0)
-    }
-    refreshPaymentIntent({ discountCode: appliedCode })
-  }, [refreshPaymentIntent])
+    setIsVerifyingDiscount(false)
+  }, [refreshPaymentIntent, t])
 
   const handleDiscountCleared = useCallback(() => {
     if (!discountCodeRef.current && !activeDiscountCode) {
@@ -1262,8 +1127,8 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
 
     setActiveDiscountCode(null)
     setHasZeroPayment(false)
+    setDiscountValidation(null)
     if (typeof window !== 'undefined') {
-      ;(window as any).__wb_lastDiscountMeta = null
       ;(window as any).__wb_lastDiscountValidation = null
     }
     refreshPaymentIntent({ discountCode: null })
@@ -1335,13 +1200,25 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
     languagesRef.current = normalizedLanguages
 
     const existingDiscount = form.getValues('discountCode')
-    if (typeof existingDiscount === 'string' && existingDiscount.trim().length > 0) {
-      const trimmed = existingDiscount.trim()
-      setActiveDiscountCode(trimmed)
-      refreshPaymentIntent({ languages: normalizedLanguages, discountCode: trimmed })
-    } else {
-      refreshPaymentIntent({ languages: normalizedLanguages })
+    const runInitialRefresh = async () => {
+      if (typeof existingDiscount === 'string' && existingDiscount.trim().length > 0) {
+        const trimmed = existingDiscount.trim()
+        setActiveDiscountCode(trimmed)
+        const response = await refreshPaymentIntent({ languages: normalizedLanguages, discountCode: trimmed })
+        if (response?.success && response.summary) {
+          setDiscountValidation({
+            status: 'valid',
+            code: trimmed,
+            preview: response.summary
+          })
+        }
+        return
+      }
+
+      await refreshPaymentIntent({ languages: normalizedLanguages })
     }
+
+    void runInitialRefresh()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -1377,12 +1254,14 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
     paymentRequired,
     hasZeroPayment,
     clientSecret,
+    pricingSummary,
     discountValidation,
     setDiscountValidation,
-    onDiscountApplied: handleDiscountApplied,
     onDiscountCleared: handleDiscountCleared,
     onLanguagesChange: handleLanguagesChange,
-    onZeroPaymentComplete: handleZeroPaymentComplete
+    onZeroPaymentComplete: handleZeroPaymentComplete,
+    isVerifyingDiscount,
+    onVerifyDiscount: handleVerifyDiscount
   }
 
   if (!paymentRequired) {

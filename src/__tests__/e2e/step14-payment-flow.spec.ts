@@ -365,7 +365,7 @@ test.describe('Step 14: Payment Flow E2E', () => {
 
     try {
       page.on('request', req => {
-        if (req.url().includes('/api/stripe/create-checkout-session')) {
+        if (req.url().includes('/api/stripe/checkout')) {
           console.log('create-checkout-session request:', req.postData())
         }
       })
