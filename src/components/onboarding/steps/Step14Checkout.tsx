@@ -288,7 +288,9 @@ function CheckoutForm({
         }
 
         if (setupIntent?.status === 'requires_payment_method') {
-          throw new Error(t('paymentFailed'))
+          const fallbackMessage = t('paymentFailed')
+          const lastError = setupIntent.last_setup_error?.message
+          throw new Error(lastError || fallbackMessage)
         }
 
       } else {
@@ -317,7 +319,9 @@ function CheckoutForm({
         }
 
         if (paymentIntent?.status === 'requires_payment_method') {
-          throw new Error(t('paymentFailed'))
+          const fallbackMessage = t('paymentFailed')
+          const lastError = paymentIntent.last_payment_error?.message
+          throw new Error(lastError || fallbackMessage)
         }
 
         if (paymentIntent?.status === 'requires_action') {
@@ -1106,6 +1110,14 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
       if (response.summary) {
         setHasZeroPayment(response.summary.total <= 0)
       }
+      if (typeof window !== 'undefined') {
+        ;(window as any).__wb_lastDiscountMeta = {
+          code,
+          amount: response.summary?.discountAmount ?? 0,
+          total: response.summary?.total ?? null,
+          recurringAmount: response.summary?.recurringAmount ?? null
+        }
+      }
     } else {
       setActiveDiscountCode(null)
       setDiscountValidation({
@@ -1130,6 +1142,7 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
     setDiscountValidation(null)
     if (typeof window !== 'undefined') {
       ;(window as any).__wb_lastDiscountValidation = null
+      ;(window as any).__wb_lastDiscountMeta = null
     }
     refreshPaymentIntent({ discountCode: null })
   }, [refreshPaymentIntent, activeDiscountCode])

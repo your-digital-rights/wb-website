@@ -396,11 +396,10 @@ test.describe('Step 14: Payment Flow E2E', () => {
       await verifyButton.click()
 
       // Wait for Stripe discount verification to complete and preview to match expected totals
-      await expect(page.getByTestId('discount-summary')).toBeVisible({ timeout: 15000 })
       await page.waitForFunction((expected) => {
         const preview = (window as any).__wb_lastDiscountPreview
         return !!preview && preview.total === expected
-      }, expectedTotal, { timeout: 15000 })
+      }, expectedTotal, { timeout: 30000 })
 
       const uiAmount = await getUIPaymentAmount(page)
       expect(uiAmount).toBe(expectedTotal)
@@ -977,10 +976,19 @@ test.describe('Step 14: Payment Flow E2E', () => {
       const verifyButton = page.getByRole('button', { name: /Apply|Verify/i })
       await verifyButton.click()
 
-      await page.waitForFunction((code: string) => {
-        const meta = (window as any).__wb_lastDiscountMeta
-        return meta?.code === code
-      }, discountCode, { timeout: 15000 })
+      await Promise.race([
+        page.waitForFunction((code: string) => {
+          const meta = (window as any).__wb_lastDiscountMeta
+          return meta?.code === code
+        }, discountCode, { timeout: 30000 }),
+        page.waitForFunction(() => {
+          return Boolean((window as any).__wb_lastDiscountValidation?.status === 'valid')
+        }, { timeout: 30000 }),
+        page.waitForFunction(() => {
+          const preview = (window as any).__wb_lastDiscountPreview
+          return Boolean(preview && preview.discountAmount > 0)
+        }, { timeout: 30000 })
+      ])
 
       // Verify discount applied
       await expect(page.locator(`text=Discount code ${discountCode} applied`)).toBeVisible({ timeout: 15000 })

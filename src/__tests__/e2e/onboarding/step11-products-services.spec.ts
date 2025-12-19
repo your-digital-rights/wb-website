@@ -444,8 +444,17 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       expect(criticalViolations).toHaveLength(0)
 
       // Verify keyboard navigation (Tab through controls)
+      const focusTarget = page.getByRole('button', { name: /Add Product/i }).first()
+      await expect(focusTarget).toBeVisible()
+      await focusTarget.focus()
+      await expect(focusTarget).toBeFocused()
       await page.keyboard.press('Tab')
-      await expect(page.locator(':focus')).toBeVisible()
+      const hasFocusableActive = await page.evaluate(() => {
+        const active = document.activeElement
+        if (!active) return false
+        return active.matches('button, [href], input, select, textarea, [tabindex]:not([tabindex=\"-1\"])')
+      })
+      expect(hasFocusableActive).toBe(true)
 
       // Verify ARIA labels present
       const dragHandle = page.locator('[aria-label*="drag"]').first()

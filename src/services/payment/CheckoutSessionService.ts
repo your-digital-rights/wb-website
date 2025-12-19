@@ -786,17 +786,49 @@ export class CheckoutSessionService {
   }
 
   private buildPricingSummary(invoice: Stripe.Invoice): PricingSummary {
+    const basePackagePriceId = process.env.STRIPE_BASE_PACKAGE_PRICE_ID
+
     const lineItems = (invoice.lines?.data || []).map((line) => {
+      const lineRecord = line as Stripe.InvoiceLineItem & {
+        price?: Stripe.Price | string | null
+        type?: string
+      }
       const discountAmount = (line.discount_amounts || []).reduce((sum, discount) => sum + discount.amount, 0)
       const amount = line.amount ?? 0
+      const quantity = line.quantity ?? 1
+      const lineAmountTotal = (line as { amount_total?: number }).amount_total
+      const finalAmount = typeof lineAmountTotal === 'number'
+        ? lineAmountTotal
+        : Math.max(amount - discountAmount, 0)
+      const unitAmount = typeof lineRecord.price === 'object' ? lineRecord.price?.unit_amount ?? null : null
+      const priceId = typeof lineRecord.price === 'string' ? lineRecord.price : lineRecord.price?.id
+      const isBasePackageLine = Boolean(
+        (basePackagePriceId && priceId === basePackagePriceId)
+        || line.description?.includes('WhiteBoar Base Package')
+        || line.description?.includes('Base Package')
+      )
+      const isRecurring = Boolean(line.subscription)
+        || Boolean(lineRecord.price && typeof lineRecord.price === 'object' && lineRecord.price.recurring)
+        || lineRecord.type === 'subscription'
+        || isBasePackageLine
+      let originalAmount = typeof lineAmountTotal === 'number' ? finalAmount + discountAmount : amount
+      if (typeof unitAmount === 'number' && unitAmount > 0) {
+        const priceBaseline = unitAmount * quantity
+        if (priceBaseline > originalAmount) {
+          originalAmount = priceBaseline
+        }
+      }
+      const derivedLineDiscount = Math.max(originalAmount - finalAmount, 0)
+      const lineDiscountAmount = discountAmount > 0 ? discountAmount : derivedLineDiscount
+
       return {
         id: line.id,
         description: line.description || 'Line item',
-        amount,
-        originalAmount: amount + discountAmount,
-        quantity: line.quantity ?? 1,
-        discountAmount,
-        isRecurring: Boolean(line.subscription)
+        amount: finalAmount,
+        originalAmount,
+        quantity,
+        discountAmount: lineDiscountAmount,
+        isRecurring
       }
     })
 
@@ -808,11 +840,19 @@ export class CheckoutSessionService {
       .reduce((sum, item) => sum + item.discountAmount, 0)
 
     const taxAmount = ((invoice as any).total_tax_amounts || []).reduce((sum: number, tax: { amount: number }) => sum + tax.amount, 0)
+    const lineDiscountTotal = lineItems.reduce((sum, item) => sum + item.discountAmount, 0)
+    const invoiceDiscountTotal = ((invoice as any).total_discount_amounts || []).reduce((sum: number, discount: { amount: number }) => sum + discount.amount, 0)
+    const subtotal = invoice.subtotal ?? 0
+    const total = invoice.total ?? 0
+    const derivedDiscount = Math.max(subtotal + taxAmount - total, 0)
+    const discountAmount = invoiceDiscountTotal > 0
+      ? invoiceDiscountTotal
+      : (lineDiscountTotal > 0 ? lineDiscountTotal : derivedDiscount)
 
     return {
-      subtotal: invoice.subtotal ?? 0,
-      total: invoice.total ?? 0,
-      discountAmount: ((invoice as any).total_discount_amounts || []).reduce((sum: number, discount: { amount: number }) => sum + discount.amount, 0),
+      subtotal,
+      total,
+      discountAmount,
       recurringAmount,
       recurringDiscount,
       taxAmount,
