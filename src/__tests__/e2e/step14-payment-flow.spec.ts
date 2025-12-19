@@ -399,7 +399,7 @@ test.describe('Step 14: Payment Flow E2E', () => {
       await page.waitForFunction((expected) => {
         const preview = (window as any).__wb_lastDiscountPreview
         return !!preview && preview.total === expected
-      }, expectedTotal, { timeout: 30000 })
+      }, expectedTotal, { timeout: 15000 })
 
       const uiAmount = await getUIPaymentAmount(page)
       expect(uiAmount).toBe(expectedTotal)
@@ -980,14 +980,14 @@ test.describe('Step 14: Payment Flow E2E', () => {
         page.waitForFunction((code: string) => {
           const meta = (window as any).__wb_lastDiscountMeta
           return meta?.code === code
-        }, discountCode, { timeout: 30000 }),
+        }, discountCode, { timeout: 15000 }),
         page.waitForFunction(() => {
           return Boolean((window as any).__wb_lastDiscountValidation?.status === 'valid')
-        }, { timeout: 30000 }),
+        }, { timeout: 15000 }),
         page.waitForFunction(() => {
           const preview = (window as any).__wb_lastDiscountPreview
           return Boolean(preview && preview.discountAmount > 0)
-        }, { timeout: 30000 })
+        }, { timeout: 15000 })
       ])
 
       // Verify discount applied

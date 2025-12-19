@@ -445,18 +445,39 @@ export class CheckoutSessionService {
         ...(validatedCoupon ? { discount_code: validatedCoupon.id } : {})
       }
 
-      try {
-        await stripe.subscriptions.update(subscription.id, {
-          metadata: subscriptionMetadata,
-          payment_settings: {
-            save_default_payment_method: 'on_subscription'
-          },
-          automatic_tax: {
-            enabled: true
+      let metadataUpdateError: unknown = null
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          await stripe.subscriptions.update(subscription.id, {
+            metadata: subscriptionMetadata,
+            payment_settings: {
+              save_default_payment_method: 'on_subscription'
+            },
+            automatic_tax: {
+              enabled: true
+            }
+          })
+          metadataUpdateError = null
+          break
+        } catch (error) {
+          metadataUpdateError = error
+          if (attempt < 1) {
+            await new Promise(resolve => setTimeout(resolve, 300))
           }
-        })
-      } catch (metadataError) {
-        console.error('Failed to update subscription metadata:', metadataError)
+        }
+      }
+
+      if (metadataUpdateError) {
+        console.error('Failed to update subscription metadata:', metadataUpdateError)
+        return {
+          success: false,
+          paymentRequired: true,
+          clientSecret: null,
+          error: {
+            code: 'SUBSCRIPTION_METADATA_UPDATE_FAILED',
+            message: 'Failed to update subscription metadata. Please try again.'
+          }
+        }
       }
 
       // 9. Add language add-ons as invoice items (use database value)
@@ -481,33 +502,55 @@ export class CheckoutSessionService {
       })
 
       // 10. Update submission with Stripe IDs (including payment intent ID for mock webhooks)
-      const { error: updateError } = await supabaseClient
-        .from('onboarding_submissions')
-        .update({
-          stripe_customer_id: customer.id,
-          stripe_subscription_id: subscription.id,
-          stripe_subscription_schedule_id: schedule.id,
-          stripe_payment_id: addOnResult.paymentIntentId || null,
-          stripe_invoice_id: addOnResult.invoiceId || null,
-          payment_summary: addOnResult.pricingSummary || null,
-          payment_tax_amount: addOnResult.taxAmount ?? null,
-          payment_tax_currency: addOnResult.taxCurrency ?? null,
-          form_data: submission.form_data,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', submissionId)
+      let updateError: any = null
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const { error } = await supabaseClient
+          .from('onboarding_submissions')
+          .update({
+            stripe_customer_id: customer.id,
+            stripe_subscription_id: subscription.id,
+            stripe_subscription_schedule_id: schedule.id,
+            stripe_payment_id: addOnResult.paymentIntentId || null,
+            stripe_invoice_id: addOnResult.invoiceId || null,
+            payment_summary: addOnResult.pricingSummary || null,
+            payment_tax_amount: addOnResult.taxAmount ?? null,
+            payment_tax_currency: addOnResult.taxCurrency ?? null,
+            form_data: submission.form_data,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', submissionId)
+
+        if (!error) {
+          updateError = null
+          break
+        }
+
+        updateError = error
+        if (attempt < 1) {
+          await new Promise(resolve => setTimeout(resolve, 300))
+        }
+      }
 
       if (updateError) {
         console.error('[CheckoutSessionService] Failed to update submission with Stripe IDs:', updateError)
-      } else {
-        console.log('[CheckoutSessionService] Updated submission with Stripe IDs', {
-          submissionId,
-          customerId: customer.id,
-          subscriptionId: subscription.id,
-          scheduleId: schedule.id,
-          paymentIntentId: addOnResult.paymentIntentId || null
-        })
+        return {
+          success: false,
+          paymentRequired: true,
+          clientSecret: null,
+          error: {
+            code: 'SUBMISSION_UPDATE_FAILED',
+            message: 'Failed to persist checkout session. Please try again.'
+          }
+        }
       }
+
+      console.log('[CheckoutSessionService] Updated submission with Stripe IDs', {
+        submissionId,
+        customerId: customer.id,
+        subscriptionId: subscription.id,
+        scheduleId: schedule.id,
+        paymentIntentId: addOnResult.paymentIntentId || null
+      })
 
       console.log('[CheckoutSessionService] returning session creation result', {
         submissionId,
@@ -620,52 +663,32 @@ export class CheckoutSessionService {
 
     await Promise.all(languageAddOnPromises)
 
-    if (couponId) {
-      try {
-        await stripe.invoices.update(invoiceId, {
-          discounts: [{ coupon: couponId }]
-        })
-      } catch (discountAttachError) {
-        console.error('Failed to attach coupon discount to invoice:', discountAttachError)
-      }
-    }
-
     try {
-      const invoicePreview = await stripe.invoices.retrieve(invoiceId, { expand: ['total_discount_amounts'] })
-      console.log('[CheckoutSessionService] invoice before finalize', {
-        invoiceId,
-        total: invoicePreview.total,
-        discountAmounts: invoicePreview.total_discount_amounts,
-        couponId
-      })
-    } catch (previewError) {
-      console.error('Failed to retrieve invoice before finalize:', previewError)
-    }
-
-    // Attach metadata to invoice so webhook events can resolve the submission reliably
-    try {
-      await stripe.invoices.update(invoiceId, {
+      const invoiceUpdate: Stripe.InvoiceUpdateParams = {
         metadata: {
           submission_id: submissionId,
           session_id: sessionId,
           is_initial_payment: 'true'
         }
-      })
-    } catch (invoiceMetadataError) {
-      console.error('Failed to attach metadata to invoice:', invoiceMetadataError)
+      }
+
+      if (couponId) {
+        invoiceUpdate.discounts = [{ coupon: couponId }]
+      }
+
+      await stripe.invoices.update(invoiceId, invoiceUpdate)
+    } catch (invoiceUpdateError) {
+      console.error('Failed to update invoice metadata or discounts:', invoiceUpdateError)
     }
 
     // Finalize the invoice to create the Payment Intent with discounts automatically applied
     // NOTE: In Stripe API v2025-09-30.clover+, payment_intent is no longer directly on invoice
     // Instead, it's nested in payments array: invoice.payments.data[0].payment.payment_intent
     const finalizedInvoice = await stripe.invoices.finalizeInvoice(invoiceId, {
-      expand: ['confirmation_secret', 'payments', 'total_discount_amounts']
+      expand: ['confirmation_secret', 'payments', 'total_discount_amounts', 'lines.data.price', 'lines.data.discounts']
     })
 
-    const expandedInvoice = await stripe.invoices.retrieve(finalizedInvoice.id, {
-      expand: ['lines.data.price.product', 'lines.data.discounts', 'total_discount_amounts', 'payments']
-    })
-    const pricingSummary = this.buildPricingSummary(expandedInvoice)
+    const pricingSummary = this.buildPricingSummary(finalizedInvoice)
     const taxAmount = pricingSummary.taxAmount
 
     console.log('[CheckoutSessionService] finalized invoice', {
@@ -731,7 +754,7 @@ export class CheckoutSessionService {
         paymentIntentId: setupIntent.id,
         pricingSummary,
         taxAmount,
-        taxCurrency: expandedInvoice.currency
+        taxCurrency: finalizedInvoice.currency
       }
     }
 
@@ -781,7 +804,7 @@ export class CheckoutSessionService {
       paymentIntentId: paymentIntentId || null,
       pricingSummary,
       taxAmount,
-      taxCurrency: expandedInvoice.currency
+      taxCurrency: finalizedInvoice.currency
     }
   }
 

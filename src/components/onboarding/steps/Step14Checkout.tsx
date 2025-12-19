@@ -62,6 +62,19 @@ interface PricingSummary {
   lineItems: CheckoutFormLineItem[]
 }
 
+interface RefreshPaymentIntentResult {
+  success: boolean
+  summary?: PricingSummary
+  appliedDiscountCode?: string | null
+  errorCode?: string
+  errorMessage?: string
+}
+
+interface DiscountVerificationResult {
+  success: boolean
+  errorMessage?: string
+}
+
 interface DiscountValidation {
   status: 'valid' | 'invalid'
   code?: string
@@ -94,7 +107,7 @@ interface CheckoutFormProps extends CheckoutWrapperProps {
   onDiscountCleared: () => void
   onLanguagesChange: (languages: string[]) => void
   onZeroPaymentComplete: () => void
-  onVerifyDiscount: (code: string) => Promise<void>
+  onVerifyDiscount: (code: string) => Promise<DiscountVerificationResult>
 }
 
 function CheckoutForm({
@@ -243,6 +256,8 @@ function CheckoutForm({
       return
     }
 
+    let controller: AbortController | null = null
+
     try {
       setIsProcessing(true)
       setPaymentError(null)
@@ -352,22 +367,13 @@ function CheckoutForm({
       return
     }
 
-    try {
-      setDiscountValidation(null)
-      await onVerifyDiscount(code)
-    } catch (error) {
-      if (error instanceof Error && error.name === 'AbortError') {
-        setDiscountValidation({
-          status: 'invalid',
-          error: t('discount.timeout')
-        })
-      } else {
-        setDiscountValidation({
-          status: 'invalid',
-          error: t('discount.verificationError')
-        })
-      }
-      onDiscountCleared()
+    setDiscountValidation(null)
+    const result = await onVerifyDiscount(code)
+    if (!result.success) {
+      setDiscountValidation({
+        status: 'invalid',
+        error: result.errorMessage || t('discount.verificationError')
+      })
     }
   }
 
@@ -913,8 +919,9 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
   const requestAbortControllerRef = useRef<AbortController | null>(null)
   const hasInitializedPaymentRef = useRef(false)
 
-  const refreshPaymentIntent = useCallback(async (options?: { languages?: string[]; discountCode?: string | null }) => {
+  const refreshPaymentIntent = useCallback(async (options?: { languages?: string[]; discountCode?: string | null; verifyDiscount?: boolean }): Promise<RefreshPaymentIntentResult | null> => {
     const languages = options?.languages ?? languagesRef.current
+    const shouldVerifyDiscount = options?.verifyDiscount === true
     const fallbackFormDiscount = (() => {
       const raw = form.getValues('discountCode')
       if (typeof raw === 'string') {
@@ -945,31 +952,38 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
       ;(window as any).__wb_refreshPayloads = payloads
     }
 
-    // Reuse existing client secret when request matches previous inputs (prevents duplicate initialization)
-    if (requestKey === lastRequestKeyRef.current && lastPaymentRequiredRef.current !== null) {
-      setPaymentRequired(lastPaymentRequiredRef.current)
-      setClientSecret(lastPaymentRequiredRef.current ? lastClientSecretRef.current : null)
-      setIsLoadingSecret(false)
-      setError(null)
-      return {
-        success: true,
-        summary: pricingSummary ?? undefined,
-        appliedDiscountCode: discountCode ?? null
-      }
-    }
-
-    setIsLoadingSecret(true)
-    setError(null)
-    const requestId = ++requestSequenceRef.current
-    activeRequestIdRef.current = requestId
-
-    if (requestAbortControllerRef.current) {
-      requestAbortControllerRef.current.abort()
-    }
-    const controller = new AbortController()
-    requestAbortControllerRef.current = controller
+    let controller: AbortController | null = null
+    let requestId: number | null = null
 
     try {
+      if (shouldVerifyDiscount) {
+        setIsVerifyingDiscount(true)
+      }
+
+      // Reuse existing client secret when request matches previous inputs (prevents duplicate initialization)
+      if (requestKey === lastRequestKeyRef.current && lastPaymentRequiredRef.current !== null) {
+        setPaymentRequired(lastPaymentRequiredRef.current)
+        setClientSecret(lastPaymentRequiredRef.current ? lastClientSecretRef.current : null)
+        setIsLoadingSecret(false)
+        setError(null)
+        return {
+          success: true,
+          summary: pricingSummary ?? undefined,
+          appliedDiscountCode: discountCode ?? null
+        }
+      }
+
+      setIsLoadingSecret(true)
+      setError(null)
+      requestId = ++requestSequenceRef.current
+      activeRequestIdRef.current = requestId
+
+      if (requestAbortControllerRef.current) {
+        requestAbortControllerRef.current.abort()
+      }
+      controller = new AbortController()
+      requestAbortControllerRef.current = controller
+
       const csrfTargetId = sessionId
       if (!csrfTargetId) {
         throw new Error('Missing session ID for CSRF token request')
@@ -1008,8 +1022,8 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
 
       const data = await response.json()
 
-      if (activeRequestIdRef.current !== requestId) {
-        return
+      if (requestId !== null && activeRequestIdRef.current !== requestId) {
+        return null
       }
 
       if (!response.ok || !data.success) {
@@ -1021,7 +1035,13 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
             errorMessage: data?.error?.message
           }
         }
-        throw new Error(data.error?.message || 'Failed to create checkout session')
+        const errorMessage = data?.error?.message || 'Failed to create checkout session'
+        setError(errorMessage)
+        return {
+          success: false,
+          errorCode,
+          errorMessage
+        }
       }
 
       const sessionPayload = {
@@ -1081,25 +1101,33 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
         appliedDiscountCode: discountCode ?? null
       }
     } catch (err) {
-      if (!(err instanceof DOMException && err.name === 'AbortError')) {
+      const isAbortError = err instanceof DOMException && err.name === 'AbortError'
+      if (!isAbortError) {
         console.error('Failed to fetch client secret:', err)
         setError(err instanceof Error ? err.message : 'Failed to initialize payment')
       }
+      return {
+        success: false,
+        errorCode: isAbortError ? 'ABORTED' : 'REQUEST_FAILED',
+        errorMessage: err instanceof Error ? err.message : 'Failed to initialize payment'
+      }
     } finally {
-      if (requestAbortControllerRef.current === controller) {
+      if (shouldVerifyDiscount) {
+        setIsVerifyingDiscount(false)
+      }
+      if (controller && requestAbortControllerRef.current === controller) {
         requestAbortControllerRef.current = null
       }
-      if (activeRequestIdRef.current === requestId) {
+      if (requestId !== null && activeRequestIdRef.current === requestId) {
         setIsLoadingSecret(false)
       }
     }
   }, [submissionId, sessionId, locale, form, pricingSummary])
 
-  const handleVerifyDiscount = useCallback(async (code: string) => {
-    setIsVerifyingDiscount(true)
+  const handleVerifyDiscount = useCallback(async (code: string): Promise<DiscountVerificationResult> => {
     setDiscountValidation(null)
 
-    const response = await refreshPaymentIntent({ discountCode: code })
+    const response = await refreshPaymentIntent({ discountCode: code, verifyDiscount: true })
     if (response?.success) {
       setActiveDiscountCode(code)
       setDiscountValidation({
@@ -1118,18 +1146,25 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
           recurringAmount: response.summary?.recurringAmount ?? null
         }
       }
-    } else {
-      setActiveDiscountCode(null)
-      setDiscountValidation({
-        status: 'invalid',
-        error: response?.errorMessage || t('discount.invalidCode')
-      })
-      if (typeof window !== 'undefined') {
-        ;(window as any).__wb_lastDiscountMeta = null
-      }
+      return { success: true }
     }
 
-    setIsVerifyingDiscount(false)
+    const errorMessage = response?.errorCode === 'INVALID_DISCOUNT_CODE'
+      ? (response?.errorMessage || t('discount.invalidCode'))
+      : response?.errorCode === 'ABORTED'
+        ? t('discount.timeout')
+        : (response?.errorMessage || t('discount.verificationError'))
+
+    setActiveDiscountCode(null)
+    setDiscountValidation({
+      status: 'invalid',
+      error: errorMessage
+    })
+    if (typeof window !== 'undefined') {
+      ;(window as any).__wb_lastDiscountMeta = null
+    }
+
+    return { success: false, errorMessage }
   }, [refreshPaymentIntent, t])
 
   const handleDiscountCleared = useCallback(() => {
@@ -1217,7 +1252,11 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
       if (typeof existingDiscount === 'string' && existingDiscount.trim().length > 0) {
         const trimmed = existingDiscount.trim()
         setActiveDiscountCode(trimmed)
-        const response = await refreshPaymentIntent({ languages: normalizedLanguages, discountCode: trimmed })
+        const response = await refreshPaymentIntent({
+          languages: normalizedLanguages,
+          discountCode: trimmed,
+          verifyDiscount: true
+        })
         if (response?.success && response.summary) {
           setDiscountValidation({
             status: 'valid',

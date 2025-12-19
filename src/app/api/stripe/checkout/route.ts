@@ -3,6 +3,10 @@ import { createServiceClient } from '@/lib/supabase'
 import { requireCSRFToken } from '@/lib/csrf'
 import { CheckoutSessionService } from '@/services/payment/CheckoutSessionService'
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
+const isValidUuid = (value: string) => UUID_REGEX.test(value)
+
 /**
  * POST /api/stripe/checkout
  * Creates a Stripe subscription schedule, invoice, and intent for Step 14 checkout.
@@ -50,6 +54,32 @@ export async function POST(request: NextRequest) {
           error: {
             code: 'INVALID_SUBMISSION_ID',
             message: 'Submission ID is required'
+          }
+        },
+        { status: 400 }
+      )
+    }
+
+    if (typeof submission_id !== 'string' || !isValidUuid(submission_id)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'INVALID_SUBMISSION_ID',
+            message: 'Submission ID must be a valid UUID'
+          }
+        },
+        { status: 400 }
+      )
+    }
+
+    if (session_id && (typeof session_id !== 'string' || !isValidUuid(session_id))) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'INVALID_SESSION_ID',
+            message: 'Session ID must be a valid UUID'
           }
         },
         { status: 400 }
