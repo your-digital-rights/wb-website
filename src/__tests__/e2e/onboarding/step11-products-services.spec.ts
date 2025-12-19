@@ -386,8 +386,9 @@ test.describe('Step 11: Enhanced Products & Services Entry', () => {
       await expect(page.getByRole('alertdialog')).toContainText('Delete Product')
       await expect(page.getByRole('alertdialog')).toContainText('Are you sure you want to delete this product?')
 
-      // Click the Delete button in the confirmation dialog
-      await page.getByRole('alertdialog').getByRole('button', { name: 'Delete' }).click()
+      // Click the Confirm button in the confirmation dialog
+      // Note: The button uses t('products.confirm') which translates to "Confirm"
+      await page.getByRole('alertdialog').getByRole('button', { name: 'Confirm' }).click()
 
       // Wait for product to be removed from list
       await expect(page.getByText('Content Writing')).not.toBeVisible()
