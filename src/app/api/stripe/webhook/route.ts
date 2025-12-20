@@ -43,7 +43,8 @@ export async function POST(request: NextRequest) {
     // Production webhook secrets start with 'whsec_' (without 'test')
     const isTestEnvironment = WEBHOOK_SECRET?.startsWith('whsec_test_') ||
                                process.env.VERCEL_ENV === 'preview' ||
-                               process.env.VERCEL_ENV === 'development'
+                               process.env.VERCEL_ENV === 'development' ||
+                               process.env.CI === 'true'
 
     let event: Stripe.Event
 
