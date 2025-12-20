@@ -138,6 +138,7 @@ function CheckoutForm({
 
   const [isProcessing, setIsProcessing] = useState(false)
   const [paymentError, setPaymentError] = useState<string | null>(null)
+  const [isPaymentElementReady, setIsPaymentElementReady] = useState(!paymentRequired)
   const lastInstrumentedClientSecretRef = useRef<string | null>(null)
 
   // Discount validation state
@@ -147,10 +148,17 @@ function CheckoutForm({
   const discountCode = watch('discountCode') || ''
 
   const languagesRef = useRef('')
+  const hasMountedRef = useRef(false)
   useEffect(() => {
     const sorted = Array.isArray(selectedLanguages)
       ? [...selectedLanguages].sort().join(',')
       : ''
+
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true
+      languagesRef.current = sorted
+      return
+    }
 
     if (languagesRef.current === sorted) {
       return
@@ -186,6 +194,7 @@ function CheckoutForm({
 
     // If no payment is required, expose a ready state immediately for tests
     if (!paymentRequired) {
+      setIsPaymentElementReady(true)
       const version = bumpVersion()
       lastInstrumentedClientSecretRef.current = null
       ;(window as any).__wb_paymentElement = {
@@ -207,6 +216,7 @@ function CheckoutForm({
       return
     }
 
+    setIsPaymentElementReady(false)
     const version = bumpVersion()
     lastInstrumentedClientSecretRef.current = clientSecret
 
@@ -222,6 +232,7 @@ function CheckoutForm({
     if (typeof window === 'undefined' || !clientSecret) {
       return
     }
+    setIsPaymentElementReady(true)
     const currentState = (window as any).__wb_paymentElement
     if (!currentState || currentState.clientSecret !== clientSecret) {
       return
@@ -272,6 +283,40 @@ function CheckoutForm({
       // SetupIntent client_secret starts with 'seti_', PaymentIntent starts with 'pi_'
       const isSetupIntent = clientSecret?.startsWith('seti_') || false
 
+      const pollPaymentIntentStatus = async () => {
+        if (!clientSecret) {
+          return null
+        }
+        for (let attempt = 0; attempt < 5; attempt++) {
+          const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret)
+          if (!paymentIntent) {
+            return null
+          }
+          if (!['processing', 'requires_confirmation'].includes(paymentIntent.status)) {
+            return paymentIntent
+          }
+          await new Promise(resolve => setTimeout(resolve, 1000))
+        }
+        return null
+      }
+
+      const pollSetupIntentStatus = async () => {
+        if (!clientSecret) {
+          return null
+        }
+        for (let attempt = 0; attempt < 5; attempt++) {
+          const { setupIntent } = await stripe.retrieveSetupIntent(clientSecret)
+          if (!setupIntent) {
+            return null
+          }
+          if (!['processing', 'requires_confirmation'].includes(setupIntent.status)) {
+            return setupIntent
+          }
+          await new Promise(resolve => setTimeout(resolve, 1000))
+        }
+        return null
+      }
+
       if (isSetupIntent) {
         // For $0 invoices - collect payment method without charging
         const { error, setupIntent } = await stripe.confirmSetup({
@@ -286,25 +331,30 @@ function CheckoutForm({
           throw new Error(error.message)
         }
 
+        let resolvedSetupIntent = setupIntent ?? null
+        if (!resolvedSetupIntent || ['processing', 'requires_confirmation'].includes(resolvedSetupIntent.status)) {
+          resolvedSetupIntent = await pollSetupIntentStatus()
+        }
+
         // Verify setup succeeded
-        if (setupIntent?.status === 'succeeded') {
+        if (resolvedSetupIntent?.status === 'succeeded') {
           console.log('[Step14] Payment method collected for future billing (SetupIntent)', {
-            setupIntentId: setupIntent.id
+            setupIntentId: resolvedSetupIntent.id
           })
           // Track purchase event (value is 0 for setup intents)
-          trackPurchase(setupIntent.id, 0, 'EUR')
+          trackPurchase(resolvedSetupIntent.id, 0, 'EUR')
           window.location.href = `/${locale}/onboarding/thank-you`
           return
         }
 
-        if (setupIntent?.status === 'requires_action') {
+        if (resolvedSetupIntent?.status === 'requires_action') {
           // Stripe will handle next_action when redirect === 'if_required'
           return
         }
 
-        if (setupIntent?.status === 'requires_payment_method') {
+        if (resolvedSetupIntent?.status === 'requires_payment_method') {
           const fallbackMessage = t('paymentFailed')
-          const lastError = setupIntent.last_setup_error?.message
+          const lastError = resolvedSetupIntent.last_setup_error?.message
           throw new Error(lastError || fallbackMessage)
         }
 
@@ -322,25 +372,39 @@ function CheckoutForm({
           throw new Error(error.message)
         }
 
+        let resolvedPaymentIntent = paymentIntent ?? null
+        if (!resolvedPaymentIntent || ['processing', 'requires_confirmation'].includes(resolvedPaymentIntent.status)) {
+          resolvedPaymentIntent = await pollPaymentIntentStatus()
+        }
+
         // Payment succeeded
-        if (paymentIntent?.status === 'succeeded') {
+        if (resolvedPaymentIntent?.status === 'succeeded') {
           console.log('[Step14] Payment processed successfully (PaymentIntent)', {
-            paymentIntentId: paymentIntent.id
+            paymentIntentId: resolvedPaymentIntent.id
           })
           // Track purchase event with actual payment amount
-          trackPurchase(paymentIntent.id, totalDueToday, 'EUR')
+          trackPurchase(resolvedPaymentIntent.id, totalDueToday, 'EUR')
           window.location.href = `/${locale}/onboarding/thank-you`
           return
         }
 
-        if (paymentIntent?.status === 'requires_payment_method') {
+        if (resolvedPaymentIntent?.status === 'requires_payment_method') {
           const fallbackMessage = t('paymentFailed')
-          const lastError = paymentIntent.last_payment_error?.message
+          const lastError = resolvedPaymentIntent.last_payment_error?.message
           throw new Error(lastError || fallbackMessage)
         }
 
-        if (paymentIntent?.status === 'requires_action') {
+        if (resolvedPaymentIntent?.status === 'requires_action') {
           // Stripe will handle next_action when redirect === 'if_required'
+          return
+        }
+
+        if (resolvedPaymentIntent?.status === 'processing' || resolvedPaymentIntent?.status === 'requires_confirmation') {
+          console.warn('[Step14] PaymentIntent still processing, redirecting to thank-you', {
+            paymentIntentId: resolvedPaymentIntent.id,
+            status: resolvedPaymentIntent.status
+          })
+          window.location.href = `/${locale}/onboarding/thank-you`
           return
         }
       }
@@ -746,7 +810,7 @@ function CheckoutForm({
             isProcessing ||
             isLoading ||
             !acceptTerms ||
-            (!effectiveNoPayment && (!stripe || !elements))
+            (!effectiveNoPayment && (!stripe || !elements || !isPaymentElementReady))
           }
           className="w-full sm:w-auto min-w-[200px]"
         >

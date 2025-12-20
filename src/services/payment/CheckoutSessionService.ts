@@ -388,14 +388,62 @@ export class CheckoutSessionService {
       const customerInfo = this.extractCustomerInfo(submission)
 
       // 6. Create or retrieve Stripe customer
-      const customer = await this.stripeService.findOrCreateCustomer(
-        customerInfo.email,
-        customerInfo.businessName,
-        {
-          submission_id: submissionId,
-          session_id: sessionId
+      const stripe = this.stripeService.getStripeInstance()
+      const customerMetadata = {
+        submission_id: submissionId,
+        session_id: sessionId
+      }
+
+      const isResourceMissing = (err: unknown) => {
+        if (err && typeof err === 'object' && 'code' in err) {
+          const stripeError = err as { code?: string }
+          return stripeError.code === 'resource_missing'
         }
-      )
+        return false
+      }
+
+      const isDeletedCustomer = (value: Stripe.Customer | Stripe.DeletedCustomer): value is Stripe.DeletedCustomer =>
+        (value as Stripe.DeletedCustomer).deleted === true
+
+      let customer: Stripe.Customer | null = null
+
+      if (submission.stripe_customer_id) {
+        try {
+          const existing = await stripe.customers.retrieve(submission.stripe_customer_id)
+          if (!isDeletedCustomer(existing)) {
+            customer = existing
+          }
+        } catch (error) {
+          if (!isResourceMissing(error)) {
+            throw error
+          }
+        }
+      }
+
+      if (!customer) {
+        customer = await this.stripeService.findOrCreateCustomer(
+          customerInfo.email,
+          customerInfo.businessName,
+          customerMetadata
+        )
+      } else {
+        const needsMetadataUpdate = customer.metadata?.submission_id !== submissionId
+          || customer.metadata?.session_id !== sessionId
+
+        if (needsMetadataUpdate) {
+          await stripe.customers.update(customer.id, {
+            metadata: {
+              ...customer.metadata,
+              ...customerMetadata,
+              signup_source: 'web_onboarding'
+            }
+          })
+        }
+      }
+
+      if (!customer) {
+        throw new Error('Failed to resolve Stripe customer')
+      }
 
       // 7. Validate discount code if provided
       let validatedCoupon: Stripe.Coupon | null = null
@@ -459,7 +507,6 @@ export class CheckoutSessionService {
         throw new Error('Subscription not created by schedule')
       }
 
-      const stripe = this.stripeService.getStripeInstance()
       const subscriptionMetadata = {
         ...(subscription.metadata || {}),
         submission_id: submissionId,

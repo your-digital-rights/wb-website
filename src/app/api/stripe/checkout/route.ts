@@ -72,18 +72,67 @@ export async function POST(request: NextRequest) {
 
     const {
       submissionId,
-      sessionId,
-      additionalLanguages = [],
-      discountCode
+      sessionId
     } = body
 
     const submission_id = submissionId ?? body.submission_id
     const session_id = sessionId ?? body.session_id
 
+    const rawAdditionalLanguages = body.additionalLanguages
+    if (rawAdditionalLanguages !== undefined && !Array.isArray(rawAdditionalLanguages)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'INVALID_LANGUAGE_CODE',
+            message: 'additionalLanguages must be an array of language codes'
+          }
+        },
+        { status: 400 }
+      )
+    }
+
+    const additionalLanguages = Array.isArray(rawAdditionalLanguages)
+      ? rawAdditionalLanguages
+          .filter((code: unknown): code is string => typeof code === 'string')
+          .map(code => code.trim())
+          .filter(code => code.length > 0)
+          .slice(0, 50)
+      : []
+
+    const rawDiscountCode = body.discountCode
+    if (rawDiscountCode !== undefined && rawDiscountCode !== null && typeof rawDiscountCode !== 'string') {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'INVALID_DISCOUNT_CODE',
+            message: 'Discount code must be a string'
+          }
+        },
+        { status: 400 }
+      )
+    }
+
+    const discountCode = typeof rawDiscountCode === 'string' ? rawDiscountCode.trim() : undefined
+    const normalizedDiscountCode = discountCode && discountCode.length > 0 ? discountCode : undefined
+    if (normalizedDiscountCode && normalizedDiscountCode.length > 255) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'INVALID_DISCOUNT_CODE',
+            message: 'Discount code is too long'
+          }
+        },
+        { status: 400 }
+      )
+    }
+
     console.log('[api/stripe/checkout] incoming request', {
       submission_id,
       session_id,
-      discountCode,
+      discountCode: normalizedDiscountCode || null,
       additionalLanguagesCount: Array.isArray(additionalLanguages) ? additionalLanguages.length : 0
     })
 
@@ -149,7 +198,7 @@ export async function POST(request: NextRequest) {
       {
         submissionId: submission_id,
         additionalLanguages,
-        discountCode
+        discountCode: normalizedDiscountCode
       },
       supabase
     )
@@ -157,7 +206,7 @@ export async function POST(request: NextRequest) {
     if (!result.success) {
       console.error('[api/stripe/checkout] failed', {
         submission_id,
-        discountCode,
+        discountCode: normalizedDiscountCode || null,
         error: result.error
       })
 
