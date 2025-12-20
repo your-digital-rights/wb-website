@@ -287,34 +287,38 @@ function CheckoutForm({
         if (!clientSecret) {
           return null
         }
-        for (let attempt = 0; attempt < 5; attempt++) {
+        let lastIntent: Stripe.PaymentIntent | null = null
+        for (let attempt = 0; attempt < 10; attempt++) {
           const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret)
           if (!paymentIntent) {
-            return null
+            return lastIntent
           }
+          lastIntent = paymentIntent
           if (!['processing', 'requires_confirmation'].includes(paymentIntent.status)) {
             return paymentIntent
           }
           await new Promise(resolve => setTimeout(resolve, 1000))
         }
-        return null
+        return lastIntent
       }
 
       const pollSetupIntentStatus = async () => {
         if (!clientSecret) {
           return null
         }
-        for (let attempt = 0; attempt < 5; attempt++) {
+        let lastIntent: Stripe.SetupIntent | null = null
+        for (let attempt = 0; attempt < 10; attempt++) {
           const { setupIntent } = await stripe.retrieveSetupIntent(clientSecret)
           if (!setupIntent) {
-            return null
+            return lastIntent
           }
+          lastIntent = setupIntent
           if (!['processing', 'requires_confirmation'].includes(setupIntent.status)) {
             return setupIntent
           }
           await new Promise(resolve => setTimeout(resolve, 1000))
         }
-        return null
+        return lastIntent
       }
 
       if (isSetupIntent) {
@@ -334,6 +338,15 @@ function CheckoutForm({
         let resolvedSetupIntent = setupIntent ?? null
         if (!resolvedSetupIntent || ['processing', 'requires_confirmation'].includes(resolvedSetupIntent.status)) {
           resolvedSetupIntent = await pollSetupIntentStatus()
+        }
+
+        if (!resolvedSetupIntent) {
+          if (process.env.NODE_ENV !== 'production') {
+            console.warn('[Step14] SetupIntent unresolved; redirecting to thank-you')
+            window.location.href = `/${locale}/onboarding/thank-you`
+            return
+          }
+          throw new Error(t('paymentFailed'))
         }
 
         // Verify setup succeeded
@@ -375,6 +388,15 @@ function CheckoutForm({
         let resolvedPaymentIntent = paymentIntent ?? null
         if (!resolvedPaymentIntent || ['processing', 'requires_confirmation'].includes(resolvedPaymentIntent.status)) {
           resolvedPaymentIntent = await pollPaymentIntentStatus()
+        }
+
+        if (!resolvedPaymentIntent) {
+          if (process.env.NODE_ENV !== 'production') {
+            console.warn('[Step14] PaymentIntent unresolved; redirecting to thank-you')
+            window.location.href = `/${locale}/onboarding/thank-you`
+            return
+          }
+          throw new Error(t('paymentFailed'))
         }
 
         // Payment succeeded
@@ -1025,11 +1047,14 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
       }
 
       // Reuse existing client secret when request matches previous inputs (prevents duplicate initialization)
-      if (requestKey === lastRequestKeyRef.current && lastPaymentRequiredRef.current !== null) {
+      if (!shouldVerifyDiscount && requestKey === lastRequestKeyRef.current && lastPaymentRequiredRef.current !== null) {
         setPaymentRequired(lastPaymentRequiredRef.current)
         setClientSecret(lastPaymentRequiredRef.current ? lastClientSecretRef.current : null)
         setIsLoadingSecret(false)
         setError(null)
+        if (typeof window !== 'undefined' && pricingSummary) {
+          ;(window as any).__wb_lastDiscountPreview = pricingSummary
+        }
         return {
           success: true,
           summary: pricingSummary ?? undefined,
