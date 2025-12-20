@@ -469,26 +469,42 @@ export class CheckoutSessionService {
         ...(validatedCoupon ? { discount_code: validatedCoupon.id } : {})
       }
 
-      let metadataUpdateError: unknown = null
-      for (let attempt = 0; attempt < 2; attempt++) {
-        try {
-          await stripe.subscriptions.update(subscription.id, {
-            metadata: subscriptionMetadata,
-            payment_settings: {
-              save_default_payment_method: 'on_subscription'
-            },
-            automatic_tax: {
-              enabled: true
+      const isTaxLocationError = (error: unknown) => {
+        if (error && typeof error === 'object' && 'code' in error) {
+          const stripeError = error as { code?: string }
+          return stripeError.code === 'customer_tax_location_invalid'
+        }
+        return false
+      }
+
+      const updateSubscription = async (includeTax: boolean) => {
+        for (let attempt = 0; attempt < 2; attempt++) {
+          try {
+            await stripe.subscriptions.update(subscription.id, {
+              metadata: subscriptionMetadata,
+              payment_settings: {
+                save_default_payment_method: 'on_subscription'
+              },
+              ...(includeTax ? { automatic_tax: { enabled: true } } : {})
+            })
+            return null
+          } catch (error) {
+            if (attempt < 1) {
+              await new Promise(resolve => setTimeout(resolve, 300))
+              continue
             }
-          })
-          metadataUpdateError = null
-          break
-        } catch (error) {
-          metadataUpdateError = error
-          if (attempt < 1) {
-            await new Promise(resolve => setTimeout(resolve, 300))
+            return error
           }
         }
+        return null
+      }
+
+      let metadataUpdateError = await updateSubscription(true)
+      if (metadataUpdateError && isTaxLocationError(metadataUpdateError)) {
+        console.warn('Automatic tax requires a valid customer address; retrying without automatic_tax.', {
+          subscriptionId: subscription.id
+        })
+        metadataUpdateError = await updateSubscription(false)
       }
 
       if (metadataUpdateError) {
