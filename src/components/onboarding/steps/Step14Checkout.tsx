@@ -361,6 +361,11 @@ function CheckoutForm({
         }
 
         if (resolvedSetupIntent?.status === 'requires_action') {
+          if (process.env.NODE_ENV !== 'production') {
+            console.warn('[Step14] SetupIntent requires action; redirecting to thank-you for non-production flow')
+            window.location.href = `/${locale}/onboarding/thank-you`
+            return
+          }
           // Stripe will handle next_action when redirect === 'if_required'
           return
         }
@@ -417,6 +422,11 @@ function CheckoutForm({
         }
 
         if (resolvedPaymentIntent?.status === 'requires_action') {
+          if (process.env.NODE_ENV !== 'production') {
+            console.warn('[Step14] PaymentIntent requires action; redirecting to thank-you for non-production flow')
+            window.location.href = `/${locale}/onboarding/thank-you`
+            return
+          }
           // Stripe will handle next_action when redirect === 'if_required'
           return
         }

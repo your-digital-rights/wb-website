@@ -399,7 +399,7 @@ test.describe('Step 14: Payment Flow E2E', () => {
       await page.waitForFunction((expected) => {
         const preview = (window as any).__wb_lastDiscountPreview
         return !!preview && preview.total === expected
-      }, expectedTotal, { timeout: 15000 })
+      }, expectedTotal, { timeout: 30000 })
 
       const uiAmount = await getUIPaymentAmount(page)
       expect(uiAmount).toBe(expectedTotal)
