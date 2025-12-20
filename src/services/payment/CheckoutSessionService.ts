@@ -12,7 +12,8 @@ import {
   CustomerInfo,
   CheckoutSessionResult,
   PricingSummary,
-  RateLimitResult
+  RateLimitResult,
+  OnboardingSubmissionRecord
 } from './types'
 import Stripe from 'stripe'
 
@@ -24,9 +25,9 @@ export class CheckoutSessionService {
   }
 
   private async cancelPendingStripeResources(
-    submission: any,
+    submission: OnboardingSubmissionRecord,
     supabaseClient: SupabaseClient
-  ): Promise<void> {
+  ): Promise<OnboardingSubmissionRecord> {
     const stripe = this.stripeService.getStripeInstance()
 
     console.log('Cancelling pending Stripe resources for submission', {
@@ -82,7 +83,7 @@ export class CheckoutSessionService {
       }
     }
 
-    const { error: cleanupError } = await supabaseClient
+    const { data: updatedSubmission, error: cleanupError } = await supabaseClient
       .from('onboarding_submissions')
       .update({
         stripe_subscription_id: null,
@@ -95,13 +96,24 @@ export class CheckoutSessionService {
         updated_at: new Date().toISOString()
       })
       .eq('id', submission.id)
+      .select('*')
+      .single()
 
-    if (cleanupError) {
+    if (cleanupError || !updatedSubmission) {
       console.error('Failed to reset submission state during cancel', cleanupError)
+      return {
+        ...submission,
+        stripe_subscription_id: null,
+        stripe_subscription_schedule_id: null,
+        stripe_payment_id: null,
+        payment_amount: null,
+        payment_completed_at: null,
+        payment_metadata: null,
+        status: submission.status === 'paid' ? 'submitted' : submission.status
+      }
     }
 
-    submission.stripe_subscription_id = null
-    submission.stripe_subscription_schedule_id = null
+    return updatedSubmission
   }
 
   /**
@@ -116,8 +128,8 @@ export class CheckoutSessionService {
     supabaseClient: SupabaseClient
   ): Promise<SubmissionValidationResult> {
     // Fetch submission from database
-    let submission: any | null = null
-    let fetchError: any = null
+    let submission: OnboardingSubmissionRecord | null = null
+    let fetchError: unknown = null
 
     for (let attempt = 0; attempt < 2 && !submission; attempt++) {
       const { data, error } = await supabaseClient
@@ -253,7 +265,7 @@ export class CheckoutSessionService {
    * @returns Customer email and business name
    * @throws Error if customer email not found
    */
-  extractCustomerInfo(submission: any): CustomerInfo {
+  extractCustomerInfo(submission: OnboardingSubmissionRecord): CustomerInfo {
     // Try multiple locations for email (form data structure changes over time)
     const customerEmail = submission.form_data?.email ||
                          submission.form_data?.businessEmail ||
@@ -302,7 +314,20 @@ export class CheckoutSessionService {
           error: validationResult.error
         }
       }
-      const submission = validationResult.submission
+      let submission = validationResult.submission
+
+      if (!submission.session_id) {
+        return {
+          success: false,
+          paymentRequired: true,
+          clientSecret: null,
+          error: {
+            code: 'MISSING_SESSION_ID',
+            message: 'Session ID not found for submission'
+          }
+        }
+      }
+      const sessionId = submission.session_id
 
       // 1b. Extract additionalLanguages from submission's form_data (source of truth)
       // The frontend may pass additionalLanguages, but we should trust the database
@@ -316,13 +341,12 @@ export class CheckoutSessionService {
       const languagesToUse = submissionLanguages.length > 0 ? submissionLanguages : fallbackLanguages
 
       // 1a. Handle existing subscription - retrieve existing client secret
-    if (validationResult.existingSubscription && submission.stripe_subscription_id) {
-      console.warn('Existing subscription detected – resetting Stripe resources')
-      await this.cancelPendingStripeResources(submission, supabaseClient)
-      submission.stripe_subscription_id = null
-      submission.stripe_subscription_schedule_id = null
-      validationResult.existingSubscription = false
-    }
+      if (validationResult.existingSubscription && submission.stripe_subscription_id) {
+        console.warn('Existing subscription detected – resetting Stripe resources')
+        submission = await this.cancelPendingStripeResources(submission, supabaseClient)
+        validationResult.submission = submission
+        validationResult.existingSubscription = false
+      }
 
       // 2. Validate language codes
       const invalidLanguages = this.validateLanguageCodes(languagesToUse)
@@ -339,7 +363,7 @@ export class CheckoutSessionService {
       }
 
       // 3. Check rate limiting
-      const rateLimitResult = await this.checkRateLimit(submission.session_id, supabaseClient)
+      const rateLimitResult = await this.checkRateLimit(sessionId, supabaseClient)
       if (!rateLimitResult.allowed) {
         return {
           success: false,
@@ -354,7 +378,7 @@ export class CheckoutSessionService {
 
       // 4. Log payment attempt
       await this.logPaymentAttempt(
-        submission.session_id,
+        sessionId,
         submissionId,
         languagesToUse.length,
         supabaseClient
@@ -369,7 +393,7 @@ export class CheckoutSessionService {
         customerInfo.businessName,
         {
           submission_id: submissionId,
-          session_id: submission.session_id
+          session_id: sessionId
         }
       )
 
@@ -424,7 +448,7 @@ export class CheckoutSessionService {
         couponId: validatedCoupon?.id,
         metadata: {
           submission_id: submissionId,
-          session_id: submission.session_id,
+          session_id: sessionId,
           commitment_months: '12'
         }
       })
@@ -439,7 +463,7 @@ export class CheckoutSessionService {
       const subscriptionMetadata = {
         ...(subscription.metadata || {}),
         submission_id: submissionId,
-        session_id: submission.session_id,
+        session_id: sessionId,
         additional_languages: languagesToUse.join(','),
         commitment_months: '12',
         ...(validatedCoupon ? { discount_code: validatedCoupon.id } : {})
@@ -486,7 +510,7 @@ export class CheckoutSessionService {
         subscription,
         languagesToUse,
         submissionId,
-        submission.session_id,
+        sessionId,
         validatedCoupon?.id ?? null,
         supabaseClient
       )

@@ -10,6 +10,46 @@ const isValidUuid = (value: string) => UUID_REGEX.test(value)
 /**
  * POST /api/stripe/checkout
  * Creates a Stripe subscription schedule, invoice, and intent for Step 14 checkout.
+ *
+ * Request body (JSON):
+ * {
+ *   submissionId: string; // required UUID
+ *   sessionId?: string; // optional UUID
+ *   additionalLanguages?: string[];
+ *   discountCode?: string;
+ *   // Deprecated snake_case equivalents (still accepted):
+ *   submission_id?: string;
+ *   session_id?: string;
+ * }
+ *
+ * Success response (200):
+ * {
+ *   success: true,
+ *   data: {
+ *     paymentRequired: boolean,
+ *     clientSecret: string | null,
+ *     submissionId: string,
+ *     stripeIds: {
+ *       customerId?: string,
+ *       subscriptionId?: string,
+ *       subscriptionScheduleId?: string,
+ *       paymentId?: string | null,
+ *       invoiceId?: string | null
+ *     },
+ *     summary?: PricingSummary,
+ *     tax?: { amount: number; currency: string } | null
+ *   }
+ * }
+ *
+ * Error responses:
+ * 400 INVALID_JSON | INVALID_SUBMISSION_ID | INVALID_SESSION_ID | MISSING_CUSTOMER_EMAIL
+ *     | MISSING_SESSION_ID | INVALID_LANGUAGE_CODE | INVALID_DISCOUNT_CODE
+ * 403 CSRF_VALIDATION_FAILED
+ * 409 PAYMENT_ALREADY_COMPLETED
+ * 429 RATE_LIMIT_EXCEEDED
+ * 500 INTERNAL_ERROR or unexpected server errors
+ *
+ * Note: Use camelCase request params; snake_case params are deprecated.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -121,12 +161,13 @@ export async function POST(request: NextRequest) {
         error: result.error
       })
 
-      const statusCode = result.error?.code === 'RATE_LIMIT_EXCEEDED' ? 429 :
-                        result.error?.code === 'PAYMENT_ALREADY_COMPLETED' ? 409 :
-                        result.error?.code === 'MISSING_CUSTOMER_EMAIL' ? 400 :
-                        result.error?.code === 'INVALID_LANGUAGE_CODE' ? 400 :
-                        result.error?.code === 'INVALID_DISCOUNT_CODE' ? 400 :
-                        500
+    const statusCode = result.error?.code === 'RATE_LIMIT_EXCEEDED' ? 429 :
+                      result.error?.code === 'PAYMENT_ALREADY_COMPLETED' ? 409 :
+                      result.error?.code === 'MISSING_CUSTOMER_EMAIL' ? 400 :
+                      result.error?.code === 'MISSING_SESSION_ID' ? 400 :
+                      result.error?.code === 'INVALID_LANGUAGE_CODE' ? 400 :
+                      result.error?.code === 'INVALID_DISCOUNT_CODE' ? 400 :
+                      500
 
       return NextResponse.json(
         {

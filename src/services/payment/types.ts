@@ -9,6 +9,24 @@ import Stripe from 'stripe'
 // CHECKOUT SESSION TYPES
 // =============================================================================
 
+export interface OnboardingSubmissionRecord {
+  id: string
+  session_id: string | null
+  status: string
+  email?: string | null
+  business_name?: string | null
+  form_data?: Record<string, any> | null
+  metadata?: Record<string, any> | null
+  stripe_customer_id?: string | null
+  stripe_subscription_id?: string | null
+  stripe_subscription_schedule_id?: string | null
+  stripe_payment_id?: string | null
+  stripe_invoice_id?: string | null
+  payment_amount?: number | null
+  payment_completed_at?: string | null
+  payment_metadata?: Record<string, any> | null
+}
+
 export interface CreateSessionParams {
   submissionId: string
   additionalLanguages?: string[]
@@ -19,7 +37,7 @@ export interface CreateSessionParams {
 
 export interface SubmissionValidationResult {
   valid: boolean
-  submission?: any
+  submission?: OnboardingSubmissionRecord
   existingSubscription?: boolean
   error?: {
     code: string
@@ -96,7 +114,7 @@ export interface SubscriptionScheduleResult {
 // =============================================================================
 
 export interface SubmissionLookupResult {
-  submission: any | null
+  submission: OnboardingSubmissionRecord | null
   foundBy?: 'schedule_id' | 'customer_id' | 'metadata' | 'subscription_id'
 }
 
