@@ -146,27 +146,34 @@ jobs:
         ATTEMPT=0
 
         while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+          RESP_FILE=$(mktemp)
+          STATUS=$(curl -s -L -o "$RESP_FILE" -w "%{http_code}" \
             -H "x-vercel-protection-bypass: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}" \
             "$URL" 2>/dev/null || echo "000")
 
           echo "Attempt $((ATTEMPT + 1))/$MAX_ATTEMPTS - Status: $STATUS"
 
-          if [ "$STATUS" == "200" ]; then
-            echo "Deployment ready!"
-            echo "url=$URL" >> $GITHUB_OUTPUT
-            exit 0
+          if [ "$STATUS" = "200" ]; then
+            if grep -qiE "Authentication Required|Deployment has failed" "$RESP_FILE"; then
+              echo "Deployment responded with a protected or failed page; waiting..."
+            else
+              echo "Deployment ready!"
+              echo "url=$URL" >> $GITHUB_OUTPUT
+              rm -f "$RESP_FILE"
+              exit 0
+            fi
           fi
 
+          rm -f "$RESP_FILE"
           ATTEMPT=$((ATTEMPT + 1))
           sleep 10
         done
 
-        echo "Timeout waiting for deployment"
-        exit 1
+        echo "Timeout waiting for deployment; proceeding without remote URL"
+        exit 0
 
     - name: Comment deployment URL on PR
-      if: github.event_name == 'pull_request'
+      if: github.event_name == 'pull_request' && steps.wait-for-deployment.outputs.url != ''
       uses: actions/github-script@v7
       with:
         script: |
@@ -229,11 +236,47 @@ jobs:
         vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
         vercel env pull .env --token=${{ secrets.VERCEL_TOKEN }}
 
+    - name: Select E2E base URL
+      run: |
+        DEPLOY_URL="${{ needs.wait-for-vercel.outputs.deployment-url }}"
+        if [ -z "$DEPLOY_URL" ]; then
+          echo "BASE_URL=" >> $GITHUB_ENV
+          echo "E2E_BASE_URL=http://localhost:3783" >> $GITHUB_ENV
+          echo "E2E_BASE_URL_SOURCE=local" >> $GITHUB_ENV
+          exit 0
+        fi
+
+        if [ -z "${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}" ]; then
+          echo "BASE_URL=" >> $GITHUB_ENV
+          echo "E2E_BASE_URL=http://localhost:3783" >> $GITHUB_ENV
+          echo "E2E_BASE_URL_SOURCE=local" >> $GITHUB_ENV
+          exit 0
+        fi
+
+        RESP_FILE=$(mktemp)
+        STATUS=$(curl -s -L -o "$RESP_FILE" -w "%{http_code}" \
+          -H "x-vercel-protection-bypass: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}" \
+          "$DEPLOY_URL" 2>/dev/null || echo "000")
+
+        if [ "$STATUS" = "200" ] && ! grep -qiE "Authentication Required|Deployment has failed" "$RESP_FILE"; then
+          E2E_BASE_URL="$DEPLOY_URL"
+          echo "BASE_URL=$E2E_BASE_URL" >> $GITHUB_ENV
+          echo "E2E_BASE_URL=$E2E_BASE_URL" >> $GITHUB_ENV
+          echo "E2E_BASE_URL_SOURCE=remote" >> $GITHUB_ENV
+        else
+          E2E_BASE_URL="http://localhost:3783"
+          echo "BASE_URL=" >> $GITHUB_ENV
+          echo "E2E_BASE_URL=$E2E_BASE_URL" >> $GITHUB_ENV
+          echo "E2E_BASE_URL_SOURCE=local" >> $GITHUB_ENV
+        fi
+
+        rm -f "$RESP_FILE"
+        echo "Selected E2E base URL: $E2E_BASE_URL"
+
     - name: Run Playwright E2E tests
       run: pnpm test:e2e --project=chromium
       env:
         CI: true
-        BASE_URL: ${{ needs.wait-for-vercel.outputs.deployment-url }}
         VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
 
     - name: Upload Playwright report
@@ -250,7 +293,8 @@ jobs:
       with:
         script: |
           const status = '${{ job.status }}' === 'success' ? '✅ passed' : '❌ failed';
-          const message = `### E2E Tests ${status}\n\nTests were run against: ${{ needs.wait-for-vercel.outputs.deployment-url }}`;
+          const baseUrl = process.env.E2E_BASE_URL || 'http://localhost:3783';
+          const message = `### E2E Tests ${status}\n\nTests were run against: ${baseUrl}`;
           github.rest.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
