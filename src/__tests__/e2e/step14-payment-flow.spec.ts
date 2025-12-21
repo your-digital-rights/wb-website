@@ -576,14 +576,14 @@ test.describe('Step 14: Payment Flow E2E', () => {
           await cvcField.click()
           await withTimeout(() => cvcField.pressSequentially('123', { delay: 50 }), 8000, 'CVC entry')
 
-        const zipField = stripeFrame.getByRole('textbox', { name: /(zip|postal)/i })
-        if (await zipField.count()) {
-          console.log('Filling postal/ZIP code...')
-          await zipField.first().click()
-          await withTimeout(() => zipField.first().pressSequentially('12345', { delay: 50 }), 8000, 'Postal code entry')
-        } else {
-          console.log('Postal/ZIP field not present - skipping')
-        }
+          const zipField = stripeFrame.getByRole('textbox', { name: /(zip|postal)/i })
+          if (await zipField.count()) {
+            console.log('Filling postal/ZIP code...')
+            await zipField.first().click()
+            await withTimeout(() => zipField.first().pressSequentially('12345', { delay: 50 }), 8000, 'Postal code entry')
+          } else {
+            console.log('Postal/ZIP field not present - skipping')
+          }
 
           // CRITICAL: 100% discounts use SetupIntent which requires email collection
           console.log('Filling email (required for SetupIntent)...')
@@ -591,6 +591,74 @@ test.describe('Step 14: Payment Flow E2E', () => {
           await emailField.click()
           await withTimeout(() => emailField.fill(''), 5000, 'Email clear')
           await withTimeout(() => emailField.pressSequentially('test@example.com', { delay: 50 }), 8000, 'Email entry')
+
+          const nameField = stripeFrame.getByRole('textbox', { name: /name/i })
+          if (await nameField.count()) {
+            console.log('Filling cardholder name...')
+            await nameField.click()
+            await withTimeout(() => nameField.fill(''), 5000, 'Name clear')
+            await withTimeout(() => nameField.pressSequentially('Test User', { delay: 50 }), 8000, 'Name entry')
+          }
+
+          const countryField = stripeFrame.getByRole('combobox', { name: /country/i })
+          if (await countryField.count()) {
+            console.log('Selecting country...')
+            const countryInput = countryField.first()
+            try {
+              const tagName = await countryInput.evaluate(element => element.tagName)
+              if (tagName === 'SELECT') {
+                await countryInput.selectOption({ value: 'IT' })
+              } else {
+                await countryInput.click({ force: true })
+                const countryOption = stripeFrame.getByRole('option', { name: /Italy/i })
+                if (await countryOption.count()) {
+                  await countryOption.first().click()
+                } else {
+                  await countryInput.fill('Italy')
+                  await countryInput.press('Enter')
+                }
+              }
+            } catch (error) {
+              console.log('⚠️  Failed to select country:', error)
+            }
+          }
+
+          const addressLine1 = stripeFrame.getByRole('textbox', { name: /address line 1/i })
+          if (await addressLine1.count()) {
+            console.log('Filling address line 1...')
+            await addressLine1.click()
+            await withTimeout(() => addressLine1.fill('Via Roma 1'), 5000, 'Address line 1 entry')
+          }
+
+          const cityField = stripeFrame.getByRole('textbox', { name: /city/i })
+          if (await cityField.count()) {
+            console.log('Filling city...')
+            await cityField.click()
+            await withTimeout(() => cityField.fill('Milano'), 5000, 'City entry')
+          }
+
+          const provinceField = stripeFrame.getByRole('combobox', { name: /province|state|region/i })
+          if (await provinceField.count()) {
+            console.log('Filling province...')
+            const provinceInput = provinceField.first()
+            try {
+              const tagName = await provinceInput.evaluate(element => element.tagName)
+              if (tagName === 'SELECT') {
+                await provinceInput.selectOption({ value: 'MI' })
+              } else {
+                await provinceInput.click({ force: true })
+                const provinceOption = stripeFrame.getByRole('option', { name: /Milano|MI/i })
+                if (await provinceOption.count()) {
+                  await provinceOption.first().click()
+                } else {
+                  await provinceInput.fill('Milano')
+                  await provinceInput.press('Enter')
+                }
+              }
+            } catch (error) {
+              console.log('⚠️  Failed to select province:', error)
+            }
+          }
 
           console.log('All fields filled - verifying...')
 
