@@ -637,14 +637,27 @@ test.describe('Step 14: Payment Flow E2E', () => {
             await withTimeout(() => cityField.fill('Milano'), 5000, 'City entry')
           }
 
-          const provinceField = stripeFrame.getByRole('combobox', { name: /province|state|region/i })
+          const provinceField = stripeFrame.getByRole('combobox', { name: /province|state/i })
           if (await provinceField.count()) {
             console.log('Filling province...')
             const provinceInput = provinceField.first()
             try {
               const tagName = await provinceInput.evaluate(element => element.tagName)
               if (tagName === 'SELECT') {
-                await provinceInput.selectOption({ value: 'MI' })
+                const provinceOptions = await provinceInput.evaluate(element =>
+                  Array.from((element as HTMLSelectElement).options).map(option => ({
+                    label: option.label,
+                    value: option.value
+                  }))
+                )
+                const preferredProvince =
+                  provinceOptions.find(option => /milano|mi/i.test(option.label) || option.value === 'MI') ??
+                  provinceOptions.find(option => option.value)
+                if (preferredProvince) {
+                  await provinceInput.selectOption({ value: preferredProvince.value }, { timeout: 5000 })
+                } else {
+                  console.log('⚠️  Province select has no usable options - skipping')
+                }
               } else {
                 await provinceInput.click({ force: true })
                 const provinceOption = stripeFrame.getByRole('option', { name: /Milano|MI/i })
