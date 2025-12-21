@@ -453,6 +453,26 @@ function CheckoutForm({
           throw new Error(lastError || fallbackMessage)
         }
 
+        if (resolvedSetupIntent?.status === 'processing' || resolvedSetupIntent?.status === 'requires_confirmation') {
+          console.warn('[Step14] SetupIntent still processing, redirecting to thank-you', {
+            setupIntentId: resolvedSetupIntent.id,
+            status: resolvedSetupIntent.status
+          })
+          window.location.href = `/${locale}/onboarding/thank-you`
+          return
+        }
+
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('[Step14] SetupIntent unresolved state; redirecting to thank-you', {
+            setupIntentId: resolvedSetupIntent?.id,
+            status: resolvedSetupIntent?.status
+          })
+          window.location.href = `/${locale}/onboarding/thank-you`
+          return
+        }
+
+        throw new Error(t('paymentFailed'))
+
       } else {
         // For normal invoices - charge immediately
         const { error, paymentIntent } = await stripe.confirmPayment({
