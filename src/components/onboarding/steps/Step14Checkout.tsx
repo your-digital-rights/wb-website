@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
@@ -20,7 +20,7 @@ import {
   ElementsConsumer
 } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
-import type { Appearance, Stripe, StripeElements } from '@stripe/stripe-js'
+import type { Appearance, Stripe, StripeElements, PaymentIntent, SetupIntent } from '@stripe/stripe-js'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -36,6 +36,7 @@ import {
 } from '@/data/european-languages'
 import { trackPurchase } from '@/lib/analytics'
 import { Locale } from '@/lib/i18n'
+import { useOnboardingStore } from '@/stores/onboarding'
 
 // Initialize Stripe
 const STRIPE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
@@ -135,11 +136,15 @@ function CheckoutForm({
   const t = useTranslations('onboarding.steps.14')
   const locale = useLocale() as Locale
   const { control, watch } = form
+  const formData = useOnboardingStore(state => state.formData)
 
   const [isProcessing, setIsProcessing] = useState(false)
   const [paymentError, setPaymentError] = useState<string | null>(null)
   const [isPaymentElementReady, setIsPaymentElementReady] = useState(!paymentRequired)
   const lastInstrumentedClientSecretRef = useRef<string | null>(null)
+  const submitInFlightRef = useRef(false)
+  const shouldExposeStripeDebug = typeof window !== 'undefined'
+    && (process.env.NODE_ENV !== 'production' || window.location.hostname === 'localhost')
 
   // Discount validation state
   // Watch form values for reactive updates
@@ -174,6 +179,48 @@ function CheckoutForm({
   const recurringMonthlyPrice = pricingSummary ? pricingSummary.recurringAmount / 100 : 0
   const subtotal = pricingSummary ? pricingSummary.subtotal / 100 : 0
   const lineItems = pricingSummary?.lineItems || []
+
+  const billingDetails = useMemo(() => {
+    const normalize = (value?: string | null) => {
+      if (typeof value !== 'string') {
+        return undefined
+      }
+      const trimmed = value.trim()
+      return trimmed.length > 0 ? trimmed : undefined
+    }
+
+    const firstName = normalize(formData?.firstName)
+    const lastName = normalize(formData?.lastName)
+    const nameFromProfile = normalize([firstName, lastName].filter(Boolean).join(' '))
+    const name = nameFromProfile || normalize(formData?.businessName)
+    const email = normalize(formData?.email) || normalize(formData?.businessEmail)
+
+    const businessCountry = normalize(formData?.businessCountry)
+    const country = businessCountry === 'Italy' ? 'IT' : businessCountry === 'Poland' || businessCountry === 'Polska' ? 'PL' : undefined
+
+    const address = {
+      line1: normalize(formData?.businessStreet),
+      city: normalize(formData?.businessCity),
+      state: normalize(formData?.businessProvince),
+      postal_code: normalize(formData?.businessPostalCode),
+      country
+    }
+
+    const hasAddress = Object.values(address).some(Boolean)
+    const details = {
+      name,
+      email,
+      ...(hasAddress ? { address } : {})
+    }
+
+    return details.name || details.email || hasAddress ? details : undefined
+  }, [formData])
+
+  const paymentElementOptions = useMemo(() => ({
+    layout: 'tabs' as const,
+    paymentMethodOrder: ['card', 'sepa_debit', 'paypal'],
+    ...(billingDetails ? { defaultValues: { billingDetails } } : {})
+  }), [billingDetails])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -249,8 +296,19 @@ function CheckoutForm({
   const effectiveNoPayment = noPaymentDue && !paymentRequired
 
   // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
+  ) => {
     e.preventDefault()
+    if (submitInFlightRef.current) {
+      return
+    }
+    submitInFlightRef.current = true
+    if (shouldExposeStripeDebug) {
+      const existingCount = (window as any).__wb_paymentSubmitCount ?? 0
+      ;(window as any).__wb_paymentSubmitCount = existingCount + 1
+      ;(window as any).__wb_paymentSubmitAt = Date.now()
+    }
     if (effectiveNoPayment) {
       setIsProcessing(true)
       onZeroPaymentComplete()
@@ -259,11 +317,13 @@ function CheckoutForm({
 
     if (!stripe || !elements) {
       setPaymentError(t('stripeNotLoaded'))
+      submitInFlightRef.current = false
       return
     }
 
     if (!acceptTerms) {
       setPaymentError('You must accept the terms and conditions to proceed')
+      submitInFlightRef.current = false
       return
     }
 
@@ -276,7 +336,17 @@ function CheckoutForm({
       // Submit the form
       const { error: submitError } = await elements.submit()
       if (submitError) {
-        throw new Error(submitError.message)
+        if (shouldExposeStripeDebug) {
+          console.warn('[Step14] Payment element submit error', submitError)
+          ;(window as any).__wb_lastStripeSubmitError = {
+            type: submitError.type,
+            code: submitError.code,
+            message: submitError.message
+          }
+        }
+        if (submitError.message) {
+          throw new Error(submitError.message)
+        }
       }
 
       // Detect if this is a SetupIntent (for $0 invoices) or PaymentIntent
@@ -287,7 +357,7 @@ function CheckoutForm({
         if (!clientSecret) {
           return null
         }
-        let lastIntent: Stripe.PaymentIntent | null = null
+        let lastIntent: PaymentIntent | null = null
         for (let attempt = 0; attempt < 10; attempt++) {
           const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret)
           if (!paymentIntent) {
@@ -306,7 +376,7 @@ function CheckoutForm({
         if (!clientSecret) {
           return null
         }
-        let lastIntent: Stripe.SetupIntent | null = null
+        let lastIntent: SetupIntent | null = null
         for (let attempt = 0; attempt < 10; attempt++) {
           const { setupIntent } = await stripe.retrieveSetupIntent(clientSecret)
           if (!setupIntent) {
@@ -327,6 +397,13 @@ function CheckoutForm({
           elements,
           confirmParams: {
             return_url: `${window.location.origin}/${locale}/onboarding/thank-you`,
+            ...(billingDetails
+              ? {
+                payment_method_data: {
+                  billing_details: billingDetails
+                }
+              }
+              : {})
           },
           redirect: 'if_required'
         })
@@ -335,7 +412,7 @@ function CheckoutForm({
           throw new Error(error.message)
         }
 
-        let resolvedSetupIntent = setupIntent ?? null
+        let resolvedSetupIntent: SetupIntent | null = setupIntent ?? null
         if (!resolvedSetupIntent || ['processing', 'requires_confirmation'].includes(resolvedSetupIntent.status)) {
           resolvedSetupIntent = await pollSetupIntentStatus()
         }
@@ -382,6 +459,13 @@ function CheckoutForm({
           elements,
           confirmParams: {
             return_url: `${window.location.origin}/${locale}/onboarding/thank-you`,
+            ...(billingDetails
+              ? {
+                payment_method_data: {
+                  billing_details: billingDetails
+                }
+              }
+              : {})
           },
           redirect: 'if_required'
         })
@@ -390,7 +474,7 @@ function CheckoutForm({
           throw new Error(error.message)
         }
 
-        let resolvedPaymentIntent = paymentIntent ?? null
+        let resolvedPaymentIntent: PaymentIntent | null = paymentIntent ?? null
         if (!resolvedPaymentIntent || ['processing', 'requires_confirmation'].includes(resolvedPaymentIntent.status)) {
           resolvedPaymentIntent = await pollPaymentIntentStatus()
         }
@@ -444,10 +528,16 @@ function CheckoutForm({
       // If processing, Stripe will handle the redirect
     } catch (error) {
       console.error('Payment error:', error)
+      if (shouldExposeStripeDebug) {
+        ;(window as any).__wb_lastStripeError = error instanceof Error ? {
+          message: error.message
+        } : error
+      }
       setPaymentError(
         error instanceof Error ? error.message : t('unexpectedError')
       )
       setIsProcessing(false)
+      submitInFlightRef.current = false
     }
   }
 
@@ -744,10 +834,7 @@ function CheckoutForm({
                   data-testid={!effectiveNoPayment ? 'stripe-payment-element' : undefined}
                 >
                   <PaymentElement
-                    options={{
-                      layout: 'tabs',
-                      paymentMethodOrder: ['card', 'sepa_debit', 'paypal'],
-                    }}
+                    options={paymentElementOptions}
                     onReady={handlePaymentElementReady}
                   />
                 </div>
@@ -844,6 +931,7 @@ function CheckoutForm({
             !acceptTerms ||
             (!effectiveNoPayment && (!stripe || !elements || !isPaymentElementReady))
           }
+          onClick={handleSubmit}
           className="w-full sm:w-auto min-w-[200px]"
         >
           {isProcessing ? (

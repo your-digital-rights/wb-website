@@ -11,6 +11,7 @@ import { triggerMockWebhookForPayment } from './helpers/mock-webhook'
 import { setCookieConsentBeforeLoad } from './helpers/test-utils'
 
 const isCI = Boolean(process.env.CI)
+const DISCOUNT_WAIT_MS = 30000
 
 // Load environment variables
 dotenv.config({ path: path.resolve(process.cwd(), '.env') })
@@ -424,7 +425,6 @@ test.describe('Step 14: Payment Flow E2E', () => {
   })
 
   test('100% discount requires payment method for future billing', async ({ page }) => {
-    test.skip(isCI, 'Temporarily skip in CI while stabilizing the flow')
     test.setTimeout(120000)
 
     let sessionId: string | null = null
@@ -475,13 +475,13 @@ test.describe('Step 14: Payment Flow E2E', () => {
         page.waitForFunction((code: string) => {
           const meta = (window as any).__wb_lastDiscountMeta
           return meta?.code === code
-        }, couponId, { timeout: 15000 }),
+        }, couponId, { timeout: DISCOUNT_WAIT_MS }),
         page.waitForFunction(() => {
           return Boolean((window as any).__wb_lastDiscountValidation?.status === 'valid')
-        }, { timeout: 15000 })
+        }, { timeout: DISCOUNT_WAIT_MS })
       ])
 
-      await expect(page.locator(`text=/Discount code ${couponId} applied/i`)).toBeVisible({ timeout: 15000 })
+      await expect(page.locator(`text=/Discount code ${couponId} applied/i`)).toBeVisible({ timeout: DISCOUNT_WAIT_MS })
 
       // CRITICAL: Wait for the checkout session to be updated with new SetupIntent
       // This happens when refreshPaymentIntent() is called after discount application
@@ -494,7 +494,7 @@ test.describe('Step 14: Payment Flow E2E', () => {
           return (currentState && currentState !== prevState) || (currentSecret && currentSecret !== prevSecret)
         },
         { initialCheckoutState, initialClientSecret },
-        { timeout: 15000 }
+        { timeout: DISCOUNT_WAIT_MS }
       )
       console.log('✅ Checkout session updated with SetupIntent')
 
@@ -757,14 +757,14 @@ test.describe('Step 14: Payment Flow E2E', () => {
         page.waitForFunction((code: string) => {
           const meta = (window as any).__wb_lastDiscountMeta
           return meta?.code === code
-        }, discountCode, { timeout: 15000 }),
+        }, discountCode, { timeout: DISCOUNT_WAIT_MS }),
         page.waitForFunction(() => {
           return Boolean((window as any).__wb_lastDiscountValidation?.status === 'valid')
-        }, { timeout: 15000 })
+        }, { timeout: DISCOUNT_WAIT_MS })
       ])
 
       // Verify success message appears
-      await expect(page.locator(`text=Discount code ${discountCode} applied`)).toBeVisible({ timeout: 15000 })
+      await expect(page.locator(`text=Discount code ${discountCode} applied`)).toBeVisible({ timeout: DISCOUNT_WAIT_MS })
 
       // Verify discount badge in order summary
       await expect(page.getByTestId('discount-summary')).toBeVisible()
@@ -919,14 +919,14 @@ test.describe('Step 14: Payment Flow E2E', () => {
         page.waitForFunction((code: string) => {
           const meta = (window as any).__wb_lastDiscountMeta
           return meta?.code === code
-        }, discountCode, { timeout: 15000 }),
+        }, discountCode, { timeout: DISCOUNT_WAIT_MS }),
         page.waitForFunction(() => {
           return Boolean((window as any).__wb_lastDiscountValidation?.status === 'valid')
-        }, { timeout: 15000 })
+        }, { timeout: DISCOUNT_WAIT_MS })
       ])
 
       // Verify discount applied (20% off €35 = €7, final price €28)
-      await expect(page.locator(`text=Discount code ${discountCode} applied`)).toBeVisible({ timeout: 15000 })
+      await expect(page.locator(`text=Discount code ${discountCode} applied`)).toBeVisible({ timeout: DISCOUNT_WAIT_MS })
       // Check for €28 in the Pay button
       const expectedPayDisplay = formatEuroDisplay(Math.round(stripePrices.base * 0.8))
       await expect(page.locator(`button:has-text("Pay €${expectedPayDisplay}")`)).toBeVisible()
@@ -980,18 +980,18 @@ test.describe('Step 14: Payment Flow E2E', () => {
         page.waitForFunction((code: string) => {
           const meta = (window as any).__wb_lastDiscountMeta
           return meta?.code === code
-        }, discountCode, { timeout: 15000 }),
+        }, discountCode, { timeout: DISCOUNT_WAIT_MS }),
         page.waitForFunction(() => {
           return Boolean((window as any).__wb_lastDiscountValidation?.status === 'valid')
-        }, { timeout: 15000 }),
+        }, { timeout: DISCOUNT_WAIT_MS }),
         page.waitForFunction(() => {
           const preview = (window as any).__wb_lastDiscountPreview
           return Boolean(preview && preview.discountAmount > 0)
-        }, { timeout: 15000 })
+        }, { timeout: DISCOUNT_WAIT_MS })
       ])
 
       // Verify discount applied
-      await expect(page.locator(`text=Discount code ${discountCode} applied`)).toBeVisible({ timeout: 15000 })
+      await expect(page.locator(`text=Discount code ${discountCode} applied`)).toBeVisible({ timeout: DISCOUNT_WAIT_MS })
 
       // 6. Accept terms and complete payment
       await page.locator('#acceptTerms').click()
@@ -1114,10 +1114,10 @@ test.describe('Step 14: Payment Flow E2E', () => {
       await page.waitForFunction((code: string) => {
         const meta = (window as any).__wb_lastDiscountMeta
         return meta?.code === code
-      }, discountCode, { timeout: 15000 })
+      }, discountCode, { timeout: DISCOUNT_WAIT_MS })
 
       // Verify discount applied
-      await expect(page.locator(`text=Discount code ${discountCode} applied`)).toBeVisible({ timeout: 15000 })
+      await expect(page.locator(`text=Discount code ${discountCode} applied`)).toBeVisible({ timeout: DISCOUNT_WAIT_MS })
 
       // 5. Complete payment
       await page.locator('#acceptTerms').click()

@@ -279,6 +279,29 @@ export class WebhookService {
       }
     }
 
+    // Strategy 6: Fallback to Stripe customer metadata when submission IDs are missing in DB
+    if (customerId) {
+      try {
+        const customer = await this.stripe.customers.retrieve(customerId)
+        if (!(customer as Stripe.DeletedCustomer).deleted) {
+          const metadataSubmissionId = (customer as Stripe.Customer).metadata?.submission_id
+          if (metadataSubmissionId) {
+            const { data } = await supabase
+              .from('onboarding_submissions')
+              .select('*')
+              .eq('id', metadataSubmissionId)
+              .single()
+
+            if (data) {
+              return { submission: data, foundBy: 'metadata' }
+            }
+          }
+        }
+      } catch (error) {
+        debugLog(`Failed to retrieve customer ${customerId} for metadata lookup:`, error)
+      }
+    }
+
     return { submission: null }
   }
 
@@ -307,7 +330,7 @@ export class WebhookService {
         invoiceCustomerRaw = (invoice as any).metadata.customer_id
       }
 
-      const subscriptionId = typeof invoiceSubscriptionRaw === 'string'
+      let subscriptionId = typeof invoiceSubscriptionRaw === 'string'
         ? invoiceSubscriptionRaw
         : invoiceSubscriptionRaw?.id ?? null
       const customerId = typeof invoiceCustomerRaw === 'string'
@@ -317,6 +340,27 @@ export class WebhookService {
       let paymentIntentId = typeof invoicePaymentIntentRaw === 'string'
         ? invoicePaymentIntentRaw
         : invoicePaymentIntentRaw?.id ?? null
+
+      if (!subscriptionId) {
+        const lineWithSubscription = invoice.lines?.data?.find((line) => Boolean(line.subscription)) ?? null
+        if (lineWithSubscription?.subscription) {
+          subscriptionId = lineWithSubscription.subscription
+        }
+      }
+
+      if (!subscriptionId && customerId) {
+        try {
+          const subscriptions = await this.stripe.subscriptions.list({
+            customer: customerId,
+            limit: 1
+          })
+          if (subscriptions.data.length > 0) {
+            subscriptionId = subscriptions.data[0].id
+          }
+        } catch (error) {
+          debugLog(`Failed to list subscriptions for customer ${customerId}:`, error)
+        }
+      }
 
       if (!paymentIntentId) {
         const paymentsArray = (invoice as any).payments?.data || []

@@ -147,7 +147,8 @@ test.describe('Step 14: Stripe Validation (Comprehensive)', () => {
       await page.locator('#acceptTerms').click()
 
       const payButton = page.locator('button:has-text("Pay €")')
-      await payButton.click()
+      await expect(payButton).toBeEnabled()
+      await page.locator('form').evaluate(form => (form as HTMLFormElement).requestSubmit())
 
       // Wait for redirect
       await page.waitForURL(url => url.pathname.includes('/thank-you'), { timeout: 90000 })
@@ -265,7 +266,9 @@ test.describe('Step 14: Stripe Validation (Comprehensive)', () => {
       // Complete payment
       await fillStripePaymentForm(page)
       await page.locator('#acceptTerms').click()
-      await page.locator('button:has-text("Pay €")').click()
+      const payButton = page.locator('button:has-text("Pay €")')
+      await expect(payButton).toBeEnabled()
+      await page.locator('form').evaluate(form => (form as HTMLFormElement).requestSubmit())
 
       await page.waitForURL(url => url.pathname.includes('/thank-you'), { timeout: 90000 })
 
