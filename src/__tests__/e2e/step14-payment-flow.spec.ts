@@ -603,8 +603,11 @@ test.describe('Step 14: Payment Flow E2E', () => {
           console.log('Filling email (required for SetupIntent)...')
           const emailField = stripeFrame.getByRole('textbox', { name: /email/i })
           await emailField.click()
-          await withTimeout(() => emailField.fill(''), 5000, 'Email clear')
-          await withTimeout(() => emailField.pressSequentially('test@example.com', { delay: 50 }), 8000, 'Email entry')
+          await withTimeout(() => emailField.fill('test@example.com'), 8000, 'Email entry')
+          const emailValue = await emailField.inputValue()
+          if (!/test@example\.com/i.test(emailValue)) {
+            throw new Error(`Email entry failed: "${emailValue}"`)
+          }
           await emailField.press('Tab')
 
           const phoneField = stripeFrame.getByRole('textbox', { name: /phone|mobile/i })

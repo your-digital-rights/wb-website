@@ -343,8 +343,11 @@ export class WebhookService {
 
       if (!subscriptionId) {
         const lineWithSubscription = invoice.lines?.data?.find((line) => Boolean(line.subscription)) ?? null
-        if (lineWithSubscription?.subscription) {
-          subscriptionId = lineWithSubscription.subscription
+        const lineSubscription = lineWithSubscription?.subscription ?? null
+        if (lineSubscription) {
+          subscriptionId = typeof lineSubscription === 'string'
+            ? lineSubscription
+            : lineSubscription.id ?? null
         }
       }
 
