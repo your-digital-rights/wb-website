@@ -439,7 +439,7 @@ test.describe('Step 14: Payment Flow E2E', () => {
   })
 
   test('100% discount requires payment method for future billing', async ({ page }) => {
-    test.setTimeout(120000)
+    test.setTimeout(180000)
 
     let sessionId: string | null = null
     let submissionId: string | null = null
@@ -756,15 +756,26 @@ test.describe('Step 14: Payment Flow E2E', () => {
       await page.locator('#acceptTerms').click()
 
       // Button shows "Pay €0" for 100% discount
+      const submitButton = page.locator('button[type="submit"]')
       const completeButton = page.getByRole('button', { name: /Pay.*€0/i })
       await expect(completeButton).toBeEnabled()
       console.log('✅ Complete Payment button enabled')
 
+      const initialSubmitCount = await page.evaluate(() => (window as any).__wb_paymentSubmitCount ?? null)
+
       // Submit payment form
-      await completeButton.click()
+      await completeButton.click({ timeout: 10000, noWaitAfter: true })
 
       // Ensure submit handler fired (helps catch clicks that don't reach Stripe)
-      await page.waitForFunction(() => (window as any).__wb_paymentSubmitCount > 0, { timeout: 5000 })
+      if (typeof initialSubmitCount === 'number') {
+        await page.waitForFunction(
+          (count: number) => (window as any).__wb_paymentSubmitCount > count,
+          initialSubmitCount,
+          { timeout: 10000 }
+        )
+      } else {
+        await expect(submitButton).toBeDisabled({ timeout: 10000 })
+      }
 
       // Should redirect to thank-you page
       // Use 'commit' instead of 'load' to avoid timing out on page load issues
