@@ -601,10 +601,19 @@ test.describe('Step 14: Payment Flow E2E', () => {
 
           // CRITICAL: 100% discounts use SetupIntent which requires email collection
           console.log('Filling email (required for SetupIntent)...')
-          const emailField = stripeFrame.getByRole('textbox', { name: 'Email' })
+          const emailField = stripeFrame.getByRole('textbox', { name: /email/i })
           await emailField.click()
           await withTimeout(() => emailField.fill(''), 5000, 'Email clear')
           await withTimeout(() => emailField.pressSequentially('test@example.com', { delay: 50 }), 8000, 'Email entry')
+          await emailField.press('Tab')
+
+          const phoneField = stripeFrame.getByRole('textbox', { name: /phone|mobile/i })
+          if (await phoneField.count()) {
+            console.log('Filling phone number...')
+            await phoneField.first().click()
+            await withTimeout(() => phoneField.first().fill('3331112223'), 5000, 'Phone entry')
+            await phoneField.first().press('Tab')
+          }
 
           const nameField = stripeFrame.getByRole('textbox', { name: /name/i })
           if (await nameField.count()) {
