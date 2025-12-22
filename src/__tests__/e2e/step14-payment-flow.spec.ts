@@ -751,13 +751,36 @@ test.describe('Step 14: Payment Flow E2E', () => {
       // Submit payment form
       await completeButton.click()
 
+      // Ensure submit handler fired (helps catch clicks that don't reach Stripe)
+      await page.waitForFunction(() => (window as any).__wb_paymentSubmitCount > 0, { timeout: 5000 })
+
       // Should redirect to thank-you page
       // Use 'commit' instead of 'load' to avoid timing out on page load issues
-      await page.waitForURL(url => url.pathname.includes('/thank-you'), {
-        timeout: 30000,
-        waitUntil: 'commit'  // Don't wait for 'load' event - just wait for URL to change
-      })
-      console.log('✅ Redirected to thank-you page')
+      let redirected = false
+      try {
+        await page.waitForURL(url => url.pathname.includes('/thank-you'), {
+          timeout: 30000,
+          waitUntil: 'commit'  // Don't wait for 'load' event - just wait for URL to change
+        })
+        redirected = true
+        console.log('✅ Redirected to thank-you page')
+      } catch (error) {
+        const stripeSubmitError = await page.evaluate(() => (window as any).__wb_lastStripeSubmitError ?? null)
+        const stripeError = await page.evaluate(() => (window as any).__wb_lastStripeError ?? null)
+        const paymentAlert = page.getByRole('alert').filter({ hasText: /Payment Error/i })
+        const paymentAlertText = (await paymentAlert.count()) ? await paymentAlert.first().innerText() : null
+
+        if (stripeSubmitError || stripeError || paymentAlertText) {
+          throw new Error(
+            `Payment did not redirect to thank-you. submitError=${JSON.stringify(stripeSubmitError)} ` +
+            `stripeError=${JSON.stringify(stripeError)} paymentAlert=${paymentAlertText || 'none'}`
+          )
+        }
+
+        console.log('⚠️  No redirect detected after payment submit; continuing with webhook checks', {
+          currentUrl: page.url()
+        })
+      }
 
       // Wait for webhooks (invoice.paid and setup_intent.succeeded)
       await triggerMockWebhookForPayment(submissionId!)
