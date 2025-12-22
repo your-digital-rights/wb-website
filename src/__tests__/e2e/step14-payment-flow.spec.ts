@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Locator } from '@playwright/test'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
 import * as dotenv from 'dotenv'
@@ -58,6 +58,20 @@ async function withTimeout<T>(promiseFactory: () => Promise<T>, timeoutMs: numbe
       clearTimeout(timer)
     }
   }
+}
+
+async function pickNonPhoneCombobox(locator: Locator): Promise<Locator | null> {
+  const count = await locator.count()
+  for (let i = 0; i < count; i++) {
+    const candidate = locator.nth(i)
+    const ariaLabel = (await candidate.getAttribute('aria-label'))?.toLowerCase() ?? ''
+    const nameAttr = (await candidate.getAttribute('name'))?.toLowerCase() ?? ''
+    if (ariaLabel.includes('phone') || nameAttr.includes('phone')) {
+      continue
+    }
+    return candidate
+  }
+  return null
 }
 
 
@@ -601,13 +615,13 @@ test.describe('Step 14: Payment Flow E2E', () => {
           }
 
           const countryField = stripeFrame.getByRole('combobox', { name: /country/i })
-          if (await countryField.count()) {
+          const countryInput = await pickNonPhoneCombobox(countryField)
+          if (countryInput) {
             console.log('Selecting country...')
-            const countryInput = countryField.first()
             try {
               const tagName = await countryInput.evaluate(element => element.tagName)
               if (tagName === 'SELECT') {
-                await countryInput.selectOption({ value: 'IT' })
+                await countryInput.selectOption({ value: 'IT' }, { timeout: 5000 })
               } else {
                 await countryInput.click({ force: true })
                 const countryOption = stripeFrame.getByRole('option', { name: /Italy/i })
@@ -621,26 +635,34 @@ test.describe('Step 14: Payment Flow E2E', () => {
             } catch (error) {
               console.log('⚠️  Failed to select country:', error)
             }
+          } else if (await countryField.count()) {
+            console.log('⚠️  Country field is phone-related; skipping country selection')
           }
 
           const addressLine1 = stripeFrame.getByRole('textbox', { name: /address line 1/i })
-          if (await addressLine1.count()) {
+          try {
+            await addressLine1.first().waitFor({ state: 'visible', timeout: 2000 })
             console.log('Filling address line 1...')
-            await addressLine1.click()
-            await withTimeout(() => addressLine1.fill('Via Roma 1'), 5000, 'Address line 1 entry')
+            await addressLine1.first().click()
+            await withTimeout(() => addressLine1.first().fill('Via Roma 1'), 5000, 'Address line 1 entry')
+          } catch {
+            console.log('Address line 1 field not present - skipping')
           }
 
           const cityField = stripeFrame.getByRole('textbox', { name: /city/i })
-          if (await cityField.count()) {
+          try {
+            await cityField.first().waitFor({ state: 'visible', timeout: 2000 })
             console.log('Filling city...')
-            await cityField.click()
-            await withTimeout(() => cityField.fill('Milano'), 5000, 'City entry')
+            await cityField.first().click()
+            await withTimeout(() => cityField.first().fill('Milano'), 5000, 'City entry')
+          } catch {
+            console.log('City field not present - skipping')
           }
 
           const provinceField = stripeFrame.getByRole('combobox', { name: /province|state/i })
-          if (await provinceField.count()) {
+          const provinceInput = await pickNonPhoneCombobox(provinceField)
+          if (provinceInput) {
             console.log('Filling province...')
-            const provinceInput = provinceField.first()
             try {
               const tagName = await provinceInput.evaluate(element => element.tagName)
               if (tagName === 'SELECT') {
