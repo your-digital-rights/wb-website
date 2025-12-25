@@ -155,6 +155,9 @@ CONSTRAINTS AND STYLE
 
 
 # Response
-Respond only with json object in the following structure: `<seo-profile-schema/>`.
+Respond only with json object in the following structure:
+
+<seo-template>
+</seo-template>
 
 
