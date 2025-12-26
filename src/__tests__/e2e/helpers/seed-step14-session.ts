@@ -16,7 +16,9 @@ function getHeaders(additionalHeaders: Record<string, string> = {}): Record<stri
 
   // Add Vercel protection bypass header if secret is available (for CI testing)
   if (process.env.VERCEL_AUTOMATION_BYPASS_SECRET) {
-    headers['x-vercel-protection-bypass'] = process.env.VERCEL_AUTOMATION_BYPASS_SECRET
+    const bypassSecret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET
+    headers['x-vercel-protection-bypass'] = bypassSecret
+    headers['Cookie'] = `__vercel_protection_bypass=${bypassSecret}`
   }
 
   return headers

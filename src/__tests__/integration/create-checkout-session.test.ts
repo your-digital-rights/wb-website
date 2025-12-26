@@ -121,17 +121,16 @@ describe('Stripe Checkout Session Creation Tests', () => {
   })
 
   it('should create checkout session with base package only', async () => {
-    const response = await fetch('http://localhost:3783/api/stripe/create-checkout-session', {
+    const response = await fetch('http://localhost:3783/api/stripe/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Test-Mode': 'true'
       },
       body: JSON.stringify({
-        submission_id: testSubmissionId,
+        submissionId: testSubmissionId,
+        sessionId: testSessionId,
         additionalLanguages: [],
-        successUrl: 'http://localhost:3783/onboarding/thank-you',
-        cancelUrl: 'http://localhost:3783/onboarding/step/14'
       })
     })
 
@@ -141,14 +140,14 @@ describe('Stripe Checkout Session Creation Tests', () => {
     expect(data.success).toBe(true)
     expect(data.data.paymentRequired).toBe(true)
     expect(data.data.clientSecret).toBeTruthy()
-    expect(data.data.customerId).toBeTruthy()
-    expect(data.data.subscriptionId).toBeTruthy()
+    expect(data.data.stripeIds.customerId).toBeTruthy()
+    expect(data.data.stripeIds.subscriptionId).toBeTruthy()
 
-    testCustomerIds.push(data.data.customerId)
-    testSubscriptionIds.push(data.data.subscriptionId)
+    testCustomerIds.push(data.data.stripeIds.customerId)
+    testSubscriptionIds.push(data.data.stripeIds.subscriptionId)
 
     // Verify subscription schedule created with 12-month commitment
-    const subscription = await stripe.subscriptions.retrieve(data.data.subscriptionId)
+    const subscription = await stripe.subscriptions.retrieve(data.data.stripeIds.subscriptionId)
     expect(subscription.schedule).toBeTruthy()
 
     if (subscription.schedule) {
@@ -198,17 +197,16 @@ describe('Stripe Checkout Session Creation Tests', () => {
       })
       .eq('id', testSubmissionId)
 
-    const response = await fetch('http://localhost:3783/api/stripe/create-checkout-session', {
+    const response = await fetch('http://localhost:3783/api/stripe/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Test-Mode': 'true'
       },
       body: JSON.stringify({
-        submission_id: testSubmissionId,
+        submissionId: testSubmissionId,
+        sessionId: testSessionId,
         additionalLanguages: ['de'],
-        successUrl: 'http://localhost:3783/onboarding/thank-you',
-        cancelUrl: 'http://localhost:3783/onboarding/step/14'
       })
     })
 
@@ -216,11 +214,11 @@ describe('Stripe Checkout Session Creation Tests', () => {
 
     const data = await response.json()
     expect(data.data.paymentRequired).toBe(true)
-    testCustomerIds.push(data.data.customerId)
-    testSubscriptionIds.push(data.data.subscriptionId)
+    testCustomerIds.push(data.data.stripeIds.customerId)
+    testSubscriptionIds.push(data.data.stripeIds.subscriptionId)
 
     // Verify total amount: €35 + €75 = €110
-    const subscription = await stripe.subscriptions.retrieve(data.data.subscriptionId)
+    const subscription = await stripe.subscriptions.retrieve(data.data.stripeIds.subscriptionId)
     const latestInvoice = await stripe.invoices.retrieve(
       typeof subscription.latest_invoice === 'string'
         ? subscription.latest_invoice
@@ -245,17 +243,16 @@ describe('Stripe Checkout Session Creation Tests', () => {
       })
       .eq('id', testSubmissionId)
 
-    const response = await fetch('http://localhost:3783/api/stripe/create-checkout-session', {
+    const response = await fetch('http://localhost:3783/api/stripe/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Test-Mode': 'true'
       },
       body: JSON.stringify({
-        submission_id: testSubmissionId,
+        submissionId: testSubmissionId,
+        sessionId: testSessionId,
         additionalLanguages: [], // intentionally empty to ensure server trusts DB
-        successUrl: 'http://localhost:3783/onboarding/thank-you',
-        cancelUrl: 'http://localhost:3783/onboarding/step/14'
       })
     })
 
@@ -264,10 +261,10 @@ describe('Stripe Checkout Session Creation Tests', () => {
     const data = await response.json()
     expect(data.success).toBe(true)
     expect(data.data.paymentRequired).toBe(true)
-    testCustomerIds.push(data.data.customerId)
-    testSubscriptionIds.push(data.data.subscriptionId)
+    testCustomerIds.push(data.data.stripeIds.customerId)
+    testSubscriptionIds.push(data.data.stripeIds.subscriptionId)
 
-    const subscription = await stripe.subscriptions.retrieve(data.data.subscriptionId)
+    const subscription = await stripe.subscriptions.retrieve(data.data.stripeIds.subscriptionId)
     const latestInvoice = await stripe.invoices.retrieve(
       typeof subscription.latest_invoice === 'string'
         ? subscription.latest_invoice
@@ -295,17 +292,16 @@ describe('Stripe Checkout Session Creation Tests', () => {
       })
       .eq('id', testSubmissionId)
 
-    const response = await fetch('http://localhost:3783/api/stripe/create-checkout-session', {
+    const response = await fetch('http://localhost:3783/api/stripe/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Test-Mode': 'true'
       },
       body: JSON.stringify({
-        submission_id: testSubmissionId,
+        submissionId: testSubmissionId,
+        sessionId: testSessionId,
         additionalLanguages: ['de', 'fr', 'es'],
-        successUrl: 'http://localhost:3783/onboarding/thank-you',
-        cancelUrl: 'http://localhost:3783/onboarding/step/14'
       })
     })
 
@@ -313,11 +309,11 @@ describe('Stripe Checkout Session Creation Tests', () => {
 
     const data = await response.json()
     expect(data.data.paymentRequired).toBe(true)
-    testCustomerIds.push(data.data.customerId)
-    testSubscriptionIds.push(data.data.subscriptionId)
+    testCustomerIds.push(data.data.stripeIds.customerId)
+    testSubscriptionIds.push(data.data.stripeIds.subscriptionId)
 
     // Verify total amount: €35 + (3 × €75) = €260
-    const subscription = await stripe.subscriptions.retrieve(data.data.subscriptionId)
+    const subscription = await stripe.subscriptions.retrieve(data.data.stripeIds.subscriptionId)
     const latestInvoice = await stripe.invoices.retrieve(
       typeof subscription.latest_invoice === 'string'
         ? subscription.latest_invoice
@@ -333,18 +329,17 @@ describe('Stripe Checkout Session Creation Tests', () => {
       id: `TESTFREE_${Date.now()}`
     })
 
-    const response = await fetch('http://localhost:3783/api/stripe/create-checkout-session', {
+    const response = await fetch('http://localhost:3783/api/stripe/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Test-Mode': 'true'
       },
       body: JSON.stringify({
-        submission_id: testSubmissionId,
+        submissionId: testSubmissionId,
+        sessionId: testSessionId,
         additionalLanguages: [],
         discountCode: coupon.id,
-        successUrl: 'http://localhost:3783/onboarding/thank-you',
-        cancelUrl: 'http://localhost:3783/onboarding/step/14'
       })
     })
 
@@ -356,13 +351,12 @@ describe('Stripe Checkout Session Creation Tests', () => {
     expect(data.data.paymentRequired).toBe(true)
     expect(data.data.clientSecret).toBeTruthy()
     expect(data.data.clientSecret.startsWith('seti_')).toBe(true) // SetupIntent for $0 invoice
-    expect(data.data.sessionId).toBeNull()
-    expect(data.data.invoiceId).toBeTruthy()
-    expect(data.data.subscriptionId).toBeTruthy()
-    testCustomerIds.push(data.data.customerId)
-    testSubscriptionIds.push(data.data.subscriptionId)
+    expect(data.data.stripeIds.invoiceId).toBeTruthy()
+    expect(data.data.stripeIds.subscriptionId).toBeTruthy()
+    testCustomerIds.push(data.data.stripeIds.customerId)
+    testSubscriptionIds.push(data.data.stripeIds.subscriptionId)
 
-    const subscription = await stripe.subscriptions.retrieve(data.data.subscriptionId)
+    const subscription = await stripe.subscriptions.retrieve(data.data.stripeIds.subscriptionId)
     const invoiceId = typeof subscription.latest_invoice === 'string'
       ? subscription.latest_invoice
       : subscription.latest_invoice?.id
@@ -385,18 +379,17 @@ describe('Stripe Checkout Session Creation Tests', () => {
       id: `TEST10_${Date.now()}`
     })
 
-    const response = await fetch('http://localhost:3783/api/stripe/create-checkout-session', {
+    const response = await fetch('http://localhost:3783/api/stripe/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Test-Mode': 'true'
       },
       body: JSON.stringify({
-        submission_id: testSubmissionId,
+        submissionId: testSubmissionId,
+        sessionId: testSessionId,
         additionalLanguages: [],
         discountCode: coupon.id,
-        successUrl: 'http://localhost:3783/onboarding/thank-you',
-        cancelUrl: 'http://localhost:3783/onboarding/step/14'
       })
     })
 
@@ -404,11 +397,11 @@ describe('Stripe Checkout Session Creation Tests', () => {
 
     const data = await response.json()
     expect(data.data.paymentRequired).toBe(true)
-    testCustomerIds.push(data.data.customerId)
-    testSubscriptionIds.push(data.data.subscriptionId)
+    testCustomerIds.push(data.data.stripeIds.customerId)
+    testSubscriptionIds.push(data.data.stripeIds.subscriptionId)
 
     // Verify discount applied: €35 - 10% = €31.50
-    const subscription = await stripe.subscriptions.retrieve(data.data.subscriptionId)
+    const subscription = await stripe.subscriptions.retrieve(data.data.stripeIds.subscriptionId)
     const latestInvoice = await stripe.invoices.retrieve(
       typeof subscription.latest_invoice === 'string'
         ? subscription.latest_invoice
@@ -421,18 +414,17 @@ describe('Stripe Checkout Session Creation Tests', () => {
   })
 
   it('should reject invalid discount code', async () => {
-    const response = await fetch('http://localhost:3783/api/stripe/create-checkout-session', {
+    const response = await fetch('http://localhost:3783/api/stripe/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Test-Mode': 'true'
       },
       body: JSON.stringify({
-        submission_id: testSubmissionId,
+        submissionId: testSubmissionId,
+        sessionId: testSessionId,
         additionalLanguages: [],
         discountCode: 'INVALID_CODE_123',
-        successUrl: 'http://localhost:3783/onboarding/thank-you',
-        cancelUrl: 'http://localhost:3783/onboarding/step/14'
       })
     })
 
@@ -443,8 +435,8 @@ describe('Stripe Checkout Session Creation Tests', () => {
     expect(data.error.code).toBe('INVALID_DISCOUNT_CODE')
   })
 
-  it('should reject missing submission_id', async () => {
-    const response = await fetch('http://localhost:3783/api/stripe/create-checkout-session', {
+  it('should reject missing submissionId', async () => {
+    const response = await fetch('http://localhost:3783/api/stripe/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -452,8 +444,6 @@ describe('Stripe Checkout Session Creation Tests', () => {
       },
       body: JSON.stringify({
         additionalLanguages: [],
-        successUrl: 'http://localhost:3783/onboarding/thank-you',
-        cancelUrl: 'http://localhost:3783/onboarding/step/14'
       })
     })
 
@@ -495,17 +485,16 @@ describe('Stripe Checkout Session Creation Tests', () => {
 
     // Make 6 rapid requests with different submissions (limit is 5 per hour per session)
     for (const submissionId of testSubmissions) {
-      const response = await fetch('http://localhost:3783/api/stripe/create-checkout-session', {
+      const response = await fetch('http://localhost:3783/api/stripe/checkout', {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json',
         'X-Test-Mode': 'true'
       },
         body: JSON.stringify({
-          submission_id: submissionId,
+          submissionId: submissionId,
+          sessionId: testSessionId,
           additionalLanguages: [],
-          successUrl: 'http://localhost:3783/onboarding/thank-you',
-          cancelUrl: 'http://localhost:3783/onboarding/step/14'
         })
       })
 
@@ -514,8 +503,8 @@ describe('Stripe Checkout Session Creation Tests', () => {
       // Collect customer/subscription IDs for cleanup
       if (response.status === 200) {
         const data = await response.json()
-        testCustomerIds.push(data.data.customerId)
-        testSubscriptionIds.push(data.data.subscriptionId)
+        testCustomerIds.push(data.data.stripeIds.customerId)
+        testSubscriptionIds.push(data.data.stripeIds.subscriptionId)
       }
     }
 
@@ -538,28 +527,27 @@ describe('Stripe Checkout Session Creation Tests', () => {
   })
 
   it('should create subscription schedule with correct configuration', async () => {
-    const response = await fetch('http://localhost:3783/api/stripe/create-checkout-session', {
+    const response = await fetch('http://localhost:3783/api/stripe/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Test-Mode': 'true'
       },
       body: JSON.stringify({
-        submission_id: testSubmissionId,
+        submissionId: testSubmissionId,
+        sessionId: testSessionId,
         additionalLanguages: [],
-        successUrl: 'http://localhost:3783/onboarding/thank-you',
-        cancelUrl: 'http://localhost:3783/onboarding/step/14'
       })
     })
 
     const data = await response.json()
     expect(data.success).toBe(true)
     expect(data.data.paymentRequired).toBe(true)
-    testCustomerIds.push(data.data.customerId)
-    testSubscriptionIds.push(data.data.subscriptionId)
+    testCustomerIds.push(data.data.stripeIds.customerId)
+    testSubscriptionIds.push(data.data.stripeIds.subscriptionId)
 
     // Retrieve subscription schedule
-    const subscription = await stripe.subscriptions.retrieve(data.data.subscriptionId)
+    const subscription = await stripe.subscriptions.retrieve(data.data.stripeIds.subscriptionId)
     const scheduleId = typeof subscription.schedule === 'string'
       ? subscription.schedule
       : subscription.schedule!.id

@@ -53,8 +53,8 @@ export async function sendMockWebhook(
  * @param expectedAmount - Optional expected payment amount (for validation testing)
  */
 export async function triggerMockWebhookForPayment(submissionId: string, expectedAmount?: number): Promise<void> {
-  // Only use mock webhooks when BASE_URL is set (CI environment)
-  if (!process.env.BASE_URL) {
+  // Only use mock webhooks in CI or when testing against a remote deployment
+  if (!process.env.BASE_URL && !process.env.CI) {
     // Local environment - real webhooks will arrive via stripe listen
     return
   }

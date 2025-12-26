@@ -57,6 +57,13 @@ export function FileUploadWithProgress({
   const abortControllersRef = useRef<Map<string, AbortController>>(new Map())
   const isInitialRender = useRef(true)
 
+  useEffect(() => {
+    if (existingFiles.length === 0 || uploadQueue.length > 0) {
+      return
+    }
+    setUploadQueue(existingFiles)
+  }, [existingFiles, uploadQueue.length])
+
   // Use effect to notify parent of file changes after state updates
   useEffect(() => {
     // Skip initial render to avoid calling onFilesChange unnecessarily

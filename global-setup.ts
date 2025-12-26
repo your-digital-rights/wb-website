@@ -42,11 +42,21 @@ async function startNextServer() {
   }
 
   console.log('🚀 Starting Next.js server on port 3783...');
+  const resolvedBaseUrl = (() => {
+    try {
+      return new URL(NEXT_SERVER_URL).origin;
+    } catch {
+      return 'http://localhost:3783';
+    }
+  })();
   nextServerProcess = spawn('pnpm', ['start', '--', '--hostname', 'localhost', '--port', '3783'], {
     stdio: ['ignore', 'pipe', 'pipe'],
     env: {
       ...process.env,
-      PORT: '3783'
+      PORT: '3783',
+      BASE_URL: process.env.BASE_URL ?? resolvedBaseUrl,
+      NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL ?? resolvedBaseUrl,
+      NEXT_PUBLIC_ENV: process.env.NEXT_PUBLIC_ENV ?? 'development'
     }
   });
 

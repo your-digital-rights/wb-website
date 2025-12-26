@@ -42,7 +42,29 @@ export class WebhookService {
 
     // Direct invoice object on legacy events
     if (eventData?.object === 'invoice') {
-      return eventData as Stripe.Invoice
+      const invoice = eventData as Stripe.Invoice
+      const hasPaymentIntent = Boolean((invoice as any).payment_intent)
+        || Boolean((invoice as any).payments?.data?.length)
+      const hasSubscription = Boolean((invoice as any).subscription)
+      const hasCustomer = Boolean((invoice as any).customer)
+
+      if (invoice.id && (!hasPaymentIntent || !hasSubscription || !hasCustomer)) {
+        try {
+          return await this.stripe.invoices.retrieve(invoice.id, {
+            expand: [
+              'total_discount_amounts.discount',
+              'customer',
+              'subscription',
+              'payments.data.payment',
+              'discounts'
+            ]
+          })
+        } catch (error) {
+          debugLog(`Failed to retrieve invoice ${invoice.id}:`, error)
+        }
+      }
+
+      return invoice
     }
 
     // New invoice payment events contain an invoice reference
@@ -54,7 +76,6 @@ export class WebhookService {
       try {
         return await this.stripe.invoices.retrieve(invoiceId, {
           expand: [
-            'line_items',
             'total_discount_amounts.discount',
             'customer',
             'subscription',
@@ -258,6 +279,29 @@ export class WebhookService {
       }
     }
 
+    // Strategy 6: Fallback to Stripe customer metadata when submission IDs are missing in DB
+    if (customerId) {
+      try {
+        const customer = await this.stripe.customers.retrieve(customerId)
+        if (!(customer as Stripe.DeletedCustomer).deleted) {
+          const metadataSubmissionId = (customer as Stripe.Customer).metadata?.submission_id
+          if (metadataSubmissionId) {
+            const { data } = await supabase
+              .from('onboarding_submissions')
+              .select('*')
+              .eq('id', metadataSubmissionId)
+              .single()
+
+            if (data) {
+              return { submission: data, foundBy: 'metadata' }
+            }
+          }
+        }
+      } catch (error) {
+        debugLog(`Failed to retrieve customer ${customerId} for metadata lookup:`, error)
+      }
+    }
+
     return { submission: null }
   }
 
@@ -286,7 +330,7 @@ export class WebhookService {
         invoiceCustomerRaw = (invoice as any).metadata.customer_id
       }
 
-      const subscriptionId = typeof invoiceSubscriptionRaw === 'string'
+      let subscriptionId = typeof invoiceSubscriptionRaw === 'string'
         ? invoiceSubscriptionRaw
         : invoiceSubscriptionRaw?.id ?? null
       const customerId = typeof invoiceCustomerRaw === 'string'
@@ -296,6 +340,30 @@ export class WebhookService {
       let paymentIntentId = typeof invoicePaymentIntentRaw === 'string'
         ? invoicePaymentIntentRaw
         : invoicePaymentIntentRaw?.id ?? null
+
+      if (!subscriptionId) {
+        const lineWithSubscription = invoice.lines?.data?.find((line) => Boolean(line.subscription)) ?? null
+        const lineSubscription = lineWithSubscription?.subscription ?? null
+        if (lineSubscription) {
+          subscriptionId = typeof lineSubscription === 'string'
+            ? lineSubscription
+            : lineSubscription.id ?? null
+        }
+      }
+
+      if (!subscriptionId && customerId) {
+        try {
+          const subscriptions = await this.stripe.subscriptions.list({
+            customer: customerId,
+            limit: 1
+          })
+          if (subscriptions.data.length > 0) {
+            subscriptionId = subscriptions.data[0].id
+          }
+        } catch (error) {
+          debugLog(`Failed to list subscriptions for customer ${customerId}:`, error)
+        }
+      }
 
       if (!paymentIntentId) {
         const paymentsArray = (invoice as any).payments?.data || []
@@ -524,6 +592,7 @@ export class WebhookService {
       let invoiceId: string | null = null
       let invoiceSubtotal: number | null = null
       let invoiceDiscountAmount = 0
+      let subscriptionIdFromInvoice: string | null = null
 
       // Find submission by customer_id or metadata
       const lookupResult = await this.findSubmissionByEvent(event, supabase)
@@ -558,6 +627,10 @@ export class WebhookService {
             const invoice = await this.stripe.invoices.retrieve(invoiceId, {
               expand: ['total_discount_amounts']
             })
+            const invoiceSubscriptionRaw = (invoice as Stripe.Invoice & { subscription?: string | Stripe.Subscription | null }).subscription ?? null
+            subscriptionIdFromInvoice = typeof invoiceSubscriptionRaw === 'string'
+              ? invoiceSubscriptionRaw
+              : invoiceSubscriptionRaw?.id ?? null
             invoiceSubtotal = typeof invoice.subtotal === 'number' ? invoice.subtotal : null
             invoiceDiscountAmount = (invoice.total_discount_amounts || []).reduce(
               (sum, discount) => sum + discount.amount,
@@ -680,6 +753,7 @@ export class WebhookService {
       // This prevents race condition where webhook overwrites CheckoutSessionService's values
       if (paymentIntentId) updateData.stripe_payment_id = paymentIntentId
       if (customerId) updateData.stripe_customer_id = customerId
+      if (subscriptionIdFromInvoice) updateData.stripe_subscription_id = subscriptionIdFromInvoice
 
       const { error: updateError } = await supabase
         .from('onboarding_submissions')

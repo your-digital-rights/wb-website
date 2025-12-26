@@ -268,7 +268,7 @@ export function Step9ImageStyle({ form, errors, isLoading }: StepComponentProps)
       >
         <p>{t('tips.title')}</p>
         {/* Desktop: inline with bullet separators */}
-        <div className="hidden sm:flex flex-wrap justify-center gap-4">
+        <div className="hidden sm:flex flex-nowrap justify-center gap-3 text-xs lg:text-sm whitespace-nowrap">
           <span>{t('tips.brand')}</span>
           <span>•</span>
           <span>{t('tips.audience')}</span>

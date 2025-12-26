@@ -92,6 +92,13 @@ export async function fillStripePaymentForm(
   // Wait for Stripe Elements iframe to load
   await page.waitForSelector('iframe[name^="__privateStripeFrame"]', { timeout: 30000 })
   await page.waitForTimeout(3000) // Let Stripe fully initialize
+  await page.waitForFunction(() => {
+    const state = (window as any).__wb_paymentElement
+    if (!state) {
+      return true
+    }
+    return state.ready === true
+  }, { timeout: 30000 })
 
   // Get the Stripe iframe locator
   const stripeFrame = page.frameLocator('iframe[name^="__privateStripeFrame"]').first()
@@ -155,11 +162,54 @@ export async function fillStripePaymentForm(
   // Optional billing details (fill when present)
   const countrySelect = stripeFrame.getByRole('combobox', { name: /country/i })
   if (await countrySelect.count()) {
+    const countryField = countrySelect.first()
     try {
-      await countrySelect.selectOption({ label: 'Italy' })
-    } catch {
-      // ignore if already selected
+      const tagName = await countryField.evaluate(element => element.tagName)
+      if (tagName === 'SELECT') {
+        try {
+          await countryField.selectOption({ value: 'IT' })
+        } catch {
+          await countryField.selectOption({ label: 'Italy' })
+        }
+      } else {
+        await countryField.click({ force: true })
+        const countryOption = stripeFrame.getByRole('option', { name: /Italy/i })
+        if (await countryOption.count()) {
+          await countryOption.first().click()
+        } else {
+          await countryField.fill('Italy')
+          await countryField.press('Enter')
+        }
+      }
+    } catch (error) {
+      try {
+        await countryField.evaluate((element) => {
+          if (!(element instanceof HTMLSelectElement)) {
+            return
+          }
+          element.value = 'IT'
+          element.dispatchEvent(new Event('input', { bubbles: true }))
+          element.dispatchEvent(new Event('change', { bubbles: true }))
+        })
+      } catch (fallbackError) {
+        console.warn('Failed to select country in Stripe form:', fallbackError)
+      }
     }
+    await page.waitForTimeout(150)
+  }
+
+  const nameInput = stripeFrame.getByRole('textbox', { name: /name/i })
+  if (await nameInput.count()) {
+    await nameInput.click()
+    await nameInput.pressSequentially('Test User', { delay: 15 })
+    await page.waitForTimeout(150)
+  }
+
+  const emailInput = stripeFrame.getByRole('textbox', { name: /email/i })
+  if (await emailInput.count()) {
+    await emailInput.click()
+    await emailInput.pressSequentially('qa@example.com', { delay: 15 })
+    await page.waitForTimeout(150)
   }
 
   const addressLine1 = stripeFrame.getByRole('textbox', { name: /address line 1/i })
@@ -183,10 +233,37 @@ export async function fillStripePaymentForm(
     await page.waitForTimeout(150)
   }
 
-  const provinceInput = stripeFrame.getByRole('textbox', { name: /province/i })
-  if (await provinceInput.count()) {
-    await provinceInput.click()
-    await provinceInput.pressSequentially('MI', { delay: 15 })
+  const provinceCombobox = stripeFrame.getByRole('combobox', { name: /province|state|region/i })
+  if (await provinceCombobox.count()) {
+    const provinceField = provinceCombobox.first()
+    try {
+      const tagName = await provinceField.evaluate(element => element.tagName)
+      if (tagName === 'SELECT') {
+        try {
+          await provinceField.selectOption({ value: 'MI' })
+        } catch {
+          await provinceField.selectOption({ label: 'Milano' })
+        }
+      } else {
+        await provinceField.click({ force: true })
+        const provinceOption = stripeFrame.getByRole('option', { name: /Milano|MI/i })
+        if (await provinceOption.count()) {
+          await provinceOption.first().click()
+        } else {
+          await provinceField.fill('Milano')
+          await provinceField.press('Enter')
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to select province in Stripe form:', error)
+    }
     await page.waitForTimeout(150)
+  } else {
+    const provinceInput = stripeFrame.getByRole('textbox', { name: /province|state|region/i })
+    if (await provinceInput.count()) {
+      await provinceInput.click()
+      await provinceInput.pressSequentially('MI', { delay: 15 })
+      await page.waitForTimeout(150)
+    }
   }
 }

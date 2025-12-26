@@ -19,11 +19,27 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://whiteboar.it'
 
 // Test mode configuration - skip sending real emails in dev/test/CI/preview unless explicitly enabled
 const ENABLE_EMAILS = process.env.ENABLE_EMAILS === 'true'
+const isLocalUrl = (value?: string): boolean => {
+  if (!value) {
+    return false
+  }
+  try {
+    const url = new URL(value)
+    return url.hostname === 'localhost' || url.hostname === '127.0.0.1' || url.hostname === '0.0.0.0'
+  } catch {
+    return false
+  }
+}
+const IS_LOCAL_TESTING =
+  process.env.NEXT_PUBLIC_ENV === 'development' ||
+  isLocalUrl(process.env.NEXT_PUBLIC_APP_URL) ||
+  isLocalUrl(process.env.BASE_URL)
 const SHOULD_SKIP_BY_DEFAULT =
   process.env.NODE_ENV === 'test' ||
   process.env.NODE_ENV === 'development' ||
   process.env.CI === 'true' ||
-  process.env.VERCEL_ENV === 'preview'
+  process.env.VERCEL_ENV === 'preview' ||
+  IS_LOCAL_TESTING
 const IS_TEST_MODE = !ENABLE_EMAILS && SHOULD_SKIP_BY_DEFAULT
 
 // Validate Resend API key (only warn in production)

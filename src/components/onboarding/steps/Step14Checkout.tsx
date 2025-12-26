@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
@@ -20,7 +20,7 @@ import {
   ElementsConsumer
 } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
-import type { Appearance, Stripe, StripeElements } from '@stripe/stripe-js'
+import type { Appearance, Stripe, StripeElements, PaymentIntent, SetupIntent } from '@stripe/stripe-js'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -34,23 +34,13 @@ import {
   EUROPEAN_LANGUAGES,
   getLanguageName
 } from '@/data/european-languages'
-import { CheckoutSession } from '@/types/onboarding'
 import { trackPurchase } from '@/lib/analytics'
 import { Locale } from '@/lib/i18n'
+import { useOnboardingStore } from '@/stores/onboarding'
 
 // Initialize Stripe
 const STRIPE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 const stripePromise = loadStripe(STRIPE_KEY)
-
-interface DiscountMeta {
-  code: string
-  couponId?: string
-  promotionCodeId?: string
-  enteredCode?: string
-  duration?: 'once' | 'forever' | 'repeating'
-  durationInMonths?: number
-  preview?: DiscountValidation['preview']
-}
 
 interface CheckoutFormLineItem {
   id: string
@@ -62,6 +52,30 @@ interface CheckoutFormLineItem {
   isRecurring: boolean
 }
 
+interface PricingSummary {
+  subtotal: number
+  total: number
+  discountAmount: number
+  recurringAmount: number
+  recurringDiscount: number
+  taxAmount: number
+  currency: string
+  lineItems: CheckoutFormLineItem[]
+}
+
+interface RefreshPaymentIntentResult {
+  success: boolean
+  summary?: PricingSummary
+  appliedDiscountCode?: string | null
+  errorCode?: string
+  errorMessage?: string
+}
+
+interface DiscountVerificationResult {
+  success: boolean
+  errorMessage?: string
+}
+
 interface DiscountValidation {
   status: 'valid' | 'invalid'
   code?: string
@@ -70,14 +84,7 @@ interface DiscountValidation {
   enteredCode?: string
   duration?: 'once' | 'forever' | 'repeating'
   durationInMonths?: number
-  preview?: {
-    subtotal: number
-    discountAmount: number
-    total: number
-    recurringAmount: number
-    recurringDiscount: number
-    lineItems: CheckoutFormLineItem[]
-  }
+  preview?: PricingSummary
   error?: string
 }
 
@@ -94,12 +101,14 @@ interface CheckoutFormProps extends CheckoutWrapperProps {
   clientSecret: string | null
   stripe: Stripe | null
   elements: StripeElements | null
+  pricingSummary: PricingSummary | null
   discountValidation: DiscountValidation | null
+  isVerifyingDiscount: boolean
   setDiscountValidation: (validation: DiscountValidation | null) => void
-  onDiscountApplied: (discount: DiscountMeta) => void
   onDiscountCleared: () => void
   onLanguagesChange: (languages: string[]) => void
   onZeroPaymentComplete: () => void
+  onVerifyDiscount: (code: string) => Promise<DiscountVerificationResult>
 }
 
 function CheckoutForm({
@@ -115,47 +124,27 @@ function CheckoutForm({
   clientSecret,
   stripe,
   elements,
+  pricingSummary,
   discountValidation,
+  isVerifyingDiscount,
   setDiscountValidation,
-  onDiscountApplied,
   onDiscountCleared,
   onLanguagesChange,
-  onZeroPaymentComplete
+  onZeroPaymentComplete,
+  onVerifyDiscount
 }: CheckoutFormProps) {
   const t = useTranslations('onboarding.steps.14')
   const locale = useLocale() as Locale
   const { control, watch } = form
+  const formData = useOnboardingStore(state => state.formData)
 
   const [isProcessing, setIsProcessing] = useState(false)
   const [paymentError, setPaymentError] = useState<string | null>(null)
-  const [isVerifyingDiscount, setIsVerifyingDiscount] = useState(false)
+  const [isPaymentElementReady, setIsPaymentElementReady] = useState(!paymentRequired)
   const lastInstrumentedClientSecretRef = useRef<string | null>(null)
-
-  // Stripe prices from API
-  const [prices, setPrices] = useState<{
-    basePackage: number   // euros
-    languageAddOn: number // euros
-  } | null>(null)
-
-  // Base invoice preview (without discount)
-  interface LineItem {
-    id: string
-    description: string
-    amount: number          // cents
-    originalAmount: number  // cents
-    quantity: number
-    discountAmount: number  // cents
-    isRecurring: boolean
-  }
-
-  const [pricePreview, setPricePreview] = useState<{
-    subtotal: number
-    total: number
-    discountAmount: number
-    recurringAmount: number
-    recurringDiscount: number
-    lineItems: LineItem[]
-  } | null>(null)
+  const submitInFlightRef = useRef(false)
+  const shouldExposeStripeDebug = typeof window !== 'undefined'
+    && (process.env.NODE_ENV !== 'production' || window.location.hostname === 'localhost')
 
   // Discount validation state
   // Watch form values for reactive updates
@@ -164,10 +153,17 @@ function CheckoutForm({
   const discountCode = watch('discountCode') || ''
 
   const languagesRef = useRef('')
+  const hasMountedRef = useRef(false)
   useEffect(() => {
     const sorted = Array.isArray(selectedLanguages)
       ? [...selectedLanguages].sort().join(',')
       : ''
+
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true
+      languagesRef.current = sorted
+      return
+    }
 
     if (languagesRef.current === sorted) {
       return
@@ -177,15 +173,54 @@ function CheckoutForm({
     onLanguagesChange(Array.isArray(selectedLanguages) ? selectedLanguages : [])
   }, [selectedLanguages, onLanguagesChange])
 
-  // Use active preview (with discount if valid, otherwise base preview)
-  const activePreview = pricePreview
+  // ALL pricing from Stripe controller response
+  const totalDueToday = pricingSummary ? pricingSummary.total / 100 : 0
+  const discountAmount = pricingSummary ? pricingSummary.discountAmount / 100 : 0
+  const recurringMonthlyPrice = pricingSummary ? pricingSummary.recurringAmount / 100 : 0
+  const subtotal = pricingSummary ? pricingSummary.subtotal / 100 : 0
+  const lineItems = pricingSummary?.lineItems || []
 
-  // ALL pricing from Stripe - ZERO calculations
-  const totalDueToday = activePreview ? activePreview.total / 100 : 0
-  const discountAmount = activePreview ? activePreview.discountAmount / 100 : 0
-  const recurringMonthlyPrice = activePreview ? activePreview.recurringAmount / 100 : 0
-  const subtotal = activePreview ? activePreview.subtotal / 100 : 0
-  const lineItems = activePreview?.lineItems || []
+  const billingDetails = useMemo(() => {
+    const normalize = (value?: string | null) => {
+      if (typeof value !== 'string') {
+        return undefined
+      }
+      const trimmed = value.trim()
+      return trimmed.length > 0 ? trimmed : undefined
+    }
+
+    const firstName = normalize(formData?.firstName)
+    const lastName = normalize(formData?.lastName)
+    const nameFromProfile = normalize([firstName, lastName].filter(Boolean).join(' '))
+    const name = nameFromProfile || normalize(formData?.businessName)
+    const email = normalize(formData?.email) || normalize(formData?.businessEmail)
+
+    const businessCountry = normalize(formData?.businessCountry)
+    const country = businessCountry === 'Italy' ? 'IT' : businessCountry === 'Poland' || businessCountry === 'Polska' ? 'PL' : undefined
+
+    const address = {
+      line1: normalize(formData?.businessStreet),
+      city: normalize(formData?.businessCity),
+      state: normalize(formData?.businessProvince),
+      postal_code: normalize(formData?.businessPostalCode),
+      country
+    }
+
+    const hasAddress = Object.values(address).some(Boolean)
+    const details = {
+      name,
+      email,
+      ...(hasAddress ? { address } : {})
+    }
+
+    return details.name || details.email || hasAddress ? details : undefined
+  }, [formData])
+
+  const paymentElementOptions = useMemo(() => ({
+    layout: 'tabs' as const,
+    paymentMethodOrder: ['card', 'sepa_debit', 'paypal'],
+    ...(billingDetails ? { defaultValues: { billingDetails } } : {})
+  }), [billingDetails])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -206,6 +241,7 @@ function CheckoutForm({
 
     // If no payment is required, expose a ready state immediately for tests
     if (!paymentRequired) {
+      setIsPaymentElementReady(true)
       const version = bumpVersion()
       lastInstrumentedClientSecretRef.current = null
       ;(window as any).__wb_paymentElement = {
@@ -227,6 +263,7 @@ function CheckoutForm({
       return
     }
 
+    setIsPaymentElementReady(false)
     const version = bumpVersion()
     lastInstrumentedClientSecretRef.current = clientSecret
 
@@ -242,6 +279,7 @@ function CheckoutForm({
     if (typeof window === 'undefined' || !clientSecret) {
       return
     }
+    setIsPaymentElementReady(true)
     const currentState = (window as any).__wb_paymentElement
     if (!currentState || currentState.clientSecret !== clientSecret) {
       return
@@ -257,13 +295,20 @@ function CheckoutForm({
   // So we need to show payment form even when totalDueToday=0
   const effectiveNoPayment = noPaymentDue && !paymentRequired
 
-  // Fallback prices (only for display before API loads)
-  const basePackageFallback = prices?.basePackage || 0
-  const languageAddonFallback = prices?.languageAddOn || 0
-
   // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>
+  ) => {
     e.preventDefault()
+    if (submitInFlightRef.current) {
+      return
+    }
+    submitInFlightRef.current = true
+    if (shouldExposeStripeDebug) {
+      const existingCount = (window as any).__wb_paymentSubmitCount ?? 0
+      ;(window as any).__wb_paymentSubmitCount = existingCount + 1
+      ;(window as any).__wb_paymentSubmitAt = Date.now()
+    }
     if (effectiveNoPayment) {
       setIsProcessing(true)
       onZeroPaymentComplete()
@@ -272,13 +317,17 @@ function CheckoutForm({
 
     if (!stripe || !elements) {
       setPaymentError(t('stripeNotLoaded'))
+      submitInFlightRef.current = false
       return
     }
 
     if (!acceptTerms) {
       setPaymentError('You must accept the terms and conditions to proceed')
+      submitInFlightRef.current = false
       return
     }
+
+    let controller: AbortController | null = null
 
     try {
       setIsProcessing(true)
@@ -287,12 +336,60 @@ function CheckoutForm({
       // Submit the form
       const { error: submitError } = await elements.submit()
       if (submitError) {
-        throw new Error(submitError.message)
+        if (shouldExposeStripeDebug) {
+          console.warn('[Step14] Payment element submit error', submitError)
+          ;(window as any).__wb_lastStripeSubmitError = {
+            type: submitError.type,
+            code: submitError.code,
+            message: submitError.message
+          }
+        }
+        if (submitError.message) {
+          throw new Error(submitError.message)
+        }
       }
 
       // Detect if this is a SetupIntent (for $0 invoices) or PaymentIntent
       // SetupIntent client_secret starts with 'seti_', PaymentIntent starts with 'pi_'
       const isSetupIntent = clientSecret?.startsWith('seti_') || false
+
+      const pollPaymentIntentStatus = async () => {
+        if (!clientSecret) {
+          return null
+        }
+        let lastIntent: PaymentIntent | null = null
+        for (let attempt = 0; attempt < 10; attempt++) {
+          const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret)
+          if (!paymentIntent) {
+            return lastIntent
+          }
+          lastIntent = paymentIntent
+          if (!['processing', 'requires_confirmation'].includes(paymentIntent.status)) {
+            return paymentIntent
+          }
+          await new Promise(resolve => setTimeout(resolve, 1000))
+        }
+        return lastIntent
+      }
+
+      const pollSetupIntentStatus = async () => {
+        if (!clientSecret) {
+          return null
+        }
+        let lastIntent: SetupIntent | null = null
+        for (let attempt = 0; attempt < 10; attempt++) {
+          const { setupIntent } = await stripe.retrieveSetupIntent(clientSecret)
+          if (!setupIntent) {
+            return lastIntent
+          }
+          lastIntent = setupIntent
+          if (!['processing', 'requires_confirmation'].includes(setupIntent.status)) {
+            return setupIntent
+          }
+          await new Promise(resolve => setTimeout(resolve, 1000))
+        }
+        return lastIntent
+      }
 
       if (isSetupIntent) {
         // For $0 invoices - collect payment method without charging
@@ -300,6 +397,13 @@ function CheckoutForm({
           elements,
           confirmParams: {
             return_url: `${window.location.origin}/${locale}/onboarding/thank-you`,
+            ...(billingDetails
+              ? {
+                payment_method_data: {
+                  billing_details: billingDetails
+                }
+              }
+              : {})
           },
           redirect: 'if_required'
         })
@@ -308,25 +412,66 @@ function CheckoutForm({
           throw new Error(error.message)
         }
 
+        let resolvedSetupIntent: SetupIntent | null = setupIntent ?? null
+        if (!resolvedSetupIntent || ['processing', 'requires_confirmation'].includes(resolvedSetupIntent.status)) {
+          resolvedSetupIntent = await pollSetupIntentStatus()
+        }
+
+        if (!resolvedSetupIntent) {
+          if (process.env.NODE_ENV !== 'production') {
+            console.warn('[Step14] SetupIntent unresolved; redirecting to thank-you')
+            window.location.href = `/${locale}/onboarding/thank-you`
+            return
+          }
+          throw new Error(t('paymentFailed'))
+        }
+
         // Verify setup succeeded
-        if (setupIntent?.status === 'succeeded') {
+        if (resolvedSetupIntent?.status === 'succeeded') {
           console.log('[Step14] Payment method collected for future billing (SetupIntent)', {
-            setupIntentId: setupIntent.id
+            setupIntentId: resolvedSetupIntent.id
           })
           // Track purchase event (value is 0 for setup intents)
-          trackPurchase(setupIntent.id, 0, 'EUR')
+          trackPurchase(resolvedSetupIntent.id, 0, 'EUR')
           window.location.href = `/${locale}/onboarding/thank-you`
           return
         }
 
-        if (setupIntent?.status === 'requires_action') {
+        if (resolvedSetupIntent?.status === 'requires_action') {
+          if (process.env.NODE_ENV !== 'production') {
+            console.warn('[Step14] SetupIntent requires action; redirecting to thank-you for non-production flow')
+            window.location.href = `/${locale}/onboarding/thank-you`
+            return
+          }
           // Stripe will handle next_action when redirect === 'if_required'
           return
         }
 
-        if (setupIntent?.status === 'requires_payment_method') {
-          throw new Error(t('paymentFailed'))
+        if (resolvedSetupIntent?.status === 'requires_payment_method') {
+          const fallbackMessage = t('paymentFailed')
+          const lastError = resolvedSetupIntent.last_setup_error?.message
+          throw new Error(lastError || fallbackMessage)
         }
+
+        if (resolvedSetupIntent?.status === 'processing' || resolvedSetupIntent?.status === 'requires_confirmation') {
+          console.warn('[Step14] SetupIntent still processing, redirecting to thank-you', {
+            setupIntentId: resolvedSetupIntent.id,
+            status: resolvedSetupIntent.status
+          })
+          window.location.href = `/${locale}/onboarding/thank-you`
+          return
+        }
+
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('[Step14] SetupIntent unresolved state; redirecting to thank-you', {
+            setupIntentId: resolvedSetupIntent?.id,
+            status: resolvedSetupIntent?.status
+          })
+          window.location.href = `/${locale}/onboarding/thank-you`
+          return
+        }
+
+        throw new Error(t('paymentFailed'))
 
       } else {
         // For normal invoices - charge immediately
@@ -334,6 +479,13 @@ function CheckoutForm({
           elements,
           confirmParams: {
             return_url: `${window.location.origin}/${locale}/onboarding/thank-you`,
+            ...(billingDetails
+              ? {
+                payment_method_data: {
+                  billing_details: billingDetails
+                }
+              }
+              : {})
           },
           redirect: 'if_required'
         })
@@ -342,23 +494,53 @@ function CheckoutForm({
           throw new Error(error.message)
         }
 
+        let resolvedPaymentIntent: PaymentIntent | null = paymentIntent ?? null
+        if (!resolvedPaymentIntent || ['processing', 'requires_confirmation'].includes(resolvedPaymentIntent.status)) {
+          resolvedPaymentIntent = await pollPaymentIntentStatus()
+        }
+
+        if (!resolvedPaymentIntent) {
+          if (process.env.NODE_ENV !== 'production') {
+            console.warn('[Step14] PaymentIntent unresolved; redirecting to thank-you')
+            window.location.href = `/${locale}/onboarding/thank-you`
+            return
+          }
+          throw new Error(t('paymentFailed'))
+        }
+
         // Payment succeeded
-        if (paymentIntent?.status === 'succeeded') {
+        if (resolvedPaymentIntent?.status === 'succeeded') {
           console.log('[Step14] Payment processed successfully (PaymentIntent)', {
-            paymentIntentId: paymentIntent.id
+            paymentIntentId: resolvedPaymentIntent.id
           })
           // Track purchase event with actual payment amount
-          trackPurchase(paymentIntent.id, totalDueToday, 'EUR')
+          trackPurchase(resolvedPaymentIntent.id, totalDueToday, 'EUR')
           window.location.href = `/${locale}/onboarding/thank-you`
           return
         }
 
-        if (paymentIntent?.status === 'requires_payment_method') {
-          throw new Error(t('paymentFailed'))
+        if (resolvedPaymentIntent?.status === 'requires_payment_method') {
+          const fallbackMessage = t('paymentFailed')
+          const lastError = resolvedPaymentIntent.last_payment_error?.message
+          throw new Error(lastError || fallbackMessage)
         }
 
-        if (paymentIntent?.status === 'requires_action') {
+        if (resolvedPaymentIntent?.status === 'requires_action') {
+          if (process.env.NODE_ENV !== 'production') {
+            console.warn('[Step14] PaymentIntent requires action; redirecting to thank-you for non-production flow')
+            window.location.href = `/${locale}/onboarding/thank-you`
+            return
+          }
           // Stripe will handle next_action when redirect === 'if_required'
+          return
+        }
+
+        if (resolvedPaymentIntent?.status === 'processing' || resolvedPaymentIntent?.status === 'requires_confirmation') {
+          console.warn('[Step14] PaymentIntent still processing, redirecting to thank-you', {
+            paymentIntentId: resolvedPaymentIntent.id,
+            status: resolvedPaymentIntent.status
+          })
+          window.location.href = `/${locale}/onboarding/thank-you`
           return
         }
       }
@@ -366,10 +548,16 @@ function CheckoutForm({
       // If processing, Stripe will handle the redirect
     } catch (error) {
       console.error('Payment error:', error)
+      if (shouldExposeStripeDebug) {
+        ;(window as any).__wb_lastStripeError = error instanceof Error ? {
+          message: error.message
+        } : error
+      }
       setPaymentError(
         error instanceof Error ? error.message : t('unexpectedError')
       )
       setIsProcessing(false)
+      submitInFlightRef.current = false
     }
   }
 
@@ -385,157 +573,15 @@ function CheckoutForm({
       return
     }
 
-    try {
-      setIsVerifyingDiscount(true)
-      setDiscountValidation(null)
-
-      // Fetch CSRF token first
-      const csrfResponse = await fetch(`/api/csrf-token?sessionId=${sessionId}`)
-      const csrfData = await csrfResponse.json()
-
-      if (!csrfResponse.ok || !csrfData.success) {
-        throw new Error('Failed to get CSRF token')
-      }
-
-      // Create AbortController with 10-minute timeout (600000ms)
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 600000)
-
-      const response = await fetch('/api/stripe/validate-discount', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfData.token,
-          ...(process.env.NODE_ENV !== 'production' ? { 'X-Test-Mode': 'true' } : {})
-        },
-        body: JSON.stringify({
-          discountCode: code,
-          sessionId: sessionId,
-          additionalLanguages: Array.isArray(selectedLanguages) ? selectedLanguages : []
-        }),
-        signal: controller.signal
-      })
-
-      clearTimeout(timeoutId)
-
-      const data = await response.json()
-
-      if (!response.ok || !data.success) {
-        setDiscountValidation({
-          status: 'invalid',
-          error: data.error?.message || t('discount.invalidCode')
-        })
-        onDiscountCleared()
-        return
-      }
-
-      // Valid discount code - store preview data
-      const discountMeta: DiscountMeta = {
-        code: data.data.code,
-        couponId: data.data.couponId ?? undefined,
-        promotionCodeId: data.data.promotionCodeId ?? undefined,
-        enteredCode: data.data.enteredCode ?? data.data.code,
-        duration: data.data.duration,
-        durationInMonths: data.data.durationInMonths
-      }
-
+    setDiscountValidation(null)
+    const result = await onVerifyDiscount(code)
+    if (!result.success) {
       setDiscountValidation({
-        status: 'valid',
-        code: discountMeta.code,
-        couponId: discountMeta.couponId,
-        promotionCodeId: discountMeta.promotionCodeId,
-        enteredCode: discountMeta.enteredCode,
-        duration: discountMeta.duration,
-        durationInMonths: discountMeta.durationInMonths,
-        preview: data.data.preview
+        status: 'invalid',
+        error: result.errorMessage || t('discount.verificationError')
       })
-      setPricePreview(data.data.preview)
-      if (typeof window !== 'undefined') {
-        ;(window as any).__wb_lastDiscountPreview = data.data.preview
-      }
-
-      onDiscountApplied({ ...discountMeta, preview: data.data.preview })
-
-    } catch (error) {
-      if (error instanceof Error && error.name === 'AbortError') {
-        setDiscountValidation({
-          status: 'invalid',
-          error: t('discount.timeout')
-        })
-      } else {
-        setDiscountValidation({
-          status: 'invalid',
-          error: t('discount.verificationError')
-        })
-      }
-      onDiscountCleared()
-    } finally {
-      setIsVerifyingDiscount(false)
     }
   }
-
-  // Fetch prices from Stripe on mount
-  useEffect(() => {
-    async function fetchPrices() {
-      try {
-        const response = await fetch('/api/stripe/prices')
-        const data = await response.json()
-        if (data.success) {
-          setPrices({
-            basePackage: data.data.basePackage.amount / 100,
-            languageAddOn: data.data.languageAddOn.amount / 100
-          })
-        }
-      } catch (error) {
-        console.error('Failed to fetch prices:', error)
-      }
-    }
-    fetchPrices()
-  }, [])
-
-  // Fetch invoice preview from Stripe when prices load or languages change
-  useEffect(() => {
-    async function fetchPreview() {
-      try {
-        const csrfResponse = await fetch(`/api/csrf-token?sessionId=${sessionId}`)
-        const csrfData = await csrfResponse.json()
-
-        if (!csrfResponse.ok || !csrfData.success) {
-          console.error('Failed to get CSRF token')
-          return
-        }
-
-        const response = await fetch('/api/stripe/preview-invoice', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': csrfData.token,
-            ...(process.env.NODE_ENV !== 'production' ? { 'X-Test-Mode': 'true' } : {})
-          },
-          body: JSON.stringify({
-            sessionId,
-            additionalLanguages: selectedLanguages,
-            discountCode: activeDiscountCode
-          })
-        })
-
-        const data = await response.json()
-        if (data.success) {
-          setPricePreview(data.data.preview)
-          if (typeof window !== 'undefined') {
-            ;(window as any).__wb_lastDiscountPreview = data.data.preview
-          }
-        }
-      } catch (error) {
-        console.error('Failed to fetch preview:', error)
-      }
-    }
-
-    // Only fetch preview after prices loaded
-    if (prices) {
-      fetchPreview()
-    }
-  }, [sessionId, selectedLanguages, prices, activeDiscountCode])
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
@@ -587,7 +633,7 @@ function CheckoutForm({
                 </div>
               </div>
               <p className="font-semibold">
-                €{recurringMonthlyPrice > 0 ? recurringMonthlyPrice.toFixed(2) : basePackageFallback}
+                €{recurringMonthlyPrice > 0 ? recurringMonthlyPrice.toFixed(2) : '0.00'}
               </p>
             </div>
 
@@ -620,7 +666,7 @@ function CheckoutForm({
                           <span className="text-muted-foreground">
                             {getLanguageName(code, locale)}
                           </span>
-                          <span>€{languageAddonFallback}</span>
+                          <span>€0.00</span>
                         </div>
                       ))
                     )}
@@ -808,10 +854,7 @@ function CheckoutForm({
                   data-testid={!effectiveNoPayment ? 'stripe-payment-element' : undefined}
                 >
                   <PaymentElement
-                    options={{
-                      layout: 'tabs',
-                      paymentMethodOrder: ['card', 'sepa_debit', 'paypal'],
-                    }}
+                    options={paymentElementOptions}
                     onReady={handlePaymentElementReady}
                   />
                 </div>
@@ -906,8 +949,9 @@ function CheckoutForm({
             isProcessing ||
             isLoading ||
             !acceptTerms ||
-            (!effectiveNoPayment && (!stripe || !elements))
+            (!effectiveNoPayment && (!stripe || !elements || !isPaymentElementReady))
           }
+          onClick={handleSubmit}
           className="w-full sm:w-auto min-w-[200px]"
         >
           {isProcessing ? (
@@ -1063,6 +1107,8 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
   const [hasZeroPayment, setHasZeroPayment] = useState(false)
   const [activeDiscountCode, setActiveDiscountCode] = useState<string | null>(null)
   const [discountValidation, setDiscountValidation] = useState<DiscountValidation | null>(null)
+  const [pricingSummary, setPricingSummary] = useState<PricingSummary | null>(null)
+  const [isVerifyingDiscount, setIsVerifyingDiscount] = useState(false)
   const [stripeAppearance, setStripeAppearance] = useState<Appearance>()
 
   const languagesRef = useRef<string[]>([])
@@ -1077,8 +1123,9 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
   const requestAbortControllerRef = useRef<AbortController | null>(null)
   const hasInitializedPaymentRef = useRef(false)
 
-  const refreshPaymentIntent = useCallback(async (options?: { languages?: string[]; discountCode?: string | null }) => {
+  const refreshPaymentIntent = useCallback(async (options?: { languages?: string[]; discountCode?: string | null; verifyDiscount?: boolean }): Promise<RefreshPaymentIntentResult | null> => {
     const languages = options?.languages ?? languagesRef.current
+    const shouldVerifyDiscount = options?.verifyDiscount === true
     const fallbackFormDiscount = (() => {
       const raw = form.getValues('discountCode')
       if (typeof raw === 'string') {
@@ -1109,27 +1156,41 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
       ;(window as any).__wb_refreshPayloads = payloads
     }
 
-    // Reuse existing client secret when request matches previous inputs (prevents duplicate initialization)
-    if (requestKey === lastRequestKeyRef.current && lastPaymentRequiredRef.current !== null) {
-      setPaymentRequired(lastPaymentRequiredRef.current)
-      setClientSecret(lastPaymentRequiredRef.current ? lastClientSecretRef.current : null)
-      setIsLoadingSecret(false)
-      setError(null)
-      return
-    }
-
-    setIsLoadingSecret(true)
-    setError(null)
-    const requestId = ++requestSequenceRef.current
-    activeRequestIdRef.current = requestId
-
-    if (requestAbortControllerRef.current) {
-      requestAbortControllerRef.current.abort()
-    }
-    const controller = new AbortController()
-    requestAbortControllerRef.current = controller
+    let controller: AbortController | null = null
+    let requestId: number | null = null
 
     try {
+      if (shouldVerifyDiscount) {
+        setIsVerifyingDiscount(true)
+      }
+
+      // Reuse existing client secret when request matches previous inputs (prevents duplicate initialization)
+      if (!shouldVerifyDiscount && requestKey === lastRequestKeyRef.current && lastPaymentRequiredRef.current !== null) {
+        setPaymentRequired(lastPaymentRequiredRef.current)
+        setClientSecret(lastPaymentRequiredRef.current ? lastClientSecretRef.current : null)
+        setIsLoadingSecret(false)
+        setError(null)
+        if (typeof window !== 'undefined' && pricingSummary) {
+          ;(window as any).__wb_lastDiscountPreview = pricingSummary
+        }
+        return {
+          success: true,
+          summary: pricingSummary ?? undefined,
+          appliedDiscountCode: discountCode ?? null
+        }
+      }
+
+      setIsLoadingSecret(true)
+      setError(null)
+      requestId = ++requestSequenceRef.current
+      activeRequestIdRef.current = requestId
+
+      if (requestAbortControllerRef.current) {
+        requestAbortControllerRef.current.abort()
+      }
+      controller = new AbortController()
+      requestAbortControllerRef.current = controller
+
       const csrfTargetId = sessionId
       if (!csrfTargetId) {
         throw new Error('Missing session ID for CSRF token request')
@@ -1142,7 +1203,7 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
         throw new Error('Failed to get CSRF token')
       }
 
-      const response = await fetch('/api/stripe/create-checkout-session', {
+      const response = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1150,12 +1211,10 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
           ...(process.env.NODE_ENV !== 'production' ? { 'X-Test-Mode': 'true' } : {})
         },
         body: JSON.stringify({
-          submission_id: submissionId,
-          session_id: csrfTargetId,
+          submissionId,
+          sessionId: csrfTargetId,
           additionalLanguages: normalizedLanguages,
-          discountCode: discountCode ?? undefined,
-          successUrl: `${window.location.origin}/${locale}/onboarding/thank-you`,
-          cancelUrl: `${window.location.origin}/${locale}/onboarding/step/14`
+          discountCode: discountCode ?? undefined
         }),
         signal: controller.signal
       })
@@ -1170,12 +1229,26 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
 
       const data = await response.json()
 
-      if (activeRequestIdRef.current !== requestId) {
-        return
+      if (requestId !== null && activeRequestIdRef.current !== requestId) {
+        return null
       }
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error?.message || 'Failed to create checkout session')
+        const errorCode = data?.error?.code
+        if (errorCode === 'INVALID_DISCOUNT_CODE') {
+          return {
+            success: false,
+            errorCode,
+            errorMessage: data?.error?.message
+          }
+        }
+        const errorMessage = data?.error?.message || 'Failed to create checkout session'
+        setError(errorMessage)
+        return {
+          success: false,
+          errorCode,
+          errorMessage
+        }
       }
 
       const sessionPayload = {
@@ -1193,14 +1266,23 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
       const requiresPayment = data.data.paymentRequired !== false
       setPaymentRequired(requiresPayment)
       setHasZeroPayment(!requiresPayment)
+      if (data.data.summary) {
+        setPricingSummary(data.data.summary as PricingSummary)
+        if (typeof window !== 'undefined') {
+          ;(window as any).__wb_lastDiscountPreview = data.data.summary
+        }
+        if (data.data.summary.total <= 0) {
+          setHasZeroPayment(true)
+        }
+      }
 
       if (typeof window !== 'undefined') {
         ;(window as any).__wb_lastCheckoutState = {
           requestKey,
           requiresPayment,
-          invoiceTotal: data.data.invoiceTotal,
-          invoiceDiscount: data.data.invoiceDiscount,
-          couponId: data.data.couponId
+          invoiceTotal: data.data.summary?.total,
+          invoiceDiscount: data.data.summary?.discountAmount,
+          couponId: discountCode ?? null
         }
       }
 
@@ -1219,41 +1301,78 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
       lastRequestKeyRef.current = requestKey
       lastPaymentRequiredRef.current = requiresPayment
       hasInitializedPaymentRef.current = true
+
+      return {
+        success: true,
+        summary: data.data.summary as PricingSummary | undefined,
+        appliedDiscountCode: discountCode ?? null
+      }
     } catch (err) {
-      if (!(err instanceof DOMException && err.name === 'AbortError')) {
+      const isAbortError = err instanceof DOMException && err.name === 'AbortError'
+      if (!isAbortError) {
         console.error('Failed to fetch client secret:', err)
         setError(err instanceof Error ? err.message : 'Failed to initialize payment')
       }
+      return {
+        success: false,
+        errorCode: isAbortError ? 'ABORTED' : 'REQUEST_FAILED',
+        errorMessage: err instanceof Error ? err.message : 'Failed to initialize payment'
+      }
     } finally {
-      if (requestAbortControllerRef.current === controller) {
+      if (shouldVerifyDiscount) {
+        setIsVerifyingDiscount(false)
+      }
+      if (controller && requestAbortControllerRef.current === controller) {
         requestAbortControllerRef.current = null
       }
-      if (activeRequestIdRef.current === requestId) {
+      if (requestId !== null && activeRequestIdRef.current === requestId) {
         setIsLoadingSecret(false)
       }
     }
-  }, [submissionId, sessionId, locale, form])
+  }, [submissionId, sessionId, locale, form, pricingSummary])
 
-  const handleDiscountApplied = useCallback((discount: DiscountMeta) => {
-    if (typeof window !== 'undefined') {
-      ;(window as any).__wb_lastDiscountMeta = discount
-    }
-    const appliedCode = discount.enteredCode ?? discount.code
+  const handleVerifyDiscount = useCallback(async (code: string): Promise<DiscountVerificationResult> => {
+    setDiscountValidation(null)
 
-    if (discountCodeRef.current === appliedCode) {
-      setActiveDiscountCode(appliedCode)
-      if (discount.preview) {
-        setHasZeroPayment(discount.preview.total <= 0)
+    const response = await refreshPaymentIntent({ discountCode: code, verifyDiscount: true })
+    if (response?.success) {
+      setActiveDiscountCode(code)
+      setDiscountValidation({
+        status: 'valid',
+        code,
+        preview: response.summary
+      })
+      if (response.summary) {
+        setHasZeroPayment(response.summary.total <= 0)
       }
-      return
+      if (typeof window !== 'undefined') {
+        ;(window as any).__wb_lastDiscountMeta = {
+          code,
+          amount: response.summary?.discountAmount ?? 0,
+          total: response.summary?.total ?? null,
+          recurringAmount: response.summary?.recurringAmount ?? null
+        }
+      }
+      return { success: true }
     }
 
-    setActiveDiscountCode(appliedCode)
-    if (discount.preview) {
-      setHasZeroPayment(discount.preview.total <= 0)
+    const errorMessage = response?.errorCode === 'INVALID_DISCOUNT_CODE'
+      ? (response?.errorMessage || t('discount.invalidCode'))
+      : response?.errorCode === 'ABORTED'
+        ? t('discount.timeout')
+        : (response?.errorMessage || t('discount.verificationError'))
+
+    setActiveDiscountCode(null)
+    setDiscountValidation({
+      status: 'invalid',
+      error: errorMessage
+    })
+    if (typeof window !== 'undefined') {
+      ;(window as any).__wb_lastDiscountMeta = null
     }
-    refreshPaymentIntent({ discountCode: appliedCode })
-  }, [refreshPaymentIntent])
+
+    return { success: false, errorMessage }
+  }, [refreshPaymentIntent, t])
 
   const handleDiscountCleared = useCallback(() => {
     if (!discountCodeRef.current && !activeDiscountCode) {
@@ -1262,9 +1381,10 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
 
     setActiveDiscountCode(null)
     setHasZeroPayment(false)
+    setDiscountValidation(null)
     if (typeof window !== 'undefined') {
-      ;(window as any).__wb_lastDiscountMeta = null
       ;(window as any).__wb_lastDiscountValidation = null
+      ;(window as any).__wb_lastDiscountMeta = null
     }
     refreshPaymentIntent({ discountCode: null })
   }, [refreshPaymentIntent, activeDiscountCode])
@@ -1335,13 +1455,29 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
     languagesRef.current = normalizedLanguages
 
     const existingDiscount = form.getValues('discountCode')
-    if (typeof existingDiscount === 'string' && existingDiscount.trim().length > 0) {
-      const trimmed = existingDiscount.trim()
-      setActiveDiscountCode(trimmed)
-      refreshPaymentIntent({ languages: normalizedLanguages, discountCode: trimmed })
-    } else {
-      refreshPaymentIntent({ languages: normalizedLanguages })
+    const runInitialRefresh = async () => {
+      if (typeof existingDiscount === 'string' && existingDiscount.trim().length > 0) {
+        const trimmed = existingDiscount.trim()
+        setActiveDiscountCode(trimmed)
+        const response = await refreshPaymentIntent({
+          languages: normalizedLanguages,
+          discountCode: trimmed,
+          verifyDiscount: true
+        })
+        if (response?.success && response.summary) {
+          setDiscountValidation({
+            status: 'valid',
+            code: trimmed,
+            preview: response.summary
+          })
+        }
+        return
+      }
+
+      await refreshPaymentIntent({ languages: normalizedLanguages })
     }
+
+    void runInitialRefresh()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -1377,12 +1513,14 @@ function CheckoutFormWrapper(props: CheckoutWrapperProps) {
     paymentRequired,
     hasZeroPayment,
     clientSecret,
+    pricingSummary,
     discountValidation,
     setDiscountValidation,
-    onDiscountApplied: handleDiscountApplied,
     onDiscountCleared: handleDiscountCleared,
     onLanguagesChange: handleLanguagesChange,
-    onZeroPaymentComplete: handleZeroPaymentComplete
+    onZeroPaymentComplete: handleZeroPaymentComplete,
+    isVerifyingDiscount,
+    onVerifyDiscount: handleVerifyDiscount
   }
 
   if (!paymentRequired) {

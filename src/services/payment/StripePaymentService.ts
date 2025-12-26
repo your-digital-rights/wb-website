@@ -52,14 +52,27 @@ export class StripePaymentService {
     })
 
     if (customers.data.length > 0) {
-      return customers.data[0]
+      const existingCustomer = customers.data[0]
+      if (Object.keys(metadata).length > 0) {
+        await this.stripe.customers.update(existingCustomer.id, {
+          metadata: {
+            ...existingCustomer.metadata,
+            ...metadata,
+            signup_source: 'web_onboarding'
+          }
+        })
+      }
+      return existingCustomer
     }
 
     // Create new customer if not found
     return await this.stripe.customers.create({
       email,
       name,
-      metadata
+      metadata: {
+        ...metadata,
+        signup_source: 'web_onboarding'
+      }
     })
   }
 
