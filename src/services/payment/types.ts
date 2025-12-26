@@ -91,6 +91,12 @@ export interface PricingSummary {
   taxAmount: number
   currency: string
   lineItems: PricingLineItem[]
+  /** Discount duration: 'once' (first payment only), 'forever' (all payments), 'repeating' (N months) */
+  discountDuration?: 'once' | 'forever' | 'repeating' | null
+  /** For 'repeating' discounts, the number of months the discount applies */
+  discountDurationMonths?: number | null
+  /** The full recurring amount without any discount (useful for 'once' duration display) */
+  recurringAmountFull?: number
 }
 
 // =============================================================================

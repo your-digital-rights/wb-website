@@ -574,7 +574,7 @@ export class CheckoutSessionService {
         languagesToUse,
         submissionId,
         sessionId,
-        validatedCoupon?.id ?? null,
+        validatedCoupon ?? null,
         supabaseClient
       )
 
@@ -702,7 +702,7 @@ export class CheckoutSessionService {
     languageCodes: string[],
     submissionId: string,
     sessionId: string,
-    couponId: string | null,
+    coupon: Stripe.Coupon | null,
     supabaseClient: SupabaseClient
   ): Promise<{
     paymentRequired: boolean
@@ -759,8 +759,8 @@ export class CheckoutSessionService {
         }
       }
 
-      if (couponId) {
-        invoiceUpdate.discounts = [{ coupon: couponId }]
+      if (coupon?.id) {
+        invoiceUpdate.discounts = [{ coupon: coupon.id }]
       }
 
       await stripe.invoices.update(invoiceId, invoiceUpdate)
@@ -775,7 +775,12 @@ export class CheckoutSessionService {
       expand: ['confirmation_secret', 'payments', 'total_discount_amounts', 'lines.data.price', 'lines.data.discounts']
     })
 
-    const pricingSummary = this.buildPricingSummary(finalizedInvoice)
+    // Build pricing summary with coupon info for correct recurring amount calculation
+    const couponInfo = coupon ? {
+      duration: coupon.duration,
+      durationInMonths: coupon.duration_in_months ?? null
+    } : null
+    const pricingSummary = this.buildPricingSummary(finalizedInvoice, couponInfo)
     const taxAmount = pricingSummary.taxAmount
 
     console.log('[CheckoutSessionService] finalized invoice', {
@@ -784,7 +789,8 @@ export class CheckoutSessionService {
       subtotal: finalizedInvoice.subtotal,
       totalDiscount: (finalizedInvoice.total_discount_amounts || []).reduce((sum, d) => sum + d.amount, 0),
       discountAmounts: finalizedInvoice.total_discount_amounts,
-      couponId,
+      couponId: coupon?.id || null,
+      couponDuration: coupon?.duration || null,
       paymentsCount: (finalizedInvoice as any).payments?.data?.length || 0,
       firstPaymentIntentId: (finalizedInvoice as any).payments?.data?.[0]?.payment?.payment_intent
     })
@@ -895,7 +901,10 @@ export class CheckoutSessionService {
     }
   }
 
-  private buildPricingSummary(invoice: Stripe.Invoice): PricingSummary {
+  private buildPricingSummary(
+    invoice: Stripe.Invoice,
+    couponInfo?: { duration: string; durationInMonths?: number | null } | null
+  ): PricingSummary {
     const basePackagePriceId = process.env.STRIPE_BASE_PACKAGE_PRICE_ID
 
     const lineItems = (invoice.lines?.data || []).map((line) => {
@@ -942,12 +951,46 @@ export class CheckoutSessionService {
       }
     })
 
-    const recurringAmount = lineItems
+    // Calculate the FULL recurring amount (without any discount)
+    const recurringAmountFull = lineItems
+      .filter((item) => item.isRecurring)
+      .reduce((sum, item) => sum + item.originalAmount, 0)
+
+    // Calculate the discounted recurring amount (from first invoice)
+    const recurringAmountDiscounted = lineItems
       .filter((item) => item.isRecurring)
       .reduce((sum, item) => sum + item.amount, 0)
+
     const recurringDiscount = lineItems
       .filter((item) => item.isRecurring)
       .reduce((sum, item) => sum + item.discountAmount, 0)
+
+    // CRITICAL FIX: Calculate recurringAmount based on discount duration
+    // - 'once': After first month, customer pays FULL price
+    // - 'forever': Customer always pays discounted price
+    // - 'repeating': Customer pays discounted price for N months, then full price
+    let recurringAmount: number
+    const discountDuration = couponInfo?.duration as 'once' | 'forever' | 'repeating' | undefined
+
+    switch (discountDuration) {
+      case 'once':
+        // After first payment, recurring is FULL price (no discount)
+        recurringAmount = recurringAmountFull
+        break
+      case 'forever':
+        // Discount applies to all future payments
+        recurringAmount = recurringAmountDiscounted
+        break
+      case 'repeating':
+        // Discount applies for N months, then reverts to full price
+        // For the UI, we show the discounted recurring during the discount period
+        // The UI should also indicate when it reverts to full price
+        recurringAmount = recurringAmountDiscounted
+        break
+      default:
+        // No discount or unknown duration - show discounted amount (backward compatible)
+        recurringAmount = recurringAmountDiscounted
+    }
 
     const taxAmount = ((invoice as any).total_tax_amounts || []).reduce((sum: number, tax: { amount: number }) => sum + tax.amount, 0)
     const lineDiscountTotal = lineItems.reduce((sum, item) => sum + item.discountAmount, 0)
@@ -967,7 +1010,10 @@ export class CheckoutSessionService {
       recurringDiscount,
       taxAmount,
       currency: invoice.currency ?? 'eur',
-      lineItems
+      lineItems,
+      discountDuration: discountDuration ?? null,
+      discountDurationMonths: couponInfo?.durationInMonths ?? null,
+      recurringAmountFull
     }
   }
 }
